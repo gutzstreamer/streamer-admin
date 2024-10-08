@@ -5,6 +5,8 @@ import { authProvider } from "./authProvider";
 import UserList from "./components/users/UserList";
 import StreamerList from "./components/streamers/StreamerList";
 import SubScriptionPlanList from "./components/subscription-plan/SubScriptionPlanList";
+import UserCreate from "./components/users/UserCreate";
+import UserEdit from "./components/users/UserEdit";
 
 export const App = () => (
   <Admin
@@ -14,8 +16,9 @@ export const App = () => (
   >
     <Resource
       name="users"
+      create={UserCreate}
       list={UserList}
-      edit={EditGuesser}
+      edit={UserEdit}
       show={ShowGuesser}
     />
     <Resource
