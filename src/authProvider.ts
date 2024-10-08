@@ -1,27 +1,53 @@
-import { AuthProvider, HttpError } from "react-admin";
-import data from "./users.json";
+import { AuthProvider, HttpError, fetchUtils } from "react-admin";
 
-/**
- * This authProvider is only for test purposes. Don't use it in production.
- */
+const BASE_URL = import.meta.env.VITE_SIMPLE_REST_URL;
+
 export const authProvider: AuthProvider = {
-  login: ({ username, password }) => {
-    const user = data.users.find(
-      (u) => u.username === username && u.password === password,
-    );
+  login: async ({ username, password }) => {
+    try {
+      const responseToken = await fetchUtils.fetchJson(
+        BASE_URL + "/authorization/login",
+        {
+          method: "POST",
+          body: JSON.stringify({ email: username, password }),
+        },
+      );
+      const { accessToken } = responseToken.json;
 
-    if (user) {
-      // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-      let { password, ...userToPersist } = user;
-      localStorage.setItem("user", JSON.stringify(userToPersist));
+      const userResponse = await fetchUtils.fetchJson(
+        BASE_URL + "/authorization/info",
+        {
+          method: "GET",
+          headers: new Headers({ Authorization: `Bearer ${accessToken}` }),
+        },
+      );
+
+      const profileResponse = await fetchUtils.fetchJson(
+        BASE_URL + `/profiles?userId=${userResponse.json.id}`,
+        {
+          method: "GET",
+          headers: new Headers({ Authorization: `Bearer ${accessToken}` }),
+        },
+      );
+
+      const user = {
+        password,
+        id: userResponse.json.id,
+        username: profileResponse.json.nickname,
+        fullName: "Admin",
+        avatar: profileResponse.json.image,
+      };
+
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", accessToken);
       return Promise.resolve();
+    } catch (error) {
+      return Promise.reject(
+        new HttpError("Unauthorized", 401, {
+          message: "Invalid username or password",
+        }),
+      );
     }
-
-    return Promise.reject(
-      new HttpError("Unauthorized", 401, {
-        message: "Invalid username or password",
-      }),
-    );
   },
   logout: () => {
     localStorage.removeItem("user");

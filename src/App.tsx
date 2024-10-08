@@ -1,29 +1,32 @@
-import {
-  Admin,
-  Resource,
-  ListGuesser,
-  EditGuesser,
-  ShowGuesser,
-} from "react-admin";
+import { Admin, Resource, EditGuesser, ShowGuesser } from "react-admin";
 import { Layout } from "./Layout";
-import { dataProvider } from "./dataProvider";
+import streamerDataProvider from "./dataProvider";
 import { authProvider } from "./authProvider";
+import UserList from "./components/users/UserList";
+import StreamerList from "./components/streamers/StreamerList";
+import SubScriptionPlanList from "./components/subscription-plan/SubScriptionPlanList";
 
 export const App = () => (
   <Admin
     layout={Layout}
-    dataProvider={dataProvider}
+    dataProvider={streamerDataProvider}
     authProvider={authProvider}
   >
     <Resource
       name="users"
-      list={ListGuesser}
+      list={UserList}
       edit={EditGuesser}
       show={ShowGuesser}
     />
     <Resource
       name="streamers"
-      list={ListGuesser}
+      list={StreamerList}
+      edit={EditGuesser}
+      show={ShowGuesser}
+    />
+    <Resource
+      name="subscription-plan"
+      list={SubScriptionPlanList}
       edit={EditGuesser}
       show={ShowGuesser}
     />
