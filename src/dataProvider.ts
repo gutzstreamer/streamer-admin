@@ -27,7 +27,7 @@ const streamerDataProvider: DataProvider = {
     return httpClient(`${apiUrl}/${resource}`).then(({ headers, json }) => {
       if (resource === "wallet-transactions") {
         return {
-          data: json.data,
+          data: json.content,
           total: json.pagination.total,
         };
       }
