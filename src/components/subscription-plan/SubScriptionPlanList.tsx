@@ -7,7 +7,7 @@ import {
 
 import { ListProps } from "react-admin";
 
-const SubscriptionPlanList = (props: ListProps) => {
+const SubscriptionsPlanList = (props: ListProps) => {
   return (
     <List {...props}>
       <Datagrid>
@@ -27,4 +27,4 @@ const SubscriptionPlanList = (props: ListProps) => {
   );
 };
 
-export default SubscriptionPlanList;
+export default SubscriptionsPlanList;
