@@ -1,12 +1,23 @@
-import { Admin, Resource, EditGuesser, ShowGuesser } from "react-admin";
+import { Admin, Resource } from "react-admin";
 import { Layout } from "./Layout";
 import streamerDataProvider from "./dataProvider";
 import { authProvider } from "./authProvider";
 import UserList from "./components/users/UserList";
 import StreamerList from "./components/streamers/StreamerList";
-import SubScriptionPlanList from "./components/subscription-plan/SubScriptionPlanList";
 import UserCreate from "./components/users/UserCreate";
 import UserEdit from "./components/users/UserEdit";
+import CategoryCreate from "./components/categories/CategoryCreate";
+import CategoryEdit from "./components/categories/CategoryEdit";
+import CategoryList from "./components/categories/CategoryList";
+import CategoryShow from "./components/categories/CategoryShow";
+import StreamerEdit from "./components/streamers/StreamerEdit";
+import StreamerShow from "./components/streamers/StreamerShow";
+import StreamerCreate from "./components/streamers/StreamerCreate";
+import UserShow from "./components/users/UserShow";
+import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionPlanCreate";
+import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
+import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
+import SubscriptionPlanList from "./components/subscription-plan/SubScriptionPlanList";
 
 export const App = () => (
   <Admin
@@ -19,19 +30,28 @@ export const App = () => (
       create={UserCreate}
       list={UserList}
       edit={UserEdit}
-      show={ShowGuesser}
+      show={UserShow}
     />
     <Resource
       name="streamers"
       list={StreamerList}
-      edit={EditGuesser}
-      show={ShowGuesser}
+      edit={StreamerEdit}
+      show={StreamerShow}
+      create={StreamerCreate}
     />
     <Resource
       name="subscription-plan"
-      list={SubScriptionPlanList}
-      edit={EditGuesser}
-      show={ShowGuesser}
+      list={SubscriptionPlanList}
+      create={SubscriptionPlanCreate}
+      edit={SubscriptionPlanEdit}
+      show={SubscriptionPlanShow}
+    />
+    <Resource
+      name="category"
+      list={CategoryList}
+      create={CategoryCreate}
+      edit={CategoryEdit}
+      show={CategoryShow}
     />
   </Admin>
 );
