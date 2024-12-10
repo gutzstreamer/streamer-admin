@@ -14,10 +14,10 @@ import StreamerEdit from "./components/streamers/StreamerEdit";
 import StreamerShow from "./components/streamers/StreamerShow";
 import StreamerCreate from "./components/streamers/StreamerCreate";
 import UserShow from "./components/users/UserShow";
-import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionPlanCreate";
-import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlansEdit";
-import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
-import SubscriptionPlansList from "./components/subscription-plan/SubscriptionPlanList";
+// import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionPlanCreate";
+// import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
+// import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
+// import SubscriptionPlansList from "./components/subscription-plan/SubscriptionPlanList";
 import ProductCreate from "./components/products/ProductCreate";
 import ProductEdit from "./components/products/ProductEdit";
 import ProductList from "./components/products/ProductList";
@@ -53,13 +53,13 @@ export const App = () => (
       show={StreamerShow}
       create={StreamerCreate}
     />
-    <Resource
+    {/* <Resource
       name="subscription-plan"
       list={SubscriptionPlansList}
       create={SubscriptionPlanCreate}
       edit={SubscriptionPlanEdit}
       show={SubscriptionPlanShow}
-    />
+    /> */}
     <Resource
       name="category"
       list={CategoryList}
