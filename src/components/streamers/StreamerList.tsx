@@ -1,19 +1,18 @@
-import { List, Datagrid, TextField, useDataProvider } from "react-admin";
+import { List, Datagrid, TextField, ReferenceField } from 'react-admin';
 
-import { ListProps } from "react-admin";
-
-const StreamerList = (props: ListProps) => {
-  const dataProvider = useDataProvider();
-
-  return <List {...props}>
-  <Datagrid>
-      <TextField source="id" />
-      <TextField source="name" />
-      <TextField source="userId" />
-      <TextField source="bio" />
-      <TextField source="image" />
-  </Datagrid>
-</List>
+const StreamerList: React.FC = (props) => {
+  return (
+    <List {...props}>
+      <Datagrid>
+        <TextField source="id" />
+        <TextField source="name" />
+        <ReferenceField source="userId" reference="users">
+          <TextField source="name" />
+        </ReferenceField>
+        <TextField source="bio" />
+      </Datagrid>
+    </List>
+  );
 };
 
 export default StreamerList;

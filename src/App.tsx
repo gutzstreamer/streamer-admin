@@ -22,6 +22,10 @@ import ProductCreate from "./components/products/ProductCreate";
 import ProductEdit from "./components/products/ProductEdit";
 import ProductList from "./components/products/ProductList";
 import ProductShow from "./components/products/ProductShow";
+import WalletList from "./components/wallet/WalletList";
+import WalletTransactionList from "./components/wallet-transactions/WalletTransactionList";
+import WalletTransactionShow from "./components/wallet-transactions/WalletTransactionShow";
+import WalletShow from "./components/wallet/WalletShow";
 
 export const App = () => (
   <Admin
@@ -35,6 +39,12 @@ export const App = () => (
       list={UserList}
       edit={UserEdit}
       show={UserShow}
+    />
+    <Resource name="wallets" list={WalletList} show={WalletShow} />
+    <Resource
+      name="wallet-transactions"
+      list={WalletTransactionList}
+      show={WalletTransactionShow}
     />
     <Resource
       name="streamers"
