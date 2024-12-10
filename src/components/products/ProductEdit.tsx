@@ -1,8 +1,8 @@
 import React from 'react';
-import { Create, SimpleForm, TextInput, NumberInput, SelectInput, ReferenceArrayInput, SelectArrayInput, ArrayInput, SimpleFormIterator } from 'react-admin';
+import { Edit, SimpleForm, TextInput, NumberInput, SelectInput, ReferenceArrayInput, SelectArrayInput, ArrayInput, SimpleFormIterator } from 'react-admin';
 
-const ProductCreate: React.FC = (props) => (
-    <Create {...props}>
+const ProductEdit: React.FC = (props) => (
+    <Edit {...props}>
         <SimpleForm>
             <TextInput source="name" />
             <TextInput source="factoryName" />
@@ -15,7 +15,7 @@ const ProductCreate: React.FC = (props) => (
                 { id: 'FEMALE', name: 'Female' },
                 { id: 'UNISEX', name: 'Unisex' },
             ]} />
-            <ReferenceArrayInput source="category" reference="category">
+            <ReferenceArrayInput source="categories" reference="categories">
                 <SelectArrayInput optionText="name" />
             </ReferenceArrayInput>
             <ArrayInput source="images">
@@ -39,7 +39,7 @@ const ProductCreate: React.FC = (props) => (
                 </SimpleFormIterator>
             </ArrayInput>
         </SimpleForm>
-    </Create>
+    </Edit>
 );
 
-export default ProductCreate;
+export default ProductEdit;

@@ -17,7 +17,11 @@ import UserShow from "./components/users/UserShow";
 import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionPlanCreate";
 import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
 import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
-import SubscriptionPlanList from "./components/subscription-plan/SubScriptionPlanList";
+import SubscriptionPlanList from "./components/subscription-plan/SubscriptionPlanList";
+import ProductCreate from "./components/products/ProductCreate";
+import ProductEdit from "./components/products/ProductEdit";
+import ProductList from "./components/products/ProductList";
+import ProductShow from "./components/products/ProductShow";
 
 export const App = () => (
   <Admin
@@ -52,6 +56,13 @@ export const App = () => (
       create={CategoryCreate}
       edit={CategoryEdit}
       show={CategoryShow}
+    />
+    <Resource
+      name="product"
+      list={ProductList}
+      create={ProductCreate}
+      edit={ProductEdit}
+      show={ProductShow}
     />
   </Admin>
 );
