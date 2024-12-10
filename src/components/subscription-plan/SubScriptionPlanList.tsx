@@ -2,15 +2,12 @@ import {
   List,
   Datagrid,
   TextField,
-  useDataProvider,
   NumberField,
 } from "react-admin";
 
 import { ListProps } from "react-admin";
 
-const SubscriptionPlanList = (props: ListProps) => {
-  const dataProvider = useDataProvider();
-
+const SubscriptionsPlanList = (props: ListProps) => {
   return (
     <List {...props}>
       <Datagrid>
@@ -30,4 +27,4 @@ const SubscriptionPlanList = (props: ListProps) => {
   );
 };
 
-export default SubscriptionPlanList;
+export default SubscriptionsPlanList;

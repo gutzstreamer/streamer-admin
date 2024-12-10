@@ -14,14 +14,18 @@ import StreamerEdit from "./components/streamers/StreamerEdit";
 import StreamerShow from "./components/streamers/StreamerShow";
 import StreamerCreate from "./components/streamers/StreamerCreate";
 import UserShow from "./components/users/UserShow";
-import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionPlanCreate";
-import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
-import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
-import SubscriptionPlanList from "./components/subscription-plan/SubscriptionPlanList";
+// import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionPlanCreate";
+// import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
+// import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
+// import SubscriptionPlansList from "./components/subscription-plan/SubscriptionPlanList";
 import ProductCreate from "./components/products/ProductCreate";
 import ProductEdit from "./components/products/ProductEdit";
 import ProductList from "./components/products/ProductList";
 import ProductShow from "./components/products/ProductShow";
+import WalletList from "./components/wallet/WalletList";
+import WalletTransactionList from "./components/wallet-transactions/WalletTransactionList";
+import WalletTransactionShow from "./components/wallet-transactions/WalletTransactionShow";
+import WalletShow from "./components/wallet/WalletShow";
 
 export const App = () => (
   <Admin
@@ -36,6 +40,12 @@ export const App = () => (
       edit={UserEdit}
       show={UserShow}
     />
+    <Resource name="wallets" list={WalletList} show={WalletShow} />
+    <Resource
+      name="wallet-transactions"
+      list={WalletTransactionList}
+      show={WalletTransactionShow}
+    />
     <Resource
       name="streamers"
       list={StreamerList}
@@ -43,13 +53,13 @@ export const App = () => (
       show={StreamerShow}
       create={StreamerCreate}
     />
-    <Resource
+    {/* <Resource
       name="subscription-plan"
-      list={SubscriptionPlanList}
+      list={SubscriptionPlansList}
       create={SubscriptionPlanCreate}
       edit={SubscriptionPlanEdit}
       show={SubscriptionPlanShow}
-    />
+    /> */}
     <Resource
       name="category"
       list={CategoryList}
