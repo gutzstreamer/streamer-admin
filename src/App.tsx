@@ -26,6 +26,8 @@ import WalletList from "./components/wallet/WalletList";
 import WalletTransactionList from "./components/wallet-transactions/WalletTransactionList";
 import WalletTransactionShow from "./components/wallet-transactions/WalletTransactionShow";
 import WalletShow from "./components/wallet/WalletShow";
+import DonateList from "./components/donations/DonateList";
+import DonateShow from "./components/donations/DonateShow";
 
 export const App = () => (
   <Admin
@@ -53,6 +55,7 @@ export const App = () => (
       show={StreamerShow}
       create={StreamerCreate}
     />
+    <Resource name="donations" list={DonateList} show={DonateShow} />
     {/* <Resource
       name="subscription-plan"
       list={SubscriptionPlansList}

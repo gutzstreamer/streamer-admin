@@ -24,7 +24,12 @@ export const dataProvider = simpleRestProvider(apiUrl, httpClient);
 const streamerDataProvider: DataProvider = {
   ...dataProvider,
   getList: (resource, params) => {
-    return httpClient(`${apiUrl}/${resource}`).then(({ headers, json }) => {
+    let url = `${apiUrl}/${resource}`;
+    if (resource === "donations") {
+      const { streamerId } = params.filter;
+      url = `${apiUrl}/streamers/${streamerId}/donations`;
+    }
+    return httpClient(url).then(({ headers, json }) => {
       if (resource === "wallet-transactions") {
         return {
           data: json.content,
