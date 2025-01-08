@@ -28,6 +28,8 @@ import WalletTransactionShow from "./components/wallet-transactions/WalletTransa
 import WalletShow from "./components/wallet/WalletShow";
 import DonateList from "./components/donations/DonateList";
 import DonateShow from "./components/donations/DonateShow";
+import ProductStreamerList from "./components/products-streamer/ProductSteamerList";
+import ProductStreamerShow from "./components/products-streamer/ProductStreamerShow";
 
 export const App = () => (
   <Admin
@@ -55,6 +57,7 @@ export const App = () => (
       show={StreamerShow}
       create={StreamerCreate}
     />
+    <Resource name="product-streamer" list={ProductStreamerList} show={ProductStreamerShow} />
     <Resource name="donations" list={DonateList} show={DonateShow} />
     {/* <Resource
       name="subscription-plan"
@@ -64,14 +67,14 @@ export const App = () => (
       show={SubscriptionPlanShow}
     /> */}
     <Resource
-      name="category"
+      name="categories"
       list={CategoryList}
       create={CategoryCreate}
       edit={CategoryEdit}
       show={CategoryShow}
     />
     <Resource
-      name="product"
+      name="products"
       list={ProductList}
       create={ProductCreate}
       edit={ProductEdit}

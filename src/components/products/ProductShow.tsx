@@ -22,7 +22,7 @@ const ProductShow: React.FC = (props) => (
       <TextField source="gender" />
       <ArrayField source="categories">
         <SingleFieldList>
-          <ChipField source="id" />
+          <ChipField source="category.name" />
         </SingleFieldList>
       </ArrayField>
       <ArrayField source="images">

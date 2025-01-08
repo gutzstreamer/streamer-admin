@@ -3,9 +3,8 @@ import simpleRestProvider from "ra-data-simple-rest";
 
 const apiUrl = import.meta.env.VITE_SIMPLE_REST_URL;
 
-// Função para obter o token de autenticação (substitua pela sua lógica de obtenção do token)
 const getToken = () => {
-  return localStorage.getItem("token"); // Exemplo: obtendo o token do localStorage
+  return localStorage.getItem("token");
 };
 
 const httpClient = (url: string, options: fetchUtils.Options = {}) => {
@@ -25,10 +24,20 @@ const streamerDataProvider: DataProvider = {
   ...dataProvider,
   getList: (resource, params) => {
     let url = `${apiUrl}/${resource}`;
+
+    const { filter, pagination, sort } = params;
+    const { streamerId } = filter;
+    console.log(filter);
+
     if (resource === "donations") {
-      const { streamerId } = params.filter;
-      url = `${apiUrl}/streamers/${streamerId}/donations`;
+      if(streamerId) url = `${apiUrl}/donations?streamerId=${streamerId}`;
+      else url = `${apiUrl}/donations`;
     }
+
+    if (resource === "product-streamer") {
+      if (streamerId) url = `${apiUrl}/product-streamer/streamer/${streamerId}`;
+    }
+
     return httpClient(url).then(({ headers, json }) => {
       if (resource === "wallet-transactions") {
         return {
@@ -38,11 +47,10 @@ const streamerDataProvider: DataProvider = {
       }
       return {
         data: json,
-        total: json.length,
+        total: json.length ?? 0,
       };
     });
   },
-  // Adicione outros métodos do dataProvider conforme necessário
 };
 
 export default streamerDataProvider;
