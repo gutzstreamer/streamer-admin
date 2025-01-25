@@ -10,12 +10,21 @@ import {
   ArrayInput,
   SimpleFormIterator,
   required,
+  BooleanInput,
+  ArrayField,
+  SingleFieldList,
+  ChipField,
 } from "react-admin";
 
 const transform = (data: any) => {
   return {
     ...data,
-    categories: data.categories.map((category: any) => ({ id: category.categoryId })),
+    categories: data.categories.map(
+      (category: any) =>
+        typeof category === "object" && category.categoryId
+          ? { id: category.categoryId } // Se for um objeto com categoryId
+          : { id: category }, // Se for apenas um ID (string)
+    ),
     images: data.images.map((image: any) => ({
       id: image.id || undefined, // Garante que IDs existentes são enviados, ou undefined para novos registros
       url: image.url,
@@ -54,6 +63,12 @@ const ProductEdit: React.FC = (props) => (
         ]}
         validate={required()}
       />
+      <BooleanInput source="active" />
+      <ArrayField source="categories">
+        <SingleFieldList linkType={false}>
+          <ChipField source="category.name" />
+        </SingleFieldList>
+      </ArrayField>
       <ReferenceArrayInput
         label="Categories"
         source="categories"

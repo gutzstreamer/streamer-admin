@@ -6,11 +6,10 @@ const ProductList: React.FC = (props) => (
     <Datagrid>
       <TextField source="id" />
       <TextField source="name" />
-      <TextField source="factoryName" />
       <NumberField source="salePrice" />
-      <NumberField source="suggestedDiscountPrice" />
       <NumberField source="suggestedPrice" />
       <TextField source="gender" />
+      <TextField source="active" />
     </Datagrid>
   </List>
 );
