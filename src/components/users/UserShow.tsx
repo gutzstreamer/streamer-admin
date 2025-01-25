@@ -8,6 +8,7 @@ const UserShow: React.FC = (props) => (
             <TextField source="name" />
             <TextField source="email" />
             <TextField source="identityNumber" />
+            <TextField source="active" />
         </SimpleShowLayout>
     </Show>
 );

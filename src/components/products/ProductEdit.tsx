@@ -9,22 +9,30 @@ import {
   SelectArrayInput,
   ArrayInput,
   SimpleFormIterator,
+  required,
 } from "react-admin";
 
 const transform = (data: any) => {
   return {
     ...data,
-    categories: data.categories
-      .filter((category: any) => category) // Remove undefined ou falsy values
-      .map((category: any) => {
-        if (typeof category === "string") {
-          return { id: category }; // Para IDs diretos selecionados
-        } else if (category.categoryId) {
-          return { id: category.categoryId }; // Para objetos completos
-        }
-        return null; // Filtra valores inválidos
-      })
-      .filter(Boolean), // Remove valores nulos
+    categories: data.categories.map((category: any) => ({ id: category.categoryId })),
+    images: data.images.map((image: any) => ({
+      id: image.id || undefined, // Garante que IDs existentes são enviados, ou undefined para novos registros
+      url: image.url,
+      color: image.color
+        ? {
+            id: image.color.id || undefined,
+            name: image.color.name,
+            hex: image.color.hex,
+            ncm: image.color.ncm,
+            sizes: image.color.sizes.map((size: any) => ({
+              id: size.id || undefined,
+              name: size.name,
+              sku: size.sku,
+            })),
+          }
+        : undefined, // Ignora cores inexistentes
+    })),
   };
 };
 
@@ -44,36 +52,33 @@ const ProductEdit: React.FC = (props) => (
           { id: "FEMALE", name: "Female" },
           { id: "UNISEX", name: "Unisex" },
         ]}
+        validate={required()}
       />
       <ReferenceArrayInput
         label="Categories"
         source="categories"
         reference="categories"
         format={(value) =>
-          value
-            ? value.map((category: any) => category.categoryId || category.id)
-            : []
+          value ? value.map((category: any) => category.id) : []
         }
-        parse={(value) => value.map((id: any) => ({ categoryId: id }))}
+        parse={(value) => (value ? value.map((id: any) => ({ id })) : [])}
       >
         <SelectArrayInput optionText="name" />
       </ReferenceArrayInput>
       <ArrayInput source="images">
         <SimpleFormIterator>
-          <TextInput source="hex" />
-          <TextInput source="url" />
-          <TextInput source="color" />
-        </SimpleFormIterator>
-      </ArrayInput>
-      <ArrayInput source="colors">
-        <SimpleFormIterator>
-          <TextInput source="name" />
-          <TextInput source="hex" />
-          <TextInput source="ncm" />
-          <ArrayInput source="sizes">
+          <TextInput source="url" label="Image URL" validate={[required()]} />
+          <TextInput source="color.name" label="Color Name" />
+          <TextInput source="color.hex" label="Color Hex" />
+          <TextInput source="color.ncm" label="NCM" />
+          <ArrayInput source="color.sizes">
             <SimpleFormIterator>
-              <TextInput source="name" />
-              <TextInput source="sku" />
+              <TextInput
+                source="name"
+                label="Size Name"
+                validate={required()}
+              />
+              <TextInput source="sku" label="SKU" validate={required()} />
             </SimpleFormIterator>
           </ArrayInput>
         </SimpleFormIterator>

@@ -6,6 +6,9 @@ import {
   NumberField,
   DateField,
   ReferenceField,
+  ArrayField,
+  ImageField,
+  SingleFieldList,
 } from "react-admin";
 
 const ProductStreamerShow: React.FC = (props) => (
@@ -18,6 +21,11 @@ const ProductStreamerShow: React.FC = (props) => (
       <NumberField source="discountPrice" />
       <DateField source="createdAt" />
       <DateField source="updatedAt" />
+      <ArrayField source="mockups">
+        <SingleFieldList linkType={false}>
+          <ImageField source="url" title="color" />
+        </SingleFieldList>
+      </ArrayField>
       <ReferenceField source="productId" reference="products">
         <TextField source="name" />
       </ReferenceField>

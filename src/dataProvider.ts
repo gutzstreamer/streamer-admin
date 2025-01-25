@@ -27,7 +27,6 @@ const streamerDataProvider: DataProvider = {
 
     const { filter, pagination, sort } = params;
     const { streamerId } = filter;
-    console.log(filter);
 
     if (resource === "donations") {
       if(streamerId) url = `${apiUrl}/donations?streamerId=${streamerId}`;

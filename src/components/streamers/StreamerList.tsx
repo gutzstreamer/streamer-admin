@@ -9,7 +9,6 @@ const StreamerList: React.FC = (props) => {
         <ReferenceField source="userId" reference="users">
           <TextField source="name" />
         </ReferenceField>
-        <TextField source="bio" />
       </Datagrid>
     </List>
   );
