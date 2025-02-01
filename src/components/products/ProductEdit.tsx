@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Edit,
-  SimpleForm,
   TextInput,
   NumberInput,
   SelectInput,
@@ -14,11 +13,22 @@ import {
   ArrayField,
   SingleFieldList,
   ChipField,
+  TabbedForm,
+  FormTab,
+  ReferenceInput,
 } from "react-admin";
 
 const transform = (data: any) => {
   return {
     ...data,
+    taxComissions: data.taxComissions.map((taxComission: any) => ({
+      id: taxComission.id || undefined,
+      name: taxComission.name,
+      value: taxComission.value,
+      subscriptionPlanId: taxComission.subscriptionPlanId
+        ? taxComission.subscriptionPlanId
+        : undefined,
+    })),
     categories: data.categories.map(
       (category: any) =>
         typeof category === "object" && category.categoryId
@@ -47,58 +57,78 @@ const transform = (data: any) => {
 
 const ProductEdit: React.FC = (props) => (
   <Edit {...props} transform={transform}>
-    <SimpleForm>
-      <TextInput source="name" />
-      <TextInput source="factoryName" />
-      <TextInput source="description" />
-      <NumberInput source="salePrice" />
-      <NumberInput source="suggestedDiscountPrice" />
-      <NumberInput source="suggestedPrice" />
-      <SelectInput
-        source="gender"
-        choices={[
-          { id: "MALE", name: "Male" },
-          { id: "FEMALE", name: "Female" },
-          { id: "UNISEX", name: "Unisex" },
-        ]}
-        validate={required()}
-      />
-      <BooleanInput source="active" />
-      <ArrayField source="categories">
-        <SingleFieldList linkType={false}>
-          <ChipField source="category.name" />
-        </SingleFieldList>
-      </ArrayField>
-      <ReferenceArrayInput
-        label="Categories"
-        source="categories"
-        reference="categories"
-        format={(value) =>
-          value ? value.map((category: any) => category.id) : []
-        }
-        parse={(value) => (value ? value.map((id: any) => ({ id })) : [])}
-      >
-        <SelectArrayInput optionText="name" />
-      </ReferenceArrayInput>
-      <ArrayInput source="images">
-        <SimpleFormIterator>
-          <TextInput source="url" label="Image URL" validate={[required()]} />
-          <TextInput source="color.name" label="Color Name" />
-          <TextInput source="color.hex" label="Color Hex" />
-          <TextInput source="color.ncm" label="NCM" />
-          <ArrayInput source="color.sizes">
-            <SimpleFormIterator>
-              <TextInput
-                source="name"
-                label="Size Name"
-                validate={required()}
-              />
-              <TextInput source="sku" label="SKU" validate={required()} />
-            </SimpleFormIterator>
-          </ArrayInput>
-        </SimpleFormIterator>
-      </ArrayInput>
-    </SimpleForm>
+    <TabbedForm>
+      <FormTab label="General">
+        <TextInput source="name" />
+        <TextInput source="factoryName" />
+        <TextInput source="description" />
+        <NumberInput source="cost" />
+        <NumberInput source="price" />
+        <SelectInput
+          source="gender"
+          choices={[
+            { id: "MALE", name: "Male" },
+            { id: "FEMALE", name: "Female" },
+            { id: "UNISEX", name: "Unisex" },
+          ]}
+          validate={required()}
+        />
+        <BooleanInput source="active" />
+        <ArrayField source="categories">
+          <SingleFieldList linkType={false}>
+            <ChipField source="category.name" />
+          </SingleFieldList>
+        </ArrayField>
+        <ReferenceArrayInput
+          label="Categories"
+          source="categories"
+          reference="categories"
+          format={(value) =>
+            value ? value.map((category: any) => category.id) : []
+          }
+          parse={(value) => (value ? value.map((id: any) => ({ id })) : [])}
+        >
+          <SelectArrayInput optionText="name" />
+        </ReferenceArrayInput>
+      </FormTab>
+      <FormTab label="Details">
+        <ArrayInput source="images">
+          <SimpleFormIterator>
+            <TextInput source="url" label="Image URL" validate={[required()]} />
+            <TextInput source="color.name" label="Color Name" />
+            <TextInput source="color.hex" label="Color Hex" />
+            <TextInput source="color.ncm" label="NCM" />
+            <ArrayInput source="color.sizes">
+              <SimpleFormIterator>
+                <TextInput
+                  source="name"
+                  label="Size Name"
+                  validate={required()}
+                />
+                <TextInput source="sku" label="SKU" validate={required()} />
+              </SimpleFormIterator>
+            </ArrayInput>
+          </SimpleFormIterator>
+        </ArrayInput>
+      </FormTab>
+      <FormTab label="Tax">
+        <ArrayInput source="taxComissions">
+          <SimpleFormIterator>
+            <TextInput source="name" label="Name" validate={required()} />
+            <NumberInput source="value" label="Value" validate={required()} />
+            <ReferenceInput
+              label="Subscription Plan"
+              source="subscriptionPlanId"
+              reference="subscription-plan"
+              format={(value) => value && value.id}
+              parse={(value) => ({ subscriptionPlanId: value })}
+            >
+              <SelectInput optionText="name" />
+            </ReferenceInput>
+          </SimpleFormIterator>
+        </ArrayInput>
+      </FormTab>
+    </TabbedForm>
   </Edit>
 );
 

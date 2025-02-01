@@ -7,6 +7,7 @@ import {
   ArrayField,
   SingleFieldList,
   ReferenceField,
+  ChipField,
 } from "react-admin";
 import { ImageDetails } from "./ImageDetails";
 
@@ -17,10 +18,14 @@ const ProductShow: React.FC = (props) => (
       <TextField source="name" />
       <TextField source="factoryName" />
       <TextField source="description" />
-      <NumberField source="salePrice" />
-      <NumberField source="suggestedDiscountPrice" />
-      <NumberField source="suggestedPrice" />
+      <NumberField source="price" />
+      <NumberField source="cost" />
       <TextField source="gender" />
+      <ArrayField source="taxComissions">
+        <SingleFieldList linkType={false}>
+          <ChipField source="name" />
+        </SingleFieldList>
+      </ArrayField>
       <ArrayField source="categories">
         <SingleFieldList>
           <ReferenceField source="categoryId" reference="categories">

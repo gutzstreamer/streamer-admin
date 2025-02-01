@@ -1,13 +1,8 @@
-import {
-  List,
-  Datagrid,
-  TextField,
-  NumberField,
-} from "react-admin";
+import { List, Datagrid, TextField, NumberField } from "react-admin";
 
 import { ListProps } from "react-admin";
 
-const SubscriptionsPlanList = (props: ListProps) => {
+const SubscriptionPlanList = (props: ListProps) => {
   return (
     <List {...props}>
       <Datagrid>
@@ -27,4 +22,4 @@ const SubscriptionsPlanList = (props: ListProps) => {
   );
 };
 
-export default SubscriptionsPlanList;
+export default SubscriptionPlanList;

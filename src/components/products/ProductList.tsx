@@ -6,8 +6,8 @@ const ProductList: React.FC = (props) => (
     <Datagrid>
       <TextField source="id" />
       <TextField source="name" />
-      <NumberField source="salePrice" />
-      <NumberField source="suggestedPrice" />
+      <NumberField source="cost" />
+      <NumberField source="price" />
       <TextField source="gender" />
       <TextField source="active" />
     </Datagrid>

@@ -30,6 +30,10 @@ import DonateList from "./components/donations/DonateList";
 import DonateShow from "./components/donations/DonateShow";
 import ProductStreamerList from "./components/products-streamer/ProductSteamerList";
 import ProductStreamerShow from "./components/products-streamer/ProductStreamerShow";
+import SubscriptionPlanList from "./components/subscription-plan/SubscriptionPlanList";
+import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionPlanCreate";
+import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
+import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
 
 export const App = () => (
   <Admin
@@ -57,15 +61,19 @@ export const App = () => (
       show={StreamerShow}
       create={StreamerCreate}
     />
-    <Resource name="product-streamer" list={ProductStreamerList} show={ProductStreamerShow} />
+    <Resource
+      name="product-streamer"
+      list={ProductStreamerList}
+      show={ProductStreamerShow}
+    />
     <Resource name="donations" list={DonateList} show={DonateShow} />
-    {/* <Resource
+    <Resource
       name="subscription-plan"
-      list={SubscriptionPlansList}
+      list={SubscriptionPlanList}
       create={SubscriptionPlanCreate}
       edit={SubscriptionPlanEdit}
       show={SubscriptionPlanShow}
-    /> */}
+    />
     <Resource
       name="categories"
       list={CategoryList}
