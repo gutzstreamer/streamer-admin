@@ -7,6 +7,7 @@ const UserCreate: React.FC = (props) => {
       <SimpleForm>
         <TextInput source="username" label="Username" validate={required()} />
         <TextInput source="email" label="Email" validate={required()} />
+        <TextInput source="identityNumber" label="Identity Number" validate={required()} />
         <TextInput source="password" label="Password" type="password" validate={required()} />
       </SimpleForm>
     </Create>

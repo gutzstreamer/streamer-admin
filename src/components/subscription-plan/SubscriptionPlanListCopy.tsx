@@ -6,17 +6,15 @@ const SubscriptionPlanListCopy = (props: ListProps) => {
   return (
     <List {...props}>
       <Datagrid>
-        <TextField source="id" />
-        <TextField source="name" />
-        <TextField source="description" />
-        <NumberField source="price" />
-        <NumberField source="duration" />
-        <NumberField source="commissionPlataform" />
-        <NumberField source="commissionStreamer" />
-        <NumberField source="donationFeeValue" />
-        <NumberField source="storeFeeValue" />
-        <NumberField source="allowedWithdrawals" />
-        <NumberField source="withdrawalFeeValue" />
+            <TextField source="id" />
+            <TextField source="name" />
+            <TextField source="description" />
+            <NumberField source="price" />
+            <NumberField source="duration" />
+            <NumberField source="donationWithDrawallFee" />
+            <NumberField source="donationWithDrawallLimit" />
+            <NumberField source="storeWithDrawallFee" />
+            <NumberField source="storeWithDrawallLimit" />
       </Datagrid>
     </List>
   );
