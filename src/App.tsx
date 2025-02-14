@@ -30,6 +30,10 @@ import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionP
 import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
 import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
 import SubscriptionPlanListCopy from "./components/subscription-plan/SubscriptionPlanListCopy";
+import FeatureToggleList from "./components/feature-toggles/FeatureToggleList";
+import FeatureToggleCreate from "./components/feature-toggles/FeatureToggleCreate";
+import FeatureToggleShow from "./components/feature-toggles/FeatureToggleShow";
+import FeatureToggleEdit from "./components/feature-toggles/FeatureToggleEdit";
 
 export const App = () => (
   <Admin
@@ -83,6 +87,13 @@ export const App = () => (
       create={ProductCreate}
       edit={ProductEdit}
       show={ProductShow}
+    />
+    <Resource
+      name="feature-toggles"
+      list={FeatureToggleList}
+      create={FeatureToggleCreate}
+      edit={FeatureToggleEdit}
+      show={FeatureToggleShow}
     />
   </Admin>
 );
