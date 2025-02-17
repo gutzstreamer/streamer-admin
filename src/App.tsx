@@ -34,6 +34,8 @@ import FeatureToggleList from "./components/feature-toggles/FeatureToggleList";
 import FeatureToggleCreate from "./components/feature-toggles/FeatureToggleCreate";
 import FeatureToggleShow from "./components/feature-toggles/FeatureToggleShow";
 import FeatureToggleEdit from "./components/feature-toggles/FeatureToggleEdit";
+import OrderList from "./components/orders/OrderList";
+import OrderShow from "./components/orders/OrderShow";
 
 export const App = () => (
   <Admin
@@ -94,6 +96,11 @@ export const App = () => (
       create={FeatureToggleCreate}
       edit={FeatureToggleEdit}
       show={FeatureToggleShow}
+    />
+    <Resource
+    name="orders"
+    list={OrderList}
+    show={OrderShow}
     />
   </Admin>
 );
