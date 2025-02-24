@@ -36,6 +36,10 @@ import FeatureToggleShow from "./components/feature-toggles/FeatureToggleShow";
 import FeatureToggleEdit from "./components/feature-toggles/FeatureToggleEdit";
 import OrderList from "./components/orders/OrderList";
 import OrderShow from "./components/orders/OrderShow";
+import CalculationFeeList from "./components/calculation-fee/CalculationFeeList";
+import CalculationFeeShow from "./components/calculation-fee/CalculationFeeShow";
+import CalculationFeeEdit from "./components/calculation-fee/CalculationFeeEdit";
+import CalculationFeeCreate from "./components/calculation-fee/CalculationFeeCreate";
 
 export const App = () => (
   <Admin
@@ -97,10 +101,14 @@ export const App = () => (
       edit={FeatureToggleEdit}
       show={FeatureToggleShow}
     />
+    <Resource name="orders" list={OrderList} show={OrderShow} />
+
     <Resource
-    name="orders"
-    list={OrderList}
-    show={OrderShow}
+      name="calculation-fee"
+      list={CalculationFeeList}
+      show={CalculationFeeShow}
+      edit={CalculationFeeEdit}
+      create={CalculationFeeCreate}
     />
   </Admin>
 );
