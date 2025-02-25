@@ -2,6 +2,8 @@ import { AuthProvider, HttpError, fetchUtils } from "react-admin";
 
 const BASE_URL = import.meta.env.VITE_SIMPLE_REST_URL;
 
+const accessToken = localStorage.getItem("token");
+
 export const authProvider: AuthProvider = {
   login: async ({ username, password }) => {
     try {
@@ -21,6 +23,16 @@ export const authProvider: AuthProvider = {
           headers: new Headers({ Authorization: `Bearer ${accessToken}` }),
         },
       );
+
+      const roles = userResponse.json["roles"];
+
+      if (!roles.includes("admin")) {
+        Promise.reject(
+          new HttpError("Unauthorized", 401, {
+            message: "Invalid username or password",
+          }),
+        );
+      }
 
       const profileResponse = await fetchUtils.fetchJson(
         BASE_URL + `/profiles?userId=${userResponse.json.id}`,
@@ -49,8 +61,16 @@ export const authProvider: AuthProvider = {
       );
     }
   },
-  logout: () => {
+  logout: async () => {
+    const token = localStorage.getItem("token");
     localStorage.removeItem("user");
+    const logout = await fetchUtils.fetchJson(
+      BASE_URL + "/authorization/logout",
+      {
+        method: "POST",
+        headers: new Headers({ Authorization: `Bearer ${token}` }),
+      },
+    );
     return Promise.resolve();
   },
   checkError: () => Promise.resolve(),
