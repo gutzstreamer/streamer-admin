@@ -64,6 +64,11 @@ export const authProvider: AuthProvider = {
   logout: async () => {
     const token = localStorage.getItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
+
+    if (!token) {
+      return Promise.resolve();
+    }
     const logout = await fetchUtils.fetchJson(
       BASE_URL + "/authorization/logout",
       {
