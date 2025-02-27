@@ -40,6 +40,12 @@ import CalculationFeeList from "./components/calculation-fee/CalculationFeeList"
 import CalculationFeeShow from "./components/calculation-fee/CalculationFeeShow";
 import CalculationFeeEdit from "./components/calculation-fee/CalculationFeeEdit";
 import CalculationFeeCreate from "./components/calculation-fee/CalculationFeeCreate";
+import ProfileList from "./components/profile/ProfileList";
+import { ProfileShow } from "./components/profile/ProfileShow";
+import { AddressList } from "./components/address/AddressList";
+import { AddressShow } from "./components/address/AddressShow";
+import { OrderBillingShow } from "./components/order-billing/OrderBillingShow";
+import { OrderBillingList } from "./components/order-billing/OrderBillingList";
 
 export const App = () => (
   <Admin
@@ -54,6 +60,13 @@ export const App = () => (
       edit={UserEdit}
       show={UserShow}
     />
+    <Resource
+      name="profiles"
+      list={ProfileList}
+      edit={ProductEdit}
+      show={ProfileShow}
+    />
+    <Resource name="address" list={AddressList} show={AddressShow} />
     <Resource name="wallets" list={WalletList} show={WalletShow} />
     <Resource
       name="wallet-transactions"
@@ -102,7 +115,11 @@ export const App = () => (
       show={FeatureToggleShow}
     />
     <Resource name="orders" list={OrderList} show={OrderShow} />
-
+    <Resource
+      name="order-billings"
+      list={OrderBillingList}
+      show={OrderBillingShow}
+    />
     <Resource
       name="calculation-fee"
       list={CalculationFeeList}

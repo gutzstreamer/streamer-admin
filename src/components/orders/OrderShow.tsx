@@ -1,57 +1,95 @@
 import React from "react";
 import {
-  Show,
-  SimpleShowLayout,
+  Datagrid,
   TextField,
   DateField,
   NumberField,
   ArrayField,
-  useRecordContext,
   ReferenceField,
+  SimpleShowLayout,
+  Show,
+  ImageField,
+  ChipField,
 } from "react-admin";
-import "./OrderShow.css";
 
-const OrderStatusTimeline = () => {
-  const record = useRecordContext();
-  if (!record || !record.orderStatus) return null;
+const OrderShow: React.FC = (props) => (
+  <Show {...props}>
+    <SimpleShowLayout>
+      <TextField source="id" label="ID do Pedido" />
+      <ReferenceField
+        source="userId"
+        reference="users"
+        label="Usuário"
+        link="show"
+      >
+        <TextField source="name" />
+      </ReferenceField>
+      <TextField source="paymentType" label="Tipo de Pagamento" />
+      <TextField source="shippingSpeed" label="Velocidade de Envio" />
+      <TextField source="deliveryMethodId" label="ID do Método de Entrega" />
+      <NumberField source="businessDays" label="Dias Úteis" />
+      <TextField source="paymentToken" label="Token de Pagamento" />
+      <NumberField source="installments" label="Parcelas" />
+      <NumberField source="totalAmountDiscount" label="Desconto Total" />
+      <NumberField source="totalAmountShipping" label="Frete Total" />
+      <NumberField
+        source="totalAmountProducts"
+        label="Valor Total dos Produtos"
+      />
+      <NumberField source="totalAmount" label="Valor Total" />
+      <DateField source="createdAt" label="Criado em" />
+      <DateField source="updatedAt" label="Atualizado em" />
 
-  return (
-    <div className="timeline">
-      {record.orderStatus.map((status: any, index: any) => (
-        <div key={index} className="timeline-item">
-          <div className="timeline-dot" />
-          <div className="timeline-content">
-            <div className="timeline-status">{status.name}</div>
-            <div className="timeline-date">
-              {new Date(status.createdAt).toLocaleString()}
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const OrderShow: React.FC = (props) => {
-  return (
-    <Show {...props}>
-      <SimpleShowLayout>
-        <TextField source="id" label="Order ID" />
-        <ReferenceField source="userId" reference="users">
+      <h3>Produtos do Pedido</h3>
+      <ArrayField source="orderProducts" label="Produtos">
+        <Datagrid rowClick={false}>
+          <ReferenceField
+            source="productStreamerId"
+            reference="product-streamer"
+            label="Produto Streamer"
+            link="show"
+          >
             <TextField source="name" />
-        </ReferenceField>
-        <TextField source="addressId" label="Address ID" />
-        <TextField source="paymentType" label="Payment Type" />
-        <NumberField source="totalProducts" label="Total Products" />
-        <NumberField source="totalShipping" label="Total Shipping" />
-        <DateField source="createdAt" label="Created At" />
-        <DateField source="updatedAt" label="Updated At" />
-        <ArrayField source="orderStatus" label="Order Status Timeline">
-          <OrderStatusTimeline />
-        </ArrayField>
-      </SimpleShowLayout>
-    </Show>
-  );
-};
+          </ReferenceField>
+          <NumberField source="quantity" label="Quantidade" />
+          <TextField source="color" label="Cor" />
+          <TextField source="size" label="Tamanho" />
+          <NumberField source="price" label="Preço" />
+          <ImageField source="image" label="Imagem" />
+        </Datagrid>
+      </ArrayField>
+
+      <h3>Status do Pedido</h3>
+      <ArrayField source="orderStatus" label="Status">
+        <Datagrid rowClick={false}>
+          <TextField source="id" label="ID do Status" />
+          <TextField source="name" label="Nome do Status" />
+          <DateField source="createdAt" label="Criado em" />
+          <DateField source="updatedAt" label="Atualizado em" />
+        </Datagrid>
+      </ArrayField>
+
+      <h3>Endereço de Entrega</h3>
+      <ReferenceField
+        source="addressId"
+        reference="address"
+        label="Endereço"
+        link="show"
+      >
+        <ChipField source="nickname" />
+      </ReferenceField>
+
+      <h3>Cobrança</h3>
+      <ReferenceField
+        source="billing.id"
+        reference="order-billings"
+        label="Cobrança"
+        link="show"
+      >
+        <ChipField source="status" />
+      </ReferenceField>
+    </SimpleShowLayout>
+  </Show>
+);
 
 export default OrderShow;
