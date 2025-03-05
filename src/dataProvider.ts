@@ -23,19 +23,19 @@ export const dataProvider = simpleRestProvider(apiUrl, httpClient);
 const streamerDataProvider: DataProvider = {
   ...dataProvider,
   getList: (resource, params) => {
-    let url = `${apiUrl}/${resource}`;
+    let url = `${apiUrl}/${resource}/all`;
 
-    const { filter, pagination, sort } = params;
-    const { streamerId } = filter;
+    // const { filter, pagination, sort } = params;
+    // const { streamerId } = filter;
 
-    if (resource === "donations") {
-      if(streamerId) url = `${apiUrl}/donations?streamerId=${streamerId}`;
-      else url = `${apiUrl}/donations`;
-    }
+    // if (resource === "donations") {
+    //   if (streamerId) url = `${apiUrl}/donations?streamerId=${streamerId}`;
+    //   else url = `${apiUrl}/donations`;
+    // }
 
-    if (resource === "product-streamer") {
-      if (streamerId) url = `${apiUrl}/product-streamer/streamer/${streamerId}`;
-    }
+    // if (resource === "product-streamer") {
+    //   if (streamerId) url = `${apiUrl}/product-streamer?${streamerId}`;
+    // }
 
     return httpClient(url).then(({ headers, json }) => {
       if (resource === "wallet-transactions") {

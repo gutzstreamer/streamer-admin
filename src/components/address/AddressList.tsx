@@ -11,7 +11,7 @@ export const AddressList: React.FC = (props) => (
         label="Perfil"
         link="show"
       >
-        <TextField source="nickname" />
+        <TextField source="nickname" emptyText="No nickname" />
       </ReferenceField>
       <TextField source="nickname" label="Apelido" />
       <TextField source="street" label="Rua" />
