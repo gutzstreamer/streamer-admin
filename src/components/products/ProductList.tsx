@@ -7,6 +7,7 @@ const ProductList: React.FC = (props) => (
       <TextField source="id" />
       <TextField source="name" />
       <NumberField source="cost" />
+      <TextField source="ncm" />
       <NumberField source="price" />
       <TextField source="gender" />
       <TextField source="active" />

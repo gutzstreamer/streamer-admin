@@ -40,7 +40,6 @@ const transform = (data: any) => {
             id: image.color.id || undefined,
             name: image.color.name,
             hex: image.color.hex,
-            ncm: image.color.ncm,
             sizes: image.color.sizes.map((size: any) => ({
               id: size.id || undefined,
               name: size.name,
@@ -65,6 +64,7 @@ const ProductCreate: React.FC = (props) => {
           <TextInput source="name" />
           <TextInput source="factoryName" />
           <TextInput source="description" />
+          <TextInput source="ncm" />
           <NumberInput source="cost" />
           <NumberInput source="price" />
           <SelectInput
@@ -93,7 +93,6 @@ const ProductCreate: React.FC = (props) => {
               />
               <TextInput source="color.name" label="Color Name" />
               <TextInput source="color.hex" label="Color Hex" />
-              <TextInput source="color.ncm" label="NCM" />
               <ArrayInput source="color.sizes">
                 <SimpleFormIterator>
                   <TextInput

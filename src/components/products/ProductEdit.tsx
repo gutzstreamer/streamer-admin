@@ -62,6 +62,7 @@ const ProductEdit: React.FC = (props) => (
         <TextInput source="name" />
         <TextInput source="factoryName" />
         <TextInput source="description" />
+        <TextInput source="ncm" />
         <NumberInput source="cost" />
         <NumberInput source="price" />
         <SelectInput
@@ -97,7 +98,6 @@ const ProductEdit: React.FC = (props) => (
             <TextInput source="url" label="Image URL" validate={[required()]} />
             <TextInput source="color.name" label="Color Name" />
             <TextInput source="color.hex" label="Color Hex" />
-            <TextInput source="color.ncm" label="NCM" />
             <ArrayInput source="color.sizes">
               <SimpleFormIterator>
                 <TextInput

@@ -18,6 +18,7 @@ const ProductShow: React.FC = (props) => (
       <TextField source="name" />
       <TextField source="factoryName" />
       <TextField source="description" />
+      <TextField source="ncm" />
       <NumberField source="price" />
       <NumberField source="cost" />
       <TextField source="gender" />
