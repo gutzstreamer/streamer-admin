@@ -46,6 +46,8 @@ import { AddressList } from "./components/address/AddressList";
 import { AddressShow } from "./components/address/AddressShow";
 import { OrderBillingShow } from "./components/order-billing/OrderBillingShow";
 import { OrderBillingList } from "./components/order-billing/OrderBillingList";
+import ErrorLogList from "./components/error-log/ErrorLogList";
+import ErrorLogShow from "./components/error-log/ErrorLogShow";
 
 export const App = () => (
   <Admin
@@ -126,6 +128,12 @@ export const App = () => (
       show={CalculationFeeShow}
       edit={CalculationFeeEdit}
       create={CalculationFeeCreate}
+    />
+
+    <Resource
+      name="error-log"
+      list={ErrorLogList}
+      show={ErrorLogShow}
     />
   </Admin>
 );
