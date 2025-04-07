@@ -63,7 +63,7 @@ const ProductCreate: React.FC = (props) => {
         <FormTab label="General">
           <TextInput source="name" />
           <TextInput source="factoryName" />
-          <TextInput source="description" />
+          <TextInput multiline source="description" />
           <TextInput source="ncm" />
           <NumberInput source="cost" />
           <NumberInput source="price" />
