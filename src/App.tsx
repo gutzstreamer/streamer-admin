@@ -48,6 +48,8 @@ import { OrderBillingShow } from "./components/order-billing/OrderBillingShow";
 import { OrderBillingList } from "./components/order-billing/OrderBillingList";
 import ErrorLogList from "./components/error-log/ErrorLogList";
 import ErrorLogShow from "./components/error-log/ErrorLogShow";
+import InvoiceList from "./components/invoices/InvoiceList";
+import InvoiceShow from "./components/invoices/InvoiceShow";
 
 export const App = () => (
   <Admin
@@ -117,6 +119,7 @@ export const App = () => (
       show={FeatureToggleShow}
     />
     <Resource name="orders" list={OrderList} show={OrderShow} />
+    <Resource name="invoices" list={InvoiceList} show={InvoiceShow} />
     <Resource
       name="order-billings"
       list={OrderBillingList}
@@ -130,10 +133,6 @@ export const App = () => (
       create={CalculationFeeCreate}
     />
 
-    <Resource
-      name="error-log"
-      list={ErrorLogList}
-      show={ErrorLogShow}
-    />
+    <Resource name="error-log" list={ErrorLogList} show={ErrorLogShow} />
   </Admin>
 );

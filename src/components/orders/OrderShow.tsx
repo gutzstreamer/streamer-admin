@@ -88,6 +88,16 @@ const OrderShow: React.FC = (props) => (
       >
         <ChipField source="status" />
       </ReferenceField>
+
+      <h3>Nota Fiscal</h3>
+      <ReferenceField
+        source="invoice.id"
+        reference="invoices"
+        label="Nota Fiscal"
+        link="show"
+      >
+        <ChipField source="accessKey" />
+      </ReferenceField>
     </SimpleShowLayout>
   </Show>
 );
