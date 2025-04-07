@@ -8,6 +8,7 @@ const UserEdit: React.FC = (props) => {
         <TextInput source="id" disabled />
         <TextInput source="name" validate={required()} />
         <TextInput source="email" validate={required()} />
+        <TextInput source="phone" validate={required()} />
         <TextInput source="identityNumber" validate={required()} />
         <BooleanInput source="active" />
       </SimpleForm>

@@ -7,6 +7,7 @@ const UserShow: React.FC = (props) => (
             <TextField source="id" />
             <TextField source="name" />
             <TextField source="email" />
+            <TextField source="phone" />
             <TextField source="identityNumber" />
             <TextField source="active" />
         </SimpleShowLayout>
