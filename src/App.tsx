@@ -50,6 +50,8 @@ import ErrorLogList from "./components/error-log/ErrorLogList";
 import ErrorLogShow from "./components/error-log/ErrorLogShow";
 import InvoiceList from "./components/invoices/InvoiceList";
 import InvoiceShow from "./components/invoices/InvoiceShow";
+import CommissionStreamerList from "./components/commission-streamer/CommissionStreamerList";
+import CommissionStreamerShow from "./components/commission-streamer/CommissionStreamerShow";
 
 export const App = () => (
   <Admin
@@ -83,6 +85,11 @@ export const App = () => (
       edit={StreamerEdit}
       show={StreamerShow}
       create={StreamerCreate}
+    />
+    <Resource
+      name="commission-streamer"
+      list={CommissionStreamerList}
+      show={CommissionStreamerShow}
     />
     <Resource
       name="product-streamer"
