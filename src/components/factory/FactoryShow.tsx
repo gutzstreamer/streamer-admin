@@ -6,6 +6,7 @@ import {
   Datagrid,
   NumberField,
   ReferenceField,
+  DateField,
 } from "react-admin";
 
 export const FactoryShow: React.FC = () => (
@@ -37,14 +38,14 @@ export const FactoryShow: React.FC = () => (
       <TextField source="customerEmail" label="Email do Cliente" />
 
       <ArrayField source="dimonaOrderStatus" label="Status na Dimona">
-        <Datagrid>
+        <Datagrid rowClick={false}>
           <TextField source="status" label="Status" />
-          <TextField source="date" label="Data" />
+          <DateField source="createdAt" label="Data" />
         </Datagrid>
       </ArrayField>
 
       <ArrayField source="items" label="Itens do Pedido">
-        <Datagrid>
+        <Datagrid rowClick={false}>
           <TextField source="name" label="Produto" />
           <TextField source="sku" label="SKU" />
           <NumberField source="qty" label="Quantidade" />
