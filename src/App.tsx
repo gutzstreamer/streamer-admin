@@ -52,6 +52,8 @@ import InvoiceList from "./components/invoices/InvoiceList";
 import InvoiceShow from "./components/invoices/InvoiceShow";
 import CommissionStreamerList from "./components/commission-streamer/CommissionStreamerList";
 import CommissionStreamerShow from "./components/commission-streamer/CommissionStreamerShow";
+import { FactoryList } from "./components/factory/FactoryList";
+import { FactoryShow } from "./components/factory/FactoryShow";
 
 export const App = () => (
   <Admin
@@ -132,6 +134,7 @@ export const App = () => (
       list={OrderBillingList}
       show={OrderBillingShow}
     />
+    <Resource name="factory" list={FactoryList} show={FactoryShow} />
     <Resource
       name="calculation-fee"
       list={CalculationFeeList}
