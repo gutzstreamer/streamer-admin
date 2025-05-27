@@ -54,6 +54,9 @@ import CommissionStreamerList from "./components/commission-streamer/CommissionS
 import CommissionStreamerShow from "./components/commission-streamer/CommissionStreamerShow";
 import { FactoryList } from "./components/factory/FactoryList";
 import { FactoryShow } from "./components/factory/FactoryShow";
+import StreamerRequestList from "./components/streamer-request/StrreamerRequestList";
+import StreamerRequestShow from "./components/streamer-request/StreamerRequestShow";
+import StreamerRequestEdit from "./components/streamer-request/StreamerRequestEdit";
 
 export const App = () => (
   <Admin
@@ -80,6 +83,12 @@ export const App = () => (
       name="wallet-transactions"
       list={WalletTransactionList}
       show={WalletTransactionShow}
+    />
+    <Resource
+      name="streamer-requests"
+      list={StreamerRequestList}
+      show={StreamerRequestShow}
+      edit={StreamerRequestEdit}
     />
     <Resource
       name="streamers"

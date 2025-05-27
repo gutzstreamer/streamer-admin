@@ -10,6 +10,7 @@ const WalletShow: React.FC = (props) => (
                 <TextField source="name" />
             </ReferenceField>
             <NumberField source="balance" />
+            <NumberField source="pendingBalance" />
             <TextField source="type" />
             <TextField source="currency" />
             <TextField source="status" />
