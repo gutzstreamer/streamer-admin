@@ -1,5 +1,11 @@
-import React from 'react';
-import { BooleanInput, Edit, SimpleForm, TextInput, required } from 'react-admin';
+import React from "react";
+import {
+  BooleanInput,
+  Edit,
+  SimpleForm,
+  TextInput,
+  required,
+} from "react-admin";
 
 const UserEdit: React.FC = (props) => {
   return (
@@ -11,6 +17,7 @@ const UserEdit: React.FC = (props) => {
         <TextInput source="phone" validate={required()} />
         <TextInput source="identityNumber" validate={required()} />
         <BooleanInput source="active" />
+        <BooleanInput source="blocked" />
       </SimpleForm>
     </Edit>
   );

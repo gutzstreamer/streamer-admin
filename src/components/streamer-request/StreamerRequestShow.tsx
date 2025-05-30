@@ -4,6 +4,7 @@ import {
   BooleanField,
   ChipField,
   DateField,
+  ReferenceField,
   Show,
   SimpleShowLayout,
   SingleFieldList,
@@ -20,6 +21,9 @@ const SteamerRequestShow: React.FC = () => (
       <TextField source="description" />
       <DateField source="createdAt" />
       <DateField source="updatedAt" />
+      <ReferenceField source="userId" reference="users">
+        <TextField source="name" />
+      </ReferenceField>
       <BooleanField source="approved" />
       <ArrayField source="links">
         <SingleFieldList linkType={false}>
