@@ -11,9 +11,10 @@ import {
   ImageField,
   ChipField,
 } from "react-admin";
+import OrderShowActions from "./OrderShowActions";
 
 const OrderShow: React.FC = (props) => (
-  <Show {...props}>
+  <Show {...props} actions={<OrderShowActions /> }>
     <SimpleShowLayout>
       <TextField source="id" label="ID do Pedido" />
       <ReferenceField

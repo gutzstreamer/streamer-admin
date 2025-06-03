@@ -3,6 +3,16 @@ import simpleRestProvider from "ra-data-simple-rest";
 
 const apiUrl = import.meta.env.VITE_SIMPLE_REST_URL;
 
+export interface DataProviderWithCustomMethods extends DataProvider {
+  retry: (
+    resource: string,
+    params: {
+      id: string;
+    },
+    type?: "invoice" | "factory",
+  ) => Promise<any>;
+}
+
 const getToken = () => {
   return localStorage.getItem("token");
 };
@@ -20,23 +30,10 @@ const httpClient = (url: string, options: fetchUtils.Options = {}) => {
 
 export const dataProvider = simpleRestProvider(apiUrl, httpClient);
 
-const streamerDataProvider: DataProvider = {
+const streamerDataProvider: DataProviderWithCustomMethods = {
   ...dataProvider,
   getList: (resource, params) => {
     let url = `${apiUrl}/${resource}/all`;
-
-    // const { filter, pagination, sort } = params;
-    // const { streamerId } = filter;
-
-    // if (resource === "donations") {
-    //   if (streamerId) url = `${apiUrl}/donations?streamerId=${streamerId}`;
-    //   else url = `${apiUrl}/donations`;
-    // }
-
-    // if (resource === "product-streamer") {
-    //   if (streamerId) url = `${apiUrl}/product-streamer?${streamerId}`;
-    // }
-
     return httpClient(url).then(({ headers, json }) => {
       if (resource === "wallet-transactions") {
         return {
@@ -48,6 +45,17 @@ const streamerDataProvider: DataProvider = {
         data: json,
         total: json.length ?? 0,
       };
+    });
+  },
+  retry: function (
+    resource: string,
+    params: {
+      id: string;
+    },
+    type: "invoice" | "factory" = "invoice",
+  ): Promise<any> {
+    return httpClient(`${apiUrl}/${resource}/${params.id}/retry/${type}`, {
+      method: "POST",
     });
   },
 };

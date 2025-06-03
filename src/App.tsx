@@ -46,8 +46,6 @@ import { AddressList } from "./components/address/AddressList";
 import { AddressShow } from "./components/address/AddressShow";
 import { OrderBillingShow } from "./components/order-billing/OrderBillingShow";
 import { OrderBillingList } from "./components/order-billing/OrderBillingList";
-import ErrorLogList from "./components/error-log/ErrorLogList";
-import ErrorLogShow from "./components/error-log/ErrorLogShow";
 import InvoiceList from "./components/invoices/InvoiceList";
 import InvoiceShow from "./components/invoices/InvoiceShow";
 import CommissionStreamerList from "./components/commission-streamer/CommissionStreamerList";
@@ -65,6 +63,7 @@ export const App = () => (
     authProvider={authProvider}
   >
     <Resource
+      options={{ label: "Users" }}
       name="users"
       create={UserCreate}
       list={UserList}
@@ -72,25 +71,39 @@ export const App = () => (
       show={UserShow}
     />
     <Resource
+      options={{ label: "Profiles" }}
       name="profiles"
       list={ProfileList}
       edit={ProductEdit}
       show={ProfileShow}
     />
-    <Resource name="address" list={AddressList} show={AddressShow} />
-    <Resource name="wallets" list={WalletList} show={WalletShow} />
     <Resource
+      name="address"
+      list={AddressList}
+      show={AddressShow}
+      options={{ label: "Addresses" }}
+    />
+    <Resource
+      name="wallets"
+      list={WalletList}
+      show={WalletShow}
+      options={{ label: "Wallets" }}
+    />
+    <Resource
+      options={{ label: "Wallet Transactions" }}
       name="wallet-transactions"
       list={WalletTransactionList}
       show={WalletTransactionShow}
     />
     <Resource
+      options={{ label: "Streamer Requests" }}
       name="streamer-requests"
       list={StreamerRequestList}
       show={StreamerRequestShow}
       edit={StreamerRequestEdit}
     />
     <Resource
+      options={{ label: "Streamer Profile" }}
       name="streamers"
       list={StreamerList}
       edit={StreamerEdit}
@@ -98,17 +111,25 @@ export const App = () => (
       create={StreamerCreate}
     />
     <Resource
+      options={{ label: "Streamer Commissions" }}
       name="commission-streamer"
       list={CommissionStreamerList}
       show={CommissionStreamerShow}
     />
     <Resource
+      options={{ label: "Streamer Products" }}
       name="product-streamer"
       list={ProductStreamerList}
       show={ProductStreamerShow}
     />
-    <Resource name="donations" list={DonateList} show={DonateShow} />
     <Resource
+      name="donations"
+      list={DonateList}
+      show={DonateShow}
+      options={{ label: "Streamer Donations" }}
+    />
+    <Resource
+      options={{ label: "Subscription Plans" }}
       name="subscription-plan"
       list={SubscriptionPlanListCopy}
       create={SubscriptionPlanCreate}
@@ -116,6 +137,7 @@ export const App = () => (
       show={SubscriptionPlanShow}
     />
     <Resource
+      options={{ label: "Product Categories" }}
       name="categories"
       list={CategoryList}
       create={CategoryCreate}
@@ -123,6 +145,7 @@ export const App = () => (
       show={CategoryShow}
     />
     <Resource
+      options={{ label: "Products" }}
       name="products"
       list={ProductList}
       create={ProductCreate}
@@ -130,28 +153,39 @@ export const App = () => (
       show={ProductShow}
     />
     <Resource
+      options={{ label: "Feature Toggles" }}
       name="feature-toggles"
       list={FeatureToggleList}
       create={FeatureToggleCreate}
       edit={FeatureToggleEdit}
       show={FeatureToggleShow}
     />
-    <Resource name="orders" list={OrderList} show={OrderShow} />
-    <Resource name="invoices" list={InvoiceList} show={InvoiceShow} />
     <Resource
+      name="orders"
+      list={OrderList}
+      show={OrderShow}
+      options={{ label: "Orders" }}
+    />
+    <Resource
+      name="invoices"
+      list={InvoiceList}
+      show={InvoiceShow}
+      options={{ label: "Invoices" }}
+    />
+    <Resource
+      options={{ label: "Order Billings" }}
       name="order-billings"
       list={OrderBillingList}
       show={OrderBillingShow}
     />
     <Resource name="factory" list={FactoryList} show={FactoryShow} />
     <Resource
+      options={{ label: "Calculation Fees" }}
       name="calculation-fee"
       list={CalculationFeeList}
       show={CalculationFeeShow}
       edit={CalculationFeeEdit}
       create={CalculationFeeCreate}
     />
-
-    <Resource name="error-log" list={ErrorLogList} show={ErrorLogShow} />
   </Admin>
 );
