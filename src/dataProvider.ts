@@ -32,26 +32,39 @@ export const dataProvider = simpleRestProvider(apiUrl, httpClient);
 
 const streamerDataProvider: DataProviderWithCustomMethods = {
   ...dataProvider,
+
   getList: (resource, params) => {
-    let url = `${apiUrl}/${resource}/all`;
+    const { filter, pagination, sort } = params;
+
+    // 🔥 Limpa filtros vazios ou nulos
+    const cleanFilter = Object.fromEntries(
+      Object.entries(filter).filter(([_, v]) => v !== undefined && v !== ""),
+    );
+
+    const query = {
+      ...cleanFilter,
+      page: pagination?.page ?? 1,
+      pageSize: pagination?.perPage ?? 10,
+      sortField: sort?.field,
+      sortOrder: sort?.order,
+    };
+
+    const queryString = new URLSearchParams(query as any).toString();
+
+    const hasFilter = Object.keys(cleanFilter).length > 0;
+    const url = `${apiUrl}/${resource}${hasFilter ? "" : "/all"}?${queryString}`;
+
     return httpClient(url).then(({ headers, json }) => {
-      if (resource === "wallet-transactions") {
-        return {
-          data: json.content,
-          total: json.pagination.total,
-        };
-      }
       return {
-        data: json,
-        total: json.length ?? 0,
+        data: json.data ? json.data : json,
+        total: json.pagination?.total ?? json.total ?? 0,
       };
     });
   },
+
   retry: function (
     resource: string,
-    params: {
-      id: string;
-    },
+    params: { id: string },
     type: "invoice" | "factory" = "invoice",
   ): Promise<any> {
     return httpClient(`${apiUrl}/${resource}/${params.id}/retry/${type}`, {

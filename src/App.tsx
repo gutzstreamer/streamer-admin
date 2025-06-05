@@ -120,7 +120,7 @@ export const App = () => (
       show={CommissionStreamerShow}
     />
     <Resource
-      options={{ label: "Withdrawal Requests" }}
+      options={{ label: "Streamer Withdrawal" }}
       name="withdrawal-requests"
       list={WithdrawalList}
       edit={WithdrawalEdit}
