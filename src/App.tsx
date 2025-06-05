@@ -55,6 +55,9 @@ import { FactoryShow } from "./components/factory/FactoryShow";
 import StreamerRequestList from "./components/streamer-request/StrreamerRequestList";
 import StreamerRequestShow from "./components/streamer-request/StreamerRequestShow";
 import StreamerRequestEdit from "./components/streamer-request/StreamerRequestEdit";
+import { WithdrawalList } from "./components/withdrawal-requests/WithdrawalRequestList";
+import { WithdrawalEdit } from "./components/withdrawal-requests/WithdrawalRequestEdit";
+import { WithdrawalShow } from "./components/withdrawal-requests/WithdrawalRequestShow";
 
 export const App = () => (
   <Admin
@@ -115,6 +118,13 @@ export const App = () => (
       name="commission-streamer"
       list={CommissionStreamerList}
       show={CommissionStreamerShow}
+    />
+    <Resource
+      options={{ label: "Withdrawal Requests" }}
+      name="withdrawal-requests"
+      list={WithdrawalList}
+      edit={WithdrawalEdit}
+      show={WithdrawalShow}
     />
     <Resource
       options={{ label: "Streamer Products" }}
