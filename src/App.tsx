@@ -58,6 +58,10 @@ import StreamerRequestEdit from "./components/streamer-request/StreamerRequestEd
 import { WithdrawalList } from "./components/withdrawal-requests/WithdrawalRequestList";
 import { WithdrawalEdit } from "./components/withdrawal-requests/WithdrawalRequestEdit";
 import { WithdrawalShow } from "./components/withdrawal-requests/WithdrawalRequestShow";
+import { OrderCancelCreate } from "./components/order-cancel/OrderCancelCreate";
+import { OrderCancelEdit } from "./components/order-cancel/OrderCancelEdit";
+import { OrderCancelList } from "./components/order-cancel/OrderCancelList";
+import { OrderCancelShow } from "./components/order-cancel/OrderCancelShow";
 
 export const App = () => (
   <Admin
@@ -175,6 +179,14 @@ export const App = () => (
       list={OrderList}
       show={OrderShow}
       options={{ label: "Orders" }}
+    />
+    <Resource
+      options={{ label: "Order Cancel" }}
+      name="order-cancel"
+      list={OrderCancelList}
+      edit={OrderCancelEdit}
+      show={OrderCancelShow}
+      create={OrderCancelCreate}
     />
     <Resource
       name="invoices"
