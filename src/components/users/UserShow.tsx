@@ -5,7 +5,6 @@ import {
   BooleanField,
   ArrayField,
   Datagrid,
-  DateField,
   ReferenceField,
 } from "react-admin";
 
@@ -42,16 +41,6 @@ const UserShow = (props: any) => (
           <ReferenceField source="id" reference="wallets">
             <TextField source="type" />
           </ReferenceField>
-        </Datagrid>
-      </ArrayField>
-
-      {/* Sessions - array */}
-      <ArrayField source="sessions" label="Sessions">
-        <Datagrid>
-          <TextField source="id" />
-          <TextField source="device" />
-          <BooleanField source="isActive" />
-          <DateField source="createdAt" />
         </Datagrid>
       </ArrayField>
     </SimpleShowLayout>

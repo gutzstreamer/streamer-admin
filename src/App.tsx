@@ -65,6 +65,35 @@ import { OrderCancelShow } from "./components/order-cancel/OrderCancelShow";
 import { UserSubscriptionList } from "./components/subscription/UserSubscriptionList";
 import { UserSubscriptionEdit } from "./components/subscription/UserSubscriptionEdit";
 import { UserSubscriptionShow } from "./components/subscription/UserSubscriptionShow";
+import SessionList from "./components/sessions/SessionList";
+import SessionShow from "./components/sessions/SessionShow";
+import {
+  People,
+  Subscriptions,
+  AccountCircle,
+  LocationOn,
+  AccountBalanceWallet,
+  SwapHoriz,
+  AssignmentInd,
+  Storefront,
+  MonetizationOn,
+  LocalMall,
+  Favorite,
+  Category,
+  Settings,
+  ShoppingCart,
+  Cancel,
+  Receipt,
+  Payments,
+  Factory,
+  Calculate,
+  ToggleOn,
+  Visibility,
+  Edit,
+  AddCircle,
+  PlaylistAddCheck,
+  SupportAgent,
+} from "@mui/icons-material";
 
 export const App = () => (
   <Admin
@@ -75,6 +104,7 @@ export const App = () => (
     <Resource
       options={{ label: "Users" }}
       name="users"
+      icon={People}
       create={UserCreate}
       list={UserList}
       edit={UserEdit}
@@ -83,25 +113,36 @@ export const App = () => (
     <Resource
       options={{ label: "User Subscriptions" }}
       name="subscription"
+      icon={Subscriptions}
       list={UserSubscriptionList}
       edit={UserSubscriptionEdit}
       show={UserSubscriptionShow}
     />
     <Resource
+      options={{ label: "User Sessions" }}
+      name="sessions"
+      icon={Visibility}
+      list={SessionList}
+      show={SessionShow}
+    />
+    <Resource
       options={{ label: "Profiles" }}
       name="profiles"
+      icon={AccountCircle}
       list={ProfileList}
       edit={ProductEdit}
       show={ProfileShow}
     />
     <Resource
       name="address"
+      icon={LocationOn}
       list={AddressList}
       show={AddressShow}
       options={{ label: "Addresses" }}
     />
     <Resource
       name="wallets"
+      icon={AccountBalanceWallet}
       list={WalletList}
       show={WalletShow}
       options={{ label: "Wallets" }}
@@ -109,12 +150,14 @@ export const App = () => (
     <Resource
       options={{ label: "Wallet Transactions" }}
       name="wallet-transactions"
+      icon={SwapHoriz}
       list={WalletTransactionList}
       show={WalletTransactionShow}
     />
     <Resource
       options={{ label: "Streamer Requests" }}
       name="streamer-requests"
+      icon={SupportAgent}
       list={StreamerRequestList}
       show={StreamerRequestShow}
       edit={StreamerRequestEdit}
@@ -122,6 +165,7 @@ export const App = () => (
     <Resource
       options={{ label: "Streamer Profile" }}
       name="streamers"
+      icon={Storefront}
       list={StreamerList}
       edit={StreamerEdit}
       show={StreamerShow}
@@ -130,12 +174,14 @@ export const App = () => (
     <Resource
       options={{ label: "Streamer Commissions" }}
       name="commission-streamer"
+      icon={MonetizationOn}
       list={CommissionStreamerList}
       show={CommissionStreamerShow}
     />
     <Resource
       options={{ label: "Streamer Withdrawal" }}
       name="withdrawal-requests"
+      icon={MonetizationOn}
       list={WithdrawalList}
       edit={WithdrawalEdit}
       show={WithdrawalShow}
@@ -143,11 +189,13 @@ export const App = () => (
     <Resource
       options={{ label: "Streamer Products" }}
       name="product-streamer"
+      icon={LocalMall}
       list={ProductStreamerList}
       show={ProductStreamerShow}
     />
     <Resource
       name="donations"
+      icon={Favorite}
       list={DonateList}
       show={DonateShow}
       options={{ label: "Streamer Donations" }}
@@ -155,6 +203,7 @@ export const App = () => (
     <Resource
       options={{ label: "Subscription Plans" }}
       name="subscription-plan"
+      icon={Subscriptions}
       list={SubscriptionPlanListCopy}
       create={SubscriptionPlanCreate}
       edit={SubscriptionPlanEdit}
@@ -163,6 +212,7 @@ export const App = () => (
     <Resource
       options={{ label: "Product Categories" }}
       name="categories"
+      icon={Category}
       list={CategoryList}
       create={CategoryCreate}
       edit={CategoryEdit}
@@ -171,6 +221,7 @@ export const App = () => (
     <Resource
       options={{ label: "Products" }}
       name="products"
+      icon={LocalMall}
       list={ProductList}
       create={ProductCreate}
       edit={ProductEdit}
@@ -179,6 +230,7 @@ export const App = () => (
     <Resource
       options={{ label: "Feature Toggles" }}
       name="feature-toggles"
+      icon={ToggleOn}
       list={FeatureToggleList}
       create={FeatureToggleCreate}
       edit={FeatureToggleEdit}
@@ -186,6 +238,7 @@ export const App = () => (
     />
     <Resource
       name="orders"
+      icon={ShoppingCart}
       list={OrderList}
       show={OrderShow}
       options={{ label: "Orders" }}
@@ -193,6 +246,7 @@ export const App = () => (
     <Resource
       options={{ label: "Order Cancel" }}
       name="order-cancel"
+      icon={Cancel}
       list={OrderCancelList}
       edit={OrderCancelEdit}
       show={OrderCancelShow}
@@ -200,6 +254,7 @@ export const App = () => (
     />
     <Resource
       name="invoices"
+      icon={Receipt}
       list={InvoiceList}
       show={InvoiceShow}
       options={{ label: "Invoices" }}
@@ -207,13 +262,20 @@ export const App = () => (
     <Resource
       options={{ label: "Order Billings" }}
       name="order-billings"
+      icon={Payments}
       list={OrderBillingList}
       show={OrderBillingShow}
     />
-    <Resource name="factory" list={FactoryList} show={FactoryShow} />
+    <Resource
+      name="factory"
+      icon={Factory}
+      list={FactoryList}
+      show={FactoryShow}
+    />
     <Resource
       options={{ label: "Calculation Fees" }}
       name="calculation-fee"
+      icon={Calculate}
       list={CalculationFeeList}
       show={CalculationFeeShow}
       edit={CalculationFeeEdit}
