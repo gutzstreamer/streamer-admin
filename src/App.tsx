@@ -62,6 +62,9 @@ import { OrderCancelCreate } from "./components/order-cancel/OrderCancelCreate";
 import { OrderCancelEdit } from "./components/order-cancel/OrderCancelEdit";
 import { OrderCancelList } from "./components/order-cancel/OrderCancelList";
 import { OrderCancelShow } from "./components/order-cancel/OrderCancelShow";
+import { UserSubscriptionList } from "./components/subscription/UserSubscriptionList";
+import { UserSubscriptionEdit } from "./components/subscription/UserSubscriptionEdit";
+import { UserSubscriptionShow } from "./components/subscription/UserSubscriptionShow";
 
 export const App = () => (
   <Admin
@@ -76,6 +79,13 @@ export const App = () => (
       list={UserList}
       edit={UserEdit}
       show={UserShow}
+    />
+    <Resource
+      options={{ label: "User Subscriptions" }}
+      name="subscription"
+      list={UserSubscriptionList}
+      edit={UserSubscriptionEdit}
+      show={UserSubscriptionShow}
     />
     <Resource
       options={{ label: "Profiles" }}

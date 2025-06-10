@@ -1,7 +1,15 @@
-import React from "react";
-import { Show, SimpleShowLayout, TextField } from "react-admin";
+import {
+  Show,
+  SimpleShowLayout,
+  TextField,
+  BooleanField,
+  ArrayField,
+  Datagrid,
+  DateField,
+  ReferenceField,
+} from "react-admin";
 
-const UserShow: React.FC = (props) => (
+const UserShow = (props: any) => (
   <Show {...props}>
     <SimpleShowLayout>
       <TextField source="id" />
@@ -9,8 +17,43 @@ const UserShow: React.FC = (props) => (
       <TextField source="email" />
       <TextField source="phone" />
       <TextField source="identityNumber" />
-      <TextField source="active" />
-      <TextField source="blocked" />
+      <BooleanField source="active" />
+      <BooleanField source="blocked" />
+
+      <ReferenceField
+        source="subscription.id"
+        reference="subscription"
+        label="Subscription"
+      >
+        <TextField source="id" />
+      </ReferenceField>
+
+      <ReferenceField
+        source="subscription.planId"
+        reference="subscription-plan"
+        label="Plan Name"
+      >
+        <TextField source="name" />
+      </ReferenceField>
+
+      {/* Wallets - array */}
+      <ArrayField source="wallets" label="Wallets">
+        <Datagrid>
+          <ReferenceField source="id" reference="wallets">
+            <TextField source="type" />
+          </ReferenceField>
+        </Datagrid>
+      </ArrayField>
+
+      {/* Sessions - array */}
+      <ArrayField source="sessions" label="Sessions">
+        <Datagrid>
+          <TextField source="id" />
+          <TextField source="device" />
+          <BooleanField source="isActive" />
+          <DateField source="createdAt" />
+        </Datagrid>
+      </ArrayField>
     </SimpleShowLayout>
   </Show>
 );
