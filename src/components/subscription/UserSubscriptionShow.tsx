@@ -15,6 +15,13 @@ export const UserSubscriptionShow = () => (
       <TextField source="status" />
       <DateField source="createdAt" showTime />
       <DateField source="updatedAt" showTime />
+      <ReferenceField
+        source="usage.id"
+        reference="subscription-usages"
+        link="show"
+      >
+        <TextField source="id" />
+      </ReferenceField>
     </SimpleShowLayout>
   </Show>
 );

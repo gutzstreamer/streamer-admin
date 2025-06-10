@@ -94,6 +94,10 @@ import {
   PlaylistAddCheck,
   SupportAgent,
 } from "@mui/icons-material";
+import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
+import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
+import { SubscriptionUsageEdit } from "./components/subscription-usages/SubscriptionUsageEdit";
+import { SubscriptionUsageShow } from "./components/subscription-usages/SubscriptionUsageShow";
 
 export const App = () => (
   <Admin
@@ -117,6 +121,15 @@ export const App = () => (
       list={UserSubscriptionList}
       edit={UserSubscriptionEdit}
       show={UserSubscriptionShow}
+    />
+    <Resource
+      options={{ label: "User Subscription Usage" }}
+      name="subscription-usages"
+      icon={Subscriptions}
+      list={SubscriptionUsageList}
+      show={SubscriptionUsageShow}
+      edit={SubscriptionUsageEdit}
+      create={SubscriptionUsageCreate}
     />
     <Resource
       options={{ label: "User Sessions" }}
