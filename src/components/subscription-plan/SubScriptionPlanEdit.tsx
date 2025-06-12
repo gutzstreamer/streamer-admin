@@ -10,8 +10,8 @@ const SubscriptionPlanEdit: React.FC = (props) => (
             <NumberInput source="duration" />
             <NumberInput source="donationWithDrawallFee" />
             <NumberInput source="donationWithDrawallLimit" />
-            <NumberInput source="storeWithDrawallFee" />
-            <NumberInput source="storeWithDrawallLimit" />
+            <NumberInput source="marketWithDrawallFee" />
+            <NumberInput source="marketWithDrawallLimit" />
         </SimpleForm>
     </Edit>
 );

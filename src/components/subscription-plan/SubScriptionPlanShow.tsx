@@ -11,8 +11,8 @@ const SubscriptionPlanShow: React.FC = (props) => (
             <NumberField source="duration" />
             <NumberField source="donationWithDrawallFee" />
             <NumberField source="donationWithDrawallLimit" />
-            <NumberField source="storeWithDrawallFee" />
-            <NumberField source="storeWithDrawallLimit" />
+            <NumberField source="marketWithDrawallFee" />
+            <NumberField source="marketWithDrawallLimit" />
         </SimpleShowLayout>
     </Show>
 );

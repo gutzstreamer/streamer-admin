@@ -115,6 +115,15 @@ export const App = () => (
       show={UserShow}
     />
     <Resource
+      options={{ label: "Subscription Plans" }}
+      name="subscription-plan"
+      icon={Subscriptions}
+      list={SubscriptionPlanListCopy}
+      create={SubscriptionPlanCreate}
+      edit={SubscriptionPlanEdit}
+      show={SubscriptionPlanShow}
+    />
+    <Resource
       options={{ label: "User Subscriptions" }}
       name="subscription"
       icon={Subscriptions}
@@ -213,15 +222,7 @@ export const App = () => (
       show={DonateShow}
       options={{ label: "Streamer Donations" }}
     />
-    <Resource
-      options={{ label: "Subscription Plans" }}
-      name="subscription-plan"
-      icon={Subscriptions}
-      list={SubscriptionPlanListCopy}
-      create={SubscriptionPlanCreate}
-      edit={SubscriptionPlanEdit}
-      show={SubscriptionPlanShow}
-    />
+
     <Resource
       options={{ label: "Product Categories" }}
       name="categories"
