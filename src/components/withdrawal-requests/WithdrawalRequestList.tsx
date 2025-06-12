@@ -36,6 +36,8 @@ export const WithdrawalList = () => (
     <Datagrid rowClick="show">
       <TextField source="id" label="ID" />
       <NumberField source="amount" label="Valor" />
+      <NumberField source="fee" label="Taxa" />
+      <NumberField source="finalAmount" label="Valor Final" />
       <TextField source="status" label="Status" />
       <TextField source="pixKey" label="Chave Pix" />
       <TextField source="pixKeyType" label="Tipo Pix" />
