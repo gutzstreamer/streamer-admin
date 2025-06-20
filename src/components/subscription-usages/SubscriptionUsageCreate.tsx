@@ -14,7 +14,7 @@ export const SubscriptionUsageCreate = () => (
           optionText={(record) => `${record.plan.name} (${record.user.name})`}
         />
       </ReferenceInput>
-      <NumberInput source="currentStoreWithdrawalUsed" />
+      <NumberInput source="currentMarketWithdrawalUsed" />
       <NumberInput source="currentDonationWithdrawalUsed" />
     </SimpleForm>
   </Create>

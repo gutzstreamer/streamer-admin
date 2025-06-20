@@ -13,7 +13,7 @@ const DisabledFields = () => {
   const record = useRecordContext();
   const approved = useWatch({ name: "approved", control });
 
-  const isApproved = approved ?? record?.approved;
+  const isApproved = record?.approved;
 
   return (
     <>

@@ -11,6 +11,17 @@ export interface DataProviderWithCustomMethods extends DataProvider {
     },
     type?: "invoice" | "factory",
   ) => Promise<any>;
+
+  approveProductStreamer: (
+    resource: string,
+    params: {
+      id: string;
+      data: {
+        status: "ACTIVE" | "INACTIVE" | "PENDING" | "REJECTED";
+        reason?: string;
+      };
+    },
+  ) => Promise<any>;
 }
 
 const getToken = () => {
@@ -69,6 +80,21 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
   ): Promise<any> {
     return httpClient(`${apiUrl}/${resource}/${params.id}/retry/${type}`, {
       method: "POST",
+    });
+  },
+  approveProductStreamer: function (
+    resource: string,
+    params: {
+      id: string;
+      data: {
+        status: "ACTIVE" | "INACTIVE" | "PENDING" | "REJECTED";
+        reason?: string;
+      };
+    },
+  ): Promise<any> {
+    return httpClient(`${apiUrl}/${resource}/${params.id}/status`, {
+      method: "PATCH",
+      body: JSON.stringify(params.data),
     });
   },
 };

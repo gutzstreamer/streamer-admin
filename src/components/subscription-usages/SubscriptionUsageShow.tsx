@@ -18,7 +18,7 @@ export const SubscriptionUsageShow = () => (
       >
         <TextField source="id" />
       </ReferenceField>
-      <NumberField source="currentStoreWithdrawalUsed" />
+      <NumberField source="currentMarketWithdrawalUsed" />
       <NumberField source="currentDonationWithdrawalUsed" />
       <DateField source="createdAt" showTime />
       <DateField source="updatedAt" showTime />

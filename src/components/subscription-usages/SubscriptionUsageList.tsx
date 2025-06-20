@@ -14,7 +14,7 @@ export const SubscriptionUsageList = () => (
       <ReferenceField source="subscriptionId" reference="subscription">
         <TextField source="name" />
       </ReferenceField>
-      <NumberField source="currentStoreWithdrawalUsed" />
+      <NumberField source="currentMarketWithdrawalUsed" />
       <NumberField source="currentDonationWithdrawalUsed" />
       <DateField source="createdAt" showTime />
       <DateField source="updatedAt" showTime />
