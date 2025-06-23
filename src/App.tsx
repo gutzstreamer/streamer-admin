@@ -15,9 +15,7 @@ import StreamerShow from "./components/streamers/StreamerShow";
 import StreamerCreate from "./components/streamers/StreamerCreate";
 import UserShow from "./components/users/UserShow";
 import ProductCreate from "./components/products/ProductCreate";
-import ProductEdit from "./components/products/ProductEdit";
-import ProductList from "./components/products/ProductList";
-import ProductShow from "./components/products/ProductShow";
+// import ProductEdit from "./components/products/ProductEdit";
 import WalletList from "./components/wallet/WalletList";
 import WalletTransactionList from "./components/wallet-transactions/WalletTransactionList";
 import WalletTransactionShow from "./components/wallet-transactions/WalletTransactionShow";
@@ -74,13 +72,11 @@ import {
   LocationOn,
   AccountBalanceWallet,
   SwapHoriz,
-  AssignmentInd,
   Storefront,
   MonetizationOn,
   LocalMall,
   Favorite,
   Category,
-  Settings,
   ShoppingCart,
   Cancel,
   Receipt,
@@ -89,15 +85,34 @@ import {
   Calculate,
   ToggleOn,
   Visibility,
-  Edit,
-  AddCircle,
-  PlaylistAddCheck,
   SupportAgent,
+  Palette,
+  Straighten,
+  Wc,
 } from "@mui/icons-material";
 import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
 import { SubscriptionUsageEdit } from "./components/subscription-usages/SubscriptionUsageEdit";
 import { SubscriptionUsageShow } from "./components/subscription-usages/SubscriptionUsageShow";
+import { ColorCreate } from "./components/colors/ColorCreate";
+import { ColorEdit } from "./components/colors/ColorEdit";
+import { ColorList } from "./components/colors/ColorList";
+import { ColorShow } from "./components/colors/ColorShow";
+import { GenderCreate } from "./components/genders/GenderCreate";
+import { GenderEdit } from "./components/genders/GenderEdit";
+import { GenderList } from "./components/genders/GenderList";
+import { GenderShow } from "./components/genders/GenderShow";
+import { SizeCreate } from "./components/sizes/SizeCreate";
+import { SizeEdit } from "./components/sizes/SizeEdit";
+import { SizeList } from "./components/sizes/SizeList";
+import { SizeShow } from "./components/sizes/SizeShow";
+import FactoryProductCreate from "./components/factory-product/FactoryProductCreate";
+import FactoryProductEdit from "./components/factory-product/FactoryProductEdit";
+import FactoryProductList from "./components/factory-product/FactoryProductList";
+import FactoryProductShow from "./components/factory-product/FactoryProductShow";
+import { ProductShow } from "./components/products/ProductShow";
+import { ProductList } from "./components/products/ProductList";
+import ProductEdit from "./components/products/ProductEdit";
 
 export const App = () => (
   <Admin
@@ -152,7 +167,6 @@ export const App = () => (
       name="profiles"
       icon={AccountCircle}
       list={ProfileList}
-      edit={ProductEdit}
       show={ProfileShow}
     />
     <Resource
@@ -222,7 +236,33 @@ export const App = () => (
       show={DonateShow}
       options={{ label: "Streamer Donations" }}
     />
-
+    <Resource
+      options={{ label: "Product Colors" }}
+      name="colors"
+      list={ColorList}
+      create={ColorCreate}
+      edit={ColorEdit}
+      show={ColorShow}
+      icon={Palette}
+    />
+    <Resource
+      options={{ label: "Product Sizes" }}
+      name="sizes"
+      list={SizeList}
+      create={SizeCreate}
+      edit={SizeEdit}
+      show={SizeShow}
+      icon={Straighten}
+    />
+    <Resource
+      options={{ label: "Product Genders" }}
+      name="genders"
+      list={GenderList}
+      create={GenderCreate}
+      edit={GenderEdit}
+      show={GenderShow}
+      icon={Wc}
+    />
     <Resource
       options={{ label: "Product Categories" }}
       name="categories"
@@ -241,6 +281,7 @@ export const App = () => (
       edit={ProductEdit}
       show={ProductShow}
     />
+
     <Resource
       options={{ label: "Feature Toggles" }}
       name="feature-toggles"
@@ -285,6 +326,15 @@ export const App = () => (
       icon={Factory}
       list={FactoryList}
       show={FactoryShow}
+    />
+    <Resource
+      name="factory-products"
+      list={FactoryProductList}
+      edit={FactoryProductEdit}
+      create={FactoryProductCreate}
+      show={FactoryProductShow}
+      options={{ label: "Factory Products" }}
+      icon={Factory}
     />
     <Resource
       options={{ label: "Calculation Fees" }}

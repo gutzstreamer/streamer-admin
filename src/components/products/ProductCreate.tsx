@@ -15,98 +15,37 @@ import {
   ReferenceInput,
 } from "react-admin";
 
-const transform = (data: any) => {
-  return {
-    ...data,
-    taxComissions: data.taxComissions.map((taxComission: any) => ({
-      id: taxComission.id || undefined,
-      name: taxComission.name,
-      value: taxComission.value,
-      subscriptionPlanId: taxComission.subscriptionPlanId
-        ? taxComission.subscriptionPlanId
-        : undefined,
-    })),
-    categories: data.categories.map(
-      (category: any) =>
-        typeof category === "object" && category.categoryId
-          ? { id: category.categoryId } // Se for um objeto com categoryId
-          : { id: category }, // Se for apenas um ID (string)
-    ),
-    images: data.images.map((image: any) => ({
-      id: image.id || undefined, // Garante que IDs existentes são enviados, ou undefined para novos registros
-      url: image.url,
-      color: image.color
-        ? {
-            id: image.color.id || undefined,
-            name: image.color.name,
-            hex: image.color.hex,
-            sizes: image.color.sizes.map((size: any) => ({
-              id: size.id || undefined,
-              name: size.name,
-              sku: size.sku,
-            })),
-          }
-        : undefined, // Ignora cores inexistentes
-    })),
-  };
-};
-
 const ProductCreate: React.FC = (props) => {
   const redirect = useRedirect();
+  const onSuccess = () => redirect("list", "products");
 
-  const onSuccess = () => {
-    redirect("list", "products");
-  };
   return (
-    <Create {...props} transform={transform} mutationOptions={{ onSuccess }}>
+    <Create {...props} mutationOptions={{ onSuccess }}>
       <TabbedForm>
+        {/* General Info */}
         <FormTab label="General">
-          <TextInput source="name" />
-          <TextInput source="factoryName" />
+          <TextInput source="name" validate={required()} />
           <TextInput multiline source="description" />
-          <TextInput source="ncm" />
-          <NumberInput source="cost" />
-          <NumberInput source="price" />
-          <SelectInput
-            source="gender"
-            choices={[
-              { id: "MALE", name: "Male" },
-              { id: "FEMALE", name: "Female" },
-              { id: "UNISEX", name: "Unisex" },
-            ]}
-          />
-          <ReferenceArrayInput
-            label="Categories"
-            source="categories"
-            reference="categories"
-          >
+          <TextInput source="ncm" validate={required()} />
+          <ReferenceArrayInput source="categories" reference="categories">
             <SelectArrayInput optionText="name" />
           </ReferenceArrayInput>
         </FormTab>
-        <FormTab label="Details">
+
+        {/* Images */}
+        <FormTab label="Images">
           <ArrayInput source="images">
             <SimpleFormIterator>
-              <TextInput
-                source="url"
-                label="Image URL"
-                validate={[required()]}
-              />
-              <TextInput source="color.name" label="Color Name" />
-              <TextInput source="color.hex" label="Color Hex" />
-              <ArrayInput source="color.sizes">
-                <SimpleFormIterator>
-                  <TextInput
-                    source="name"
-                    label="Size Name"
-                    validate={required()}
-                  />
-                  <TextInput source="sku" label="SKU" validate={required()} />
-                </SimpleFormIterator>
-              </ArrayInput>
+              <TextInput source="url" label="Image URL" validate={required()} />
+              <ReferenceInput source="colorId" reference="colors" label="Color">
+                <SelectInput optionText="name" />
+              </ReferenceInput>
             </SimpleFormIterator>
           </ArrayInput>
         </FormTab>
-        <FormTab label="Tax">
+
+        {/* Tax Commissions */}
+        <FormTab label="Tax Commissions">
           <ArrayInput source="taxComissions">
             <SimpleFormIterator>
               <TextInput source="name" label="Name" validate={required()} />
@@ -115,11 +54,37 @@ const ProductCreate: React.FC = (props) => {
                 label="Subscription Plan"
                 source="subscriptionPlanId"
                 reference="subscription-plan"
-                format={(value) => value && value.id}
-                parse={(value) => ({ subscriptionPlanId: value })}
+                format={(value) => value?.id}
+                parse={(value) => value}
               >
                 <SelectInput optionText="name" />
               </ReferenceInput>
+            </SimpleFormIterator>
+          </ArrayInput>
+        </FormTab>
+
+        {/* Variants */}
+        <FormTab label="Variants">
+          <ArrayInput source="variants">
+            <SimpleFormIterator>
+              <TextInput source="sku" label="SKU" validate={required()} />
+              <NumberInput source="price" label="Price" validate={required()} />
+              <NumberInput source="cost" label="Cost" validate={required()} />
+              <ReferenceInput source="colorId" reference="colors" label="Color">
+                <SelectInput optionText="name" />
+              </ReferenceInput>
+              <ReferenceInput source="sizeId" reference="sizes" label="Size">
+                <SelectInput optionText="name" />
+              </ReferenceInput>
+              <ReferenceInput source="genderId" reference="genders" label="Gender">
+                <SelectInput optionText="name" />
+              </ReferenceInput>
+              <TextInput source="dimona.dimonaSku" label="Dimona SKU" validate={required()} />
+              <TextInput
+                source="dimona.factoryProduct.name"
+                label="Factory Product Name"
+                validate={required()}
+              />
             </SimpleFormIterator>
           </ArrayInput>
         </FormTab>

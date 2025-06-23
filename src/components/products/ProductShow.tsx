@@ -1,46 +1,72 @@
-import React from "react";
 import {
   Show,
   SimpleShowLayout,
   TextField,
-  NumberField,
+  BooleanField,
+  DateField,
   ArrayField,
-  SingleFieldList,
+  Datagrid,
+  NumberField,
   ReferenceField,
-  ChipField,
-} from "react-admin";
-import { ImageDetails } from "./ImageDetails";
+} from 'react-admin';
 
-const ProductShow: React.FC = (props) => (
-  <Show {...props}>
+// SHOW VIEW
+export const ProductShow = () => (
+  <Show>
     <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="name" />
-      <TextField source="factoryName" />
       <TextField source="description" />
+      <BooleanField source="active" />
       <TextField source="ncm" />
-      <NumberField source="price" />
-      <NumberField source="cost" />
-      <TextField source="gender" />
-      <ArrayField source="taxComissions">
-        <SingleFieldList linkType={false}>
-          <ChipField source="name" />
-        </SingleFieldList>
-      </ArrayField>
-      <ArrayField source="categories">
-        <SingleFieldList>
+      <DateField source="createdAt" />
+      <DateField source="updatedAt" />
+
+      <ArrayField source="categories" label="Categories">
+        <Datagrid bulkActionButtons={false}>
           <ReferenceField source="categoryId" reference="categories">
-            <ChipField source="name" />
+            <TextField source="name" />
           </ReferenceField>
-        </SingleFieldList>
+        </Datagrid>
       </ArrayField>
-      <ArrayField source="images">
-        <SingleFieldList linkType={false}>
-          <ImageDetails />
-        </SingleFieldList>
+
+      <ArrayField source="variants" label="Variants">
+        <Datagrid bulkActionButtons={false}>
+          <TextField source="sku" />
+          <NumberField source="price" />
+          <NumberField source="cost" />
+          <BooleanField source="active" />
+          <ReferenceField source="colorId" reference="colors">
+            <TextField source="name" />
+          </ReferenceField>
+          <ReferenceField source="sizeId" reference="sizes">
+            <TextField source="name" />
+          </ReferenceField>
+          <ReferenceField source="genderId" reference="genders">
+            <TextField source="name" />
+          </ReferenceField>
+          <TextField source="dimonaMapping.dimonaSku" label="Dimona SKU" />
+        </Datagrid>
+      </ArrayField>
+
+      <ArrayField source="images" label="Images">
+        <Datagrid bulkActionButtons={false}>
+          <TextField source="url" />
+          <ReferenceField source="colorId" reference="colors">
+            <TextField source="name" />
+          </ReferenceField>
+        </Datagrid>
+      </ArrayField>
+
+      <ArrayField source="taxComissions" label="Tax Commissions">
+        <Datagrid bulkActionButtons={false}>
+          <TextField source="name" />
+          <NumberField source="value" />
+          <ReferenceField source="subscriptionPlanId" reference="subscription-plan">
+            <TextField source="name" />
+          </ReferenceField>
+        </Datagrid>
       </ArrayField>
     </SimpleShowLayout>
   </Show>
 );
-
-export default ProductShow;

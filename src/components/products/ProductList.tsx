@@ -1,18 +1,16 @@
-import React from "react";
-import { List, Datagrid, TextField, NumberField } from "react-admin";
+import { List, Datagrid, TextField, BooleanField, DateField } from "react-admin";
 
-const ProductList: React.FC = (props) => (
-  <List {...props}>
-    <Datagrid>
+// LIST VIEW
+export const ProductList = () => (
+  <List>
+    <Datagrid rowClick="show">
       <TextField source="id" />
       <TextField source="name" />
-      <NumberField source="cost" />
+      <BooleanField source="active" />
       <TextField source="ncm" />
-      <NumberField source="price" />
-      <TextField source="gender" />
-      <TextField source="active" />
+      <DateField source="createdAt" />
+      <DateField source="updatedAt" />
     </Datagrid>
   </List>
 );
 
-export default ProductList;
