@@ -5,7 +5,6 @@ import {
   NumberInput,
   SelectInput,
   ReferenceArrayInput,
-  SelectArrayInput,
   ArrayInput,
   SimpleFormIterator,
   required,
@@ -16,9 +15,12 @@ import {
   TabbedForm,
   FormTab,
   ReferenceInput,
+  ReferenceField,
+  AutocompleteArrayInput,
 } from "react-admin";
 
 const transform = (data: any) => {
+  console.log("transform");
   return {
     ...data,
     taxComissions: data.taxComissions.map((taxComission: any) => ({
@@ -76,8 +78,10 @@ const ProductEdit: React.FC = (props) => (
         />
         <BooleanInput source="active" />
         <ArrayField source="categories">
-          <SingleFieldList linkType={false}>
-            <ChipField source="category.name" />
+          <SingleFieldList>
+            <ReferenceField source="categoryId" reference="categories">
+              <ChipField source="name" />
+            </ReferenceField>
           </SingleFieldList>
         </ArrayField>
         <ReferenceArrayInput
@@ -85,11 +89,11 @@ const ProductEdit: React.FC = (props) => (
           source="categories"
           reference="categories"
           format={(value) =>
-            value ? value.map((category: any) => category.id) : []
+            value?.map((v) => (typeof v === "string" ? v : v.categoryId))
           }
-          parse={(value) => (value ? value.map((id: any) => ({ id })) : [])}
+          parse={(value) => value?.map((id) => ({ categoryId: id }))}
         >
-          <SelectArrayInput optionText="name" />
+          <AutocompleteArrayInput optionText="name" />
         </ReferenceArrayInput>
       </FormTab>
       <FormTab label="Details">

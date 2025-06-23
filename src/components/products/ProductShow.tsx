@@ -30,7 +30,7 @@ const ProductShow: React.FC = (props) => (
       <ArrayField source="categories">
         <SingleFieldList>
           <ReferenceField source="categoryId" reference="categories">
-            <TextField source="name" />
+            <ChipField source="name" />
           </ReferenceField>
         </SingleFieldList>
       </ArrayField>
