@@ -19,19 +19,23 @@ const ProductStreamerShow: React.FC = (props) => (
       <TextField source="description" />
       <NumberField source="price" />
       <NumberField source="discountPrice" />
+      <TextField source="status" />
       <DateField source="createdAt" />
       <DateField source="updatedAt" />
+
+      <ReferenceField source="productId" reference="products">
+        <TextField source="name" />
+      </ReferenceField>
+
+      <ReferenceField source="streamerId" reference="streamers">
+        <TextField source="name" />
+      </ReferenceField>
+
       <ArrayField source="mockups">
         <SingleFieldList linkType={false}>
           <ImageField source="url" title="color" />
         </SingleFieldList>
       </ArrayField>
-      <ReferenceField source="productId" reference="products">
-        <TextField source="name" />
-      </ReferenceField>
-      <ReferenceField source="streamerId" reference="streamers">
-        <TextField source="name" />
-      </ReferenceField>
     </SimpleShowLayout>
   </Show>
 );

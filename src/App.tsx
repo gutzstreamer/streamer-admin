@@ -98,6 +98,7 @@ import { SubscriptionUsageList } from "./components/subscription-usages/Subscrip
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
 import { SubscriptionUsageEdit } from "./components/subscription-usages/SubscriptionUsageEdit";
 import { SubscriptionUsageShow } from "./components/subscription-usages/SubscriptionUsageShow";
+import ProductStreamerEdit from "./components/products-streamer/ProductStreamerEdit";
 
 export const App = () => (
   <Admin
@@ -214,6 +215,7 @@ export const App = () => (
       icon={LocalMall}
       list={ProductStreamerList}
       show={ProductStreamerShow}
+      edit={ProductStreamerEdit}
     />
     <Resource
       name="donations"

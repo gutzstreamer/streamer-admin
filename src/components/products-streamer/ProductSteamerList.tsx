@@ -19,12 +19,13 @@ const ProductStreamerFilter: React.FC = (props) => (
 
 const ProductStreamerList = (props: ListProps) => (
   <List {...props} filters={<ProductStreamerFilter />}>
-    <Datagrid>
+    <Datagrid rowClick="show">
       <TextField source="id" />
       <TextField source="name" />
       <TextField source="description" />
       <NumberField source="price" />
       <NumberField source="discountPrice" />
+      <TextField source="status" />
       <DateField source="createdAt" />
       <DateField source="updatedAt" />
       <ReferenceField source="productId" reference="products">

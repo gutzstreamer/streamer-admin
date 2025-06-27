@@ -73,6 +73,29 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     });
   },
 
+  update: (resource, params) => {
+    if (resource === "product-streamer") {
+      return httpClient(`${apiUrl}/${resource}/${params.id}/status`, {
+        method: "PATCH",
+        body: JSON.stringify(params.data),
+      }).then(({ json }) => {
+        if (!json) {
+          console.error("Resposta da API vazia");
+          return { data: { id: params.id, ...params.data } };
+        }
+        return { data: { id: params.id, ...json } };
+      });
+    } else {
+      const url = `${apiUrl}/${resource}/${params.id}`;
+      return httpClient(url, {
+        method: "PUT",
+        body: JSON.stringify(params.data),
+      }).then(({ json }) => {
+        return { data: json };
+      });
+    }
+  },
+
   retry: function (
     resource: string,
     params: { id: string },
@@ -82,6 +105,7 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
       method: "POST",
     });
   },
+
   approveProductStreamer: function (
     resource: string,
     params: {
