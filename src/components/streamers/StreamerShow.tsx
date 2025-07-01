@@ -9,6 +9,7 @@ import {
   TextField,
 } from "react-admin";
 
+
 const StreamerShow: React.FC = (props) => (
   <Show {...props}>
     <SimpleShowLayout>
