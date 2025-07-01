@@ -15,6 +15,19 @@ import {
   ReferenceInput,
 } from "react-admin";
 
+const SIZE_OPTIONS = [
+  { id: "P", name: "P" },
+  { id: "M", name: "M" },
+  { id: "G", name: "G" },
+  { id: "GG", name: "GG" },
+  { id: "XGG", name: "XGG" },
+  { id: "G1", name: "G1" },
+  { id: "G2", name: "G2" },
+  { id: "G3", name: "G3" },
+  { id: "G4", name: "G4" },
+  { id: "U", name: "U" },
+];
+
 const transform = (data: any) => {
   return {
     ...data,
@@ -93,11 +106,12 @@ const ProductCreate: React.FC = (props) => {
               />
               <TextInput source="color.name" label="Color Name" />
               <TextInput source="color.hex" label="Color Hex" />
-              <ArrayInput source="color.sizes">
+              <ArrayInput source="color.sizes" label="Tamanhos">
                 <SimpleFormIterator>
-                  <TextInput
+                  <SelectInput
                     source="name"
-                    label="Size Name"
+                    label="Tamanho"
+                    choices={SIZE_OPTIONS}
                     validate={required()}
                   />
                   <TextInput source="sku" label="SKU" validate={required()} />

@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Edit,
   TextInput,
   NumberInput,
   SelectInput,
-  ReferenceArrayInput,
   ArrayInput,
   SimpleFormIterator,
   required,
@@ -16,11 +15,11 @@ import {
   FormTab,
   ReferenceInput,
   ReferenceField,
-  AutocompleteArrayInput,
+  ReferenceArrayInput,
+  SelectArrayInput,
 } from "react-admin";
 
 const transform = (data: any) => {
-  console.log("transform");
   return {
     ...data,
     taxComissions: data.taxComissions.map((taxComission: any) => ({
@@ -77,24 +76,13 @@ const ProductEdit: React.FC = (props) => (
           validate={required()}
         />
         <BooleanInput source="active" />
-        <ArrayField source="categories">
-          <SingleFieldList>
-            <ReferenceField source="categoryId" reference="categories">
-              <ChipField source="name" />
-            </ReferenceField>
-          </SingleFieldList>
-        </ArrayField>
-        <ReferenceArrayInput
-          label="Categories"
-          source="categories"
-          reference="categories"
-          format={(value) =>
-            value?.map((v) => (typeof v === "string" ? v : v.categoryId))
-          }
-          parse={(value) => value?.map((id) => ({ categoryId: id }))}
-        >
-          <AutocompleteArrayInput optionText="name" />
-        </ReferenceArrayInput>
+        <ArrayInput source="categories">
+          <SimpleFormIterator>
+            <ReferenceInput source="categoryId" reference="categories">
+              <SelectInput optionText="name" />
+            </ReferenceInput>
+          </SimpleFormIterator>
+        </ArrayInput>
       </FormTab>
       <FormTab label="Details">
         <ArrayInput source="images">
