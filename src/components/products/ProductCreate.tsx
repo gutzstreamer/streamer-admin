@@ -26,6 +26,13 @@ const SIZE_OPTIONS = [
   { id: "G3", name: "G3" },
   { id: "G4", name: "G4" },
   { id: "U", name: "U" },
+  { id: "2Anos", name: "2 anos" },
+  { id: "4Anos", name: "4 anos" },
+  { id: "6Anos", name: "6 anos" },
+  { id: "8Anos", name: "8 anos" },
+  { id: "10Anos", name: "10 anos" },
+  { id: "12Anos", name: "12 anos" },
+  { id: "14Anos", name: "14 anos" },
 ];
 
 const transform = (data: any) => {
