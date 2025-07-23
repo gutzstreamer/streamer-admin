@@ -15,6 +15,9 @@ const OrderShowActions = () => {
   const refresh = useRefresh();
 
   const [loading, setLoading] = useState<"invoice" | "factory" | null>(null);
+  const [loadingChecks, setLoadingChecks] = useState<
+    "invoice" | "factory" | null
+  >(null);
 
   const handleRetry = async (type: "invoice" | "factory") => {
     if (!record) {
@@ -35,6 +38,25 @@ const OrderShowActions = () => {
     }
   };
 
+  const handleChecks = async (type: "invoice" | "factory") => {
+    if (!record) {
+      notify("Registro não encontrado.", { type: "warning" });
+      return;
+    }
+    setLoadingChecks(type);
+    try {
+      await streamerDataProvider.checks("orders", { id: record.id }, type);
+      notify(`Checks ${type} executado com sucesso`, { type: "success" });
+      refresh();
+    } catch (error: any) {
+      notify(`Erro ao executar Checks ${type}: ${error.message}`, {
+        type: "error",
+      });
+    } finally {
+      setLoadingChecks(null);
+    }
+  };
+
   return (
     <TopToolbar>
       <Button
@@ -52,6 +74,22 @@ const OrderShowActions = () => {
         disabled={loading !== null}
       >
         {loading === "invoice" ? "Processando..." : "Retry Invoice"}
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        size="small"
+        startIcon={
+          loadingChecks === "invoice" ? (
+            <CircularProgress size={16} color="inherit" />
+          ) : (
+            <ReplayIcon />
+          )
+        }
+        onClick={() => handleChecks("invoice")}
+        disabled={loadingChecks !== null}
+      >
+        {loadingChecks === "invoice" ? "Processando..." : "Check Invoice"}
       </Button>
       <Button
         variant="contained"

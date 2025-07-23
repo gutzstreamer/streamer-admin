@@ -12,15 +12,12 @@ export interface DataProviderWithCustomMethods extends DataProvider {
     type?: "invoice" | "factory",
   ) => Promise<any>;
 
-  approveProductStreamer: (
+  checks: (
     resource: string,
     params: {
       id: string;
-      data: {
-        status: "ACTIVE" | "INACTIVE" | "PENDING" | "REJECTED";
-        reason?: string;
-      };
     },
+    type?: "invoice" | "factory",
   ) => Promise<any>;
 }
 
@@ -96,29 +93,23 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     }
   },
 
-  retry: function (
+  checks(
     resource: string,
     params: { id: string },
     type: "invoice" | "factory" = "invoice",
-  ): Promise<any> {
-    return httpClient(`${apiUrl}/${resource}/${params.id}/retry/${type}`, {
+  ) {
+    return httpClient(`${apiUrl}/${resource}/${params.id}/checks/${type}`, {
       method: "POST",
     });
   },
 
-  approveProductStreamer: function (
+  retry(
     resource: string,
-    params: {
-      id: string;
-      data: {
-        status: "ACTIVE" | "INACTIVE" | "PENDING" | "REJECTED";
-        reason?: string;
-      };
-    },
-  ): Promise<any> {
-    return httpClient(`${apiUrl}/${resource}/${params.id}/status`, {
-      method: "PATCH",
-      body: JSON.stringify(params.data),
+    params: { id: string },
+    type: "invoice" | "factory" = "invoice",
+  ) {
+    return httpClient(`${apiUrl}/${resource}/${params.id}/retry/${type}`, {
+      method: "POST",
     });
   },
 };
