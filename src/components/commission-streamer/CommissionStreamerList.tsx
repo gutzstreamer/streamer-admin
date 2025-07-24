@@ -5,6 +5,7 @@ import {
   TextField,
   ReferenceField,
   DateField,
+  NumberField,
 } from "react-admin";
 
 const CommissionStreamerList: React.FC = (props) => (
@@ -17,10 +18,21 @@ const CommissionStreamerList: React.FC = (props) => (
       <ReferenceField source="orderId" reference="orders">
         <TextField source="id" />
       </ReferenceField>
-      <TextField source="orderProductId" />
-      <TextField source="taxComissionId" />
-      <TextField source="commissionValue" />
+      <ReferenceField source="productStreamerId" reference="product-streamer">
+        <TextField source="name" />
+      </ReferenceField>
+      <NumberField
+        source="productSalePrice"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
+      <TextField source="productSaleQuantity" />
       <TextField source="percentage" />
+      <NumberField
+        source="commissionValue"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <DateField source="createdAt" />
     </Datagrid>
   </List>
