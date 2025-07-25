@@ -21,6 +21,9 @@ const CommissionStreamerList: React.FC = (props) => (
       <ReferenceField source="productStreamerId" reference="product-streamer">
         <TextField source="name" />
       </ReferenceField>
+      <ReferenceField source="walletTransactionId" reference="wallet-transactions">
+        <TextField source="status" />
+      </ReferenceField>
       <NumberField
         source="productSalePrice"
         options={{ style: "currency", currency: "BRL" }}
