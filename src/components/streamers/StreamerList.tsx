@@ -1,4 +1,12 @@
-import { List, Datagrid, TextField, ReferenceField, EditButton, ShowButton } from 'react-admin';
+import {
+  List,
+  Datagrid,
+  TextField,
+  ReferenceField,
+  EditButton,
+  ShowButton,
+  BooleanField,
+} from "react-admin";
 
 const StreamerList: React.FC = (props) => {
   return (
@@ -6,6 +14,7 @@ const StreamerList: React.FC = (props) => {
       <Datagrid>
         <TextField source="id" />
         <TextField source="name" />
+        <BooleanField source="public" />
         <ReferenceField source="userId" reference="users">
           <TextField source="name" />
         </ReferenceField>

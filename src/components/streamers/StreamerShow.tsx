@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ArrayField,
+  BooleanField,
   ChipField,
   ReferenceField,
   Show,
@@ -20,6 +21,7 @@ const StreamerShow: React.FC = (props) => (
       </ReferenceField>
       <TextField source="bio" />
       <TextField source="image" />
+      <BooleanField source="public" />
       <ArrayField source="games">
         <SingleFieldList linkType={false}>
           <ChipField source="name" />

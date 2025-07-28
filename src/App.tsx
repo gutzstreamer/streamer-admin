@@ -12,7 +12,6 @@ import CategoryList from "./components/categories/CategoryList";
 import CategoryShow from "./components/categories/CategoryShow";
 import StreamerEdit from "./components/streamers/StreamerEdit";
 import StreamerShow from "./components/streamers/StreamerShow";
-import StreamerCreate from "./components/streamers/StreamerCreate";
 import UserShow from "./components/users/UserShow";
 import ProductCreate from "./components/products/ProductCreate";
 import ProductEdit from "./components/products/ProductEdit";
@@ -192,7 +191,6 @@ export const App = () => (
       list={StreamerList}
       edit={StreamerEdit}
       show={StreamerShow}
-      create={StreamerCreate}
     />
     <Resource
       options={{ label: "Streamer Commissions" }}
