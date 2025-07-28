@@ -13,7 +13,6 @@ const InvoiceList: React.FC = (props) => {
   return (
     <List {...props}>
       <Datagrid rowClick="show">
-        <TextField source="id" label="ID da Fatura" />
         <ReferenceField
           source="orderId"
           reference="orders"
@@ -28,11 +27,13 @@ const InvoiceList: React.FC = (props) => {
         <TextField source="model" label="Modelo" />
         <TextField source="environmentType" label="Tipo de Ambiente" />
         <DateField source="issuedOn" label="Emitido em" />
-        <NumberField source="totalAmount" label="Valor Total" />
+        <NumberField
+          source="totalAmount"
+          label="Valor Total"
+          options={{ style: "currency", currency: "BRL" }}
+          locales="pt-BR"
+        />
         <TextField source="accessKey" label="Chave de Acesso" />
-        <TextField source="pdfUrl" label="URL do PDF" />
-        <TextField source="operationType" label="Tipo de Operação" />
-        <TextField source="issueType" label="Tipo de Emissão" />
       </Datagrid>
     </List>
   );

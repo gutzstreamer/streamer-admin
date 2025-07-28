@@ -19,8 +19,16 @@ const ProductShow: React.FC = (props) => (
       <TextField source="factoryName" />
       <TextField source="description" />
       <TextField source="ncm" />
-      <NumberField source="price" />
-      <NumberField source="cost" />
+      <NumberField
+        source="price"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
+      <NumberField
+        source="cost"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <TextField source="gender" />
       <ArrayField source="taxComissions">
         <SingleFieldList linkType={false}>

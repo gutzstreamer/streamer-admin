@@ -28,7 +28,12 @@ const InvoiceShow: React.FC = (props) => (
       <DateField source="issuedOn" label="Emitido em" />
       <DateField source="effectiveDate" label="Data de Efeito" />
       <TextField source="digestValue" label="Valor do Digest" />
-      <NumberField source="totalAmount" label="Valor Total" />
+      <NumberField
+        source="totalAmount"
+        label="Valor Total"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <TextField source="accessKey" label="Chave de Acesso" />
       <TextField source="pdfUrl" label="URL do PDF" />
       <TextField source="operationType" label="Tipo de Operação" />

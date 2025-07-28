@@ -14,7 +14,7 @@ import {
 import OrderShowActions from "./OrderShowActions";
 
 const OrderShow: React.FC = (props) => (
-  <Show {...props} actions={<OrderShowActions /> }>
+  <Show {...props} actions={<OrderShowActions />}>
     <SimpleShowLayout>
       <TextField source="id" label="ID do Pedido" />
       <ReferenceField
@@ -31,13 +31,30 @@ const OrderShow: React.FC = (props) => (
       <NumberField source="businessDays" label="Dias Úteis" />
       <TextField source="paymentToken" label="Token de Pagamento" />
       <NumberField source="installments" label="Parcelas" />
-      <NumberField source="totalAmountDiscount" label="Desconto Total" />
-      <NumberField source="totalAmountShipping" label="Frete Total" />
+      <NumberField
+        source="totalAmountDiscount"
+        label="Desconto Total"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
+      <NumberField
+        source="totalAmountShipping"
+        label="Frete Total"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <NumberField
         source="totalAmountProducts"
         label="Valor Total dos Produtos"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
       />
-      <NumberField source="totalAmount" label="Valor Total" />
+      <NumberField
+        source="totalAmount"
+        label="Valor Total"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <DateField source="createdAt" label="Criado em" />
       <DateField source="updatedAt" label="Atualizado em" />
 

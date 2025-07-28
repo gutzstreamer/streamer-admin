@@ -12,7 +12,7 @@ export const SubscriptionUsageList = () => (
     <Datagrid rowClick="show">
       <TextField source="id" />
       <ReferenceField source="subscriptionId" reference="subscription">
-        <TextField source="name" />
+        <TextField source="id" />
       </ReferenceField>
       <NumberField source="currentMarketWithdrawalUsed" />
       <NumberField source="currentDonationWithdrawalUsed" />

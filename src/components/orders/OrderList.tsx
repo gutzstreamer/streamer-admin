@@ -8,7 +8,6 @@ import {
   ReferenceField,
 } from "react-admin";
 
-
 const OrderList: React.FC = (props) => {
   return (
     <List {...props}>
@@ -18,9 +17,24 @@ const OrderList: React.FC = (props) => {
           <TextField source="name" />
         </ReferenceField>
         <TextField source="paymentType" label="Payment Type" />
-        <NumberField source="totalAmount" label="Total Amount" />
-        <NumberField source="totalAmountProducts" label="Total Products" />
-        <NumberField source="totalAmountShipping" label="Total Shipping" />
+        <NumberField
+          source="totalAmount"
+          label="Total Amount"
+          options={{ style: "currency", currency: "BRL" }}
+          locales="pt-BR"
+        />
+        <NumberField
+          source="totalAmountProducts"
+          label="Total Products"
+          options={{ style: "currency", currency: "BRL" }}
+          locales="pt-BR"
+        />
+        <NumberField
+          source="totalAmountShipping"
+          label="Total Shipping"
+          options={{ style: "currency", currency: "BRL" }}
+          locales="pt-BR"
+        />
         <TextField source="shippingSpeed" label="Shipping Spped" />
         <DateField source="createdAt" label="Created At" />
         <DateField source="updatedAt" label="Updated At" />

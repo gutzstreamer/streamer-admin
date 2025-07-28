@@ -18,17 +18,18 @@ const DonateFilter: React.FC = (props) => (
 );
 
 const DonateList = (props: ListProps) => (
-  <List
-    {...props}
-    filters={<DonateFilter />}
-  >
+  <List {...props} filters={<DonateFilter />}>
     <Datagrid>
       <TextField source="id" />
       <ReferenceField source="streamerId" reference="streamers">
         <TextField source="name" />
       </ReferenceField>
       <TextField source="transactionId" />
-      <NumberField source="amount" />
+      <NumberField
+        source="amount"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <TextField source="message" />
       <TextField source="username" />
       <TextField source="paymentCode" />

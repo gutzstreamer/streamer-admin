@@ -23,8 +23,16 @@ const ProductStreamerList = (props: ListProps) => (
       <TextField source="id" />
       <TextField source="name" />
       <TextField source="description" />
-      <NumberField source="price" />
-      <NumberField source="discountPrice" />
+      <NumberField
+        source="price"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
+      <NumberField
+        source="discountPrice"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <TextField source="status" />
       <DateField source="createdAt" />
       <DateField source="updatedAt" />

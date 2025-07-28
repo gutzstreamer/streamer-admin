@@ -11,9 +11,19 @@ export const WithdrawalShow = () => (
   <Show>
     <SimpleShowLayout>
       <TextField source="id" label="ID" />
-      <NumberField source="amount" label="Valor" />
+      <NumberField
+        source="amount"
+        label="Valor"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <NumberField source="fee" label="Taxa" />
-      <NumberField source="finalAmount" label="Valor Final" />
+      <NumberField
+        source="finalAmount"
+        label="Valor Final"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <TextField source="status" label="Status" />
       <TextField source="pixKey" label="Chave Pix" />
       <TextField source="pixKeyType" label="Tipo Pix" />
