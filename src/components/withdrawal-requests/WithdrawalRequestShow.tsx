@@ -28,6 +28,13 @@ export const WithdrawalShow = () => (
       <TextField source="pixKey" label="Chave Pix" />
       <TextField source="pixKeyType" label="Tipo Pix" />
       <DateField source="processedAt" label="Processado em" />
+      <ReferenceField
+        source="streamerId"
+        reference="streamers"
+        label="Streamer"
+      >
+        <TextField source="name" />
+      </ReferenceField>
       <ReferenceField source="walletId" label="Wallet" reference="wallets">
         <TextField source="id" />
       </ReferenceField>

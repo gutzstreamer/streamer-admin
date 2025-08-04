@@ -10,6 +10,7 @@ import {
   ShowButton,
   EditButton,
   Filter,
+  ReferenceField,
 } from "react-admin";
 import { statusChoices } from ".";
 
@@ -48,6 +49,13 @@ export const WithdrawalList = () => (
         options={{ style: "currency", currency: "BRL" }}
         locales="pt-BR"
       />
+      <ReferenceField
+        source="streamerId"
+        reference="streamers"
+        label="Streamer"
+      >
+        <TextField source="name" />
+      </ReferenceField>
       <TextField source="status" label="Status" />
       <TextField source="pixKey" label="Chave Pix" />
       <TextField source="pixKeyType" label="Tipo Pix" />
