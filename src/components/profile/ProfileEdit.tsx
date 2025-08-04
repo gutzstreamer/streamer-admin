@@ -24,8 +24,8 @@ export const ProfileEdit: React.FC = (props) => {
   return (
     <Edit {...props}>
       <SimpleShowLayout>
-        <TextField source="image" label="Imagem" />
-        <TextField source="nickname" label="Apelido" />
+        <TextField source="image" label="Imagem" defaultValue={""} />
+        <TextField source="nickname" label="Apelido" defaultValue={""} />
       </SimpleShowLayout>
     </Edit>
   );
