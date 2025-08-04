@@ -98,6 +98,7 @@ import { SubscriptionUsageCreate } from "./components/subscription-usages/Subscr
 import { SubscriptionUsageEdit } from "./components/subscription-usages/SubscriptionUsageEdit";
 import { SubscriptionUsageShow } from "./components/subscription-usages/SubscriptionUsageShow";
 import ProductStreamerEdit from "./components/products-streamer/ProductStreamerEdit";
+import { ProfileEdit } from "./components/profile/ProfileEdit";
 
 export const App = () => (
   <Admin
@@ -152,7 +153,7 @@ export const App = () => (
       name="profiles"
       icon={AccountCircle}
       list={ProfileList}
-      edit={ProductEdit}
+      edit={ProfileEdit}
       show={ProfileShow}
     />
     <Resource
