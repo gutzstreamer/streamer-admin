@@ -24,7 +24,9 @@ const DonateList = (props: ListProps) => (
       <ReferenceField source="streamerId" reference="streamers">
         <TextField source="name" />
       </ReferenceField>
-      <TextField source="transactionId" />
+      <ReferenceField source="transactionId" reference="wallet-transactions">
+        <TextField source="status" />
+      </ReferenceField>
       <NumberField
         source="amount"
         options={{ style: "currency", currency: "BRL" }}
