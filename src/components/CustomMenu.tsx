@@ -142,6 +142,11 @@ export const CustomMenu = () => {
       {/* Sistema */}
       <ListSubheader inset>Configurações</ListSubheader>
       <MenuItemLink
+        to="/subscription-plan"
+        primaryText="Planos de Assinatura"
+        leftIcon={<SettingsIcon />}
+      />
+      <MenuItemLink
         to="/feature-toggles"
         primaryText="Feature Toggles"
         leftIcon={<SettingsIcon />}
