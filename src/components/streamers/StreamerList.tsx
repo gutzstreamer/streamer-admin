@@ -14,6 +14,7 @@ const StreamerList: React.FC = (props) => {
       <Datagrid>
         <TextField source="id" />
         <TextField source="name" />
+        <TextField source="atname" />
         <BooleanField source="public" />
         <ReferenceField source="userId" reference="users">
           <TextField source="name" />

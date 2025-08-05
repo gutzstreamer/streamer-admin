@@ -16,6 +16,7 @@ const StreamerShow: React.FC = (props) => (
     <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="name" />
+      <TextField source="atname" />
       <ReferenceField source="userId" reference="users">
         <TextField source="name" />
       </ReferenceField>
