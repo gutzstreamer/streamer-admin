@@ -64,22 +64,6 @@ const OrderShowActions = () => {
         color="primary"
         size="small"
         startIcon={
-          loading === "invoice" ? (
-            <CircularProgress size={16} color="inherit" />
-          ) : (
-            <ReplayIcon />
-          )
-        }
-        onClick={() => handleRetry("invoice")}
-        disabled={loading !== null}
-      >
-        {loading === "invoice" ? "Processando..." : "Retry Invoice"}
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        size="small"
-        startIcon={
           loadingChecks === "invoice" ? (
             <CircularProgress size={16} color="inherit" />
           ) : (
@@ -90,6 +74,22 @@ const OrderShowActions = () => {
         disabled={loadingChecks !== null}
       >
         {loadingChecks === "invoice" ? "Processando..." : "Check Invoice"}
+      </Button>
+            <Button
+        variant="contained"
+        color="primary"
+        size="small"
+        startIcon={
+          loadingChecks === "factory" ? (
+            <CircularProgress size={16} color="inherit" />
+          ) : (
+            <ReplayIcon />
+          )
+        }
+        onClick={() => handleChecks("factory")}
+        disabled={loadingChecks !== null}
+      >
+        {loadingChecks === "factory" ? "Processando..." : "Check Factory"}
       </Button>
       <Button
         variant="contained"
