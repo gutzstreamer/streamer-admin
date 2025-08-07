@@ -75,7 +75,7 @@ const OrderShowActions = () => {
       >
         {loadingChecks === "invoice" ? "Processando..." : "Check Invoice"}
       </Button>
-            <Button
+      <Button
         variant="contained"
         color="primary"
         size="small"
@@ -90,22 +90,6 @@ const OrderShowActions = () => {
         disabled={loadingChecks !== null}
       >
         {loadingChecks === "factory" ? "Processando..." : "Check Factory"}
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        size="small"
-        startIcon={
-          loading === "factory" ? (
-            <CircularProgress size={16} color="inherit" />
-          ) : (
-            <ReplayIcon />
-          )
-        }
-        onClick={() => handleRetry("factory")}
-        disabled={loading !== null}
-      >
-        {loading === "factory" ? "Processando..." : "Retry Factory"}
       </Button>
     </TopToolbar>
   );
