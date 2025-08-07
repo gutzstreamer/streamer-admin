@@ -9,6 +9,7 @@ import {
   SingleFieldList,
   TextField,
 } from "react-admin";
+import ImageField from "../common/ImageField";
 
 
 const StreamerShow: React.FC = (props) => (
@@ -21,7 +22,7 @@ const StreamerShow: React.FC = (props) => (
         <TextField source="name" />
       </ReferenceField>
       <TextField source="bio" />
-      <TextField source="image" />
+      <ImageField source="image" label="Profile Image" width={150} height={150} />
       <BooleanField source="public" />
       <ArrayField source="games">
         <SingleFieldList linkType={false}>

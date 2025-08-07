@@ -1,5 +1,6 @@
 import React from "react";
 import { BooleanInput, Edit, SimpleForm, TextInput } from "react-admin";
+import StreamerImageInput from "./StreamerImageInput";
 
 const StreamerEdit: React.FC = (props) => (
   <Edit {...props}>
@@ -7,7 +8,7 @@ const StreamerEdit: React.FC = (props) => (
       <TextInput source="name" />
       <TextInput source="userId" />
       <TextInput source="bio" />
-      <TextInput source="image" />
+      <StreamerImageInput source="image" label="Streamer Profile Image" />
       <BooleanInput source="public" />
     </SimpleForm>
   </Edit>

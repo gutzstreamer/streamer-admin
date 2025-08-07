@@ -14,6 +14,7 @@ import {
   required,
   ReferenceInput,
 } from "react-admin";
+import ProductImageInput from "./ProductImageInput";
 
 const SIZE_OPTIONS = [
   { id: "P", name: "P" },
@@ -106,11 +107,7 @@ const ProductCreate: React.FC = (props) => {
         <FormTab label="Details">
           <ArrayInput source="images">
             <SimpleFormIterator>
-              <TextInput
-                source="url"
-                label="Image URL"
-                validate={[required()]}
-              />
+              <ProductImageInput source="url" label="Product Image" />
               <TextInput source="color.name" label="Color Name" />
               <TextInput source="color.hex" label="Color Hex" />
               <ArrayInput source="color.sizes" label="Tamanhos">

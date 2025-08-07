@@ -18,6 +18,7 @@ import {
   ReferenceArrayInput,
   SelectArrayInput,
 } from "react-admin";
+import ProductImageInput from "./ProductImageInput";
 
 const transform = (data: any) => {
   return {
@@ -87,7 +88,7 @@ const ProductEdit: React.FC = (props) => (
       <FormTab label="Details">
         <ArrayInput source="images">
           <SimpleFormIterator>
-            <TextInput source="url" label="Image URL" validate={[required()]} />
+            <ProductImageInput source="url" label="Product Image" />
             <TextInput source="color.name" label="Color Name" />
             <TextInput source="color.hex" label="Color Hex" />
             <ArrayInput source="color.sizes">
