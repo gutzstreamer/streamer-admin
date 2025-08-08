@@ -4,7 +4,6 @@ import {
   Datagrid,
   TextField,
   NumberField,
-  ReferenceField,
   DateField,
   Filter,
   TextInput,
@@ -52,9 +51,6 @@ const WalletTransactionList = (props: ListProps) => (
   <List {...props} filters={<WalletTransactionFilter />}>
     <Datagrid>
       <TextField source="id" />
-      <ReferenceField source="walletId" reference="wallets">
-        <TextField source="id" />
-      </ReferenceField>
       <NumberField
         source="amount"
         options={{ style: "currency", currency: "BRL" }}
@@ -84,8 +80,8 @@ const WalletTransactionList = (props: ListProps) => (
           ) : '-'
         }
       />
-      <DateField source="createdAt" />
-      <DateField source="updatedAt" />
+      <DateField source="createdAt" showTime />
+      <DateField source="updatedAt" showTime />
     </Datagrid>
   </List>
 );
