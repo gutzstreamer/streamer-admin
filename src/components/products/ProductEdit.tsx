@@ -19,6 +19,8 @@ import {
   SelectArrayInput,
 } from "react-admin";
 import ProductImageInput from "./ProductImageInput";
+import { Button, Card, CardContent } from "@mui/material";
+import { useNotify, useRecordContext } from "react-admin";
 
 const transform = (data: any) => {
   return {
@@ -57,6 +59,87 @@ const transform = (data: any) => {
   };
 };
 
+const ImagesReorder: React.FC = () => {
+  const record = useRecordContext<any>();
+  const notify = useNotify();
+  const [order, setOrder] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (record?.images) {
+      // Inicializa com a ordem vinda do backend
+      setOrder(record.images.map((img: any) => img.id));
+    }
+  }, [record]);
+
+  const move = (from: number, to: number) => {
+    setOrder((prev) => {
+      const next = [...prev];
+      const [m] = next.splice(from, 1);
+      next.splice(to, 0, m);
+      return next;
+    });
+  };
+
+  const saveOrder = async () => {
+    try {
+      const apiUrl = (import.meta as any).env.VITE_SIMPLE_REST_URL;
+      const response = await fetch(`${apiUrl}/products/${record.id}/images/order`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ imageIds: order }),
+      });
+      if (response.ok) {
+        notify("Ordem das cores atualizada", { type: "success" });
+      }
+      else {
+        notify("Falha ao atualizar ordem das cores", { type: "warning" });
+      }
+    } catch (e) {
+      notify("Falha ao atualizar ordem das cores", { type: "warning" });
+    }
+  };
+
+  return (
+    <Card variant="outlined" sx={{ mb: 2 }}>
+      <CardContent>
+        <h3>Ordenar Cores</h3>
+        <ol>
+          {order.map((id, index) => {
+            const img = record?.images?.find((i: any) => i.id === id);
+            return (
+              <li key={id} style={{ marginBottom: 8 }}>
+                <span style={{ marginRight: 12 }}>
+                  {img?.color?.name ?? img?.url}
+                </span>
+                <Button
+                  size="small"
+                  disabled={index === 0}
+                  onClick={() => move(index, index - 1)}
+                >
+                  ↑
+                </Button>
+                <Button
+                  size="small"
+                  disabled={index === order.length - 1}
+                  onClick={() => move(index, index + 1)}
+                >
+                  ↓
+                </Button>
+              </li>
+            );
+          })}
+        </ol>
+        <Button variant="contained" onClick={saveOrder}>
+          Salvar ordem
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
 const ProductEdit: React.FC = (props) => (
   <Edit {...props} transform={transform}>
     <TabbedForm>
@@ -86,6 +169,7 @@ const ProductEdit: React.FC = (props) => (
         </ArrayInput>
       </FormTab>
       <FormTab label="Details">
+  <ImagesReorder />
         <ArrayInput source="images">
           <SimpleFormIterator>
             <ProductImageInput source="url" label="Product Image" />
