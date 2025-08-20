@@ -5,49 +5,39 @@ const BASE_URL = import.meta.env.VITE_SIMPLE_REST_URL;
 const accessToken = localStorage.getItem("token");
 
 export const authProvider: AuthProvider = {
-  login: async ({ username, password }) => {
+  login: async ({ username, password, captchaToken }) => {
     try {
       const responseToken = await fetchUtils.fetchJson(
         BASE_URL + "/authorization/login",
         {
           method: "POST",
           body: JSON.stringify({ email: username, password }),
+          headers: new Headers({
+            "x-turnstile-token": captchaToken
+          })
         },
       );
       const { accessToken } = responseToken.json;
 
-      const userResponse = await fetchUtils.fetchJson(
-        BASE_URL + "/authorization/info",
-        {
-          method: "GET",
-          headers: new Headers({ Authorization: `Bearer ${accessToken}` }),
-        },
-      );
-
-      const roles = userResponse.json["roles"];
+      // Decodifica o token JWT para extrair os dados do usuário
+      const payload = JSON.parse(atob(accessToken.split(".")[1]));
+      const roles = payload["roles"] || [];
+      const userId = payload["sub"] || payload["id"];
+      const nickname = payload["nickname"] || username;
+      const image = payload["image"] || undefined;
 
       if (!roles.includes("admin")) {
-        Promise.reject(
-          new HttpError("Unauthorized", 401, {
-            message: "Invalid username or password",
-          }),
-        );
+        throw new HttpError("Unauthorized", 401, {
+          message: "Invalid username or password",
+        });
       }
-
-      const profileResponse = await fetchUtils.fetchJson(
-        BASE_URL + `/profiles?userId=${userResponse.json.id}`,
-        {
-          method: "GET",
-          headers: new Headers({ Authorization: `Bearer ${accessToken}` }),
-        },
-      );
 
       const user = {
         password,
-        id: userResponse.json.id,
-        username: profileResponse.json.nickname,
+        id: userId,
+        username: nickname,
         fullName: "Admin",
-        avatar: profileResponse.json.image,
+        avatar: image,
       };
 
       localStorage.setItem("user", JSON.stringify(user));

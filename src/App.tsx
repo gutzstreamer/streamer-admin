@@ -99,12 +99,14 @@ import { SubscriptionUsageEdit } from "./components/subscription-usages/Subscrip
 import { SubscriptionUsageShow } from "./components/subscription-usages/SubscriptionUsageShow";
 import ProductStreamerEdit from "./components/products-streamer/ProductStreamerEdit";
 import { ProfileEdit } from "./components/profile/ProfileEdit";
+import CustomLoginPage from "./components/CustomLoginPage";
 
 export const App = () => (
   <Admin
     layout={Layout}
     dataProvider={streamerDataProvider}
     authProvider={authProvider}
+    loginPage={CustomLoginPage}
   >
     <Resource
       options={{ label: "Users" }}

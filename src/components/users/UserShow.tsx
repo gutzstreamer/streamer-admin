@@ -7,9 +7,10 @@ import {
   Datagrid,
   ReferenceField,
 } from "react-admin";
+import UserShowActions from "./UserShowActions";
 
 const UserShow = (props: any) => (
-  <Show {...props}>
+  <Show {...props} actions={<UserShowActions />}>
     <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="name" />
