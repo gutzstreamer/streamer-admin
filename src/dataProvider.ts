@@ -19,7 +19,6 @@ export interface DataProviderWithCustomMethods extends DataProvider {
     },
     type?: "invoice" | "factory",
   ) => Promise<any>;
-  resetPassword: (resource: string, params: { id: string }) => Promise<any>;
 }
 
 const getToken = () => {
@@ -110,11 +109,6 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     type: "invoice" | "factory" = "invoice",
   ) {
     return httpClient(`${apiUrl}/${resource}/${params.id}/retry/${type}`, {
-      method: "POST",
-    });
-  },
-  resetPassword(resource: string, params: { id: string }) {
-    return httpClient(`${apiUrl}/${resource}/${params.id}/reset-password`, {
       method: "POST",
     });
   },

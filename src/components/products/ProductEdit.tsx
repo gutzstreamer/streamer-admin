@@ -22,6 +22,26 @@ import ProductImageInput from "./ProductImageInput";
 import { Button, Card, CardContent } from "@mui/material";
 import { useNotify, useRecordContext } from "react-admin";
 
+const SIZE_OPTIONS = [
+  { id: "P", name: "P" },
+  { id: "M", name: "M" },
+  { id: "G", name: "G" },
+  { id: "GG", name: "GG" },
+  { id: "XGG", name: "XGG" },
+  { id: "G1", name: "G1" },
+  { id: "G2", name: "G2" },
+  { id: "G3", name: "G3" },
+  { id: "G4", name: "G4" },
+  { id: "U", name: "U" },
+  { id: "2Anos", name: "2 anos" },
+  { id: "4Anos", name: "4 anos" },
+  { id: "6Anos", name: "6 anos" },
+  { id: "8Anos", name: "8 anos" },
+  { id: "10Anos", name: "10 anos" },
+  { id: "12Anos", name: "12 anos" },
+  { id: "14Anos", name: "14 anos" },
+];
+
 const transform = (data: any) => {
   return {
     ...data,
@@ -83,18 +103,20 @@ const ImagesReorder: React.FC = () => {
   const saveOrder = async () => {
     try {
       const apiUrl = (import.meta as any).env.VITE_SIMPLE_REST_URL;
-      const response = await fetch(`${apiUrl}/products/${record.id}/images/order`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await fetch(
+        `${apiUrl}/products/${record.id}/images/order`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ imageIds: order }),
         },
-        body: JSON.stringify({ imageIds: order }),
-      });
+      );
       if (response.ok) {
         notify("Ordem das cores atualizada", { type: "success" });
-      }
-      else {
+      } else {
         notify("Falha ao atualizar ordem das cores", { type: "warning" });
       }
     } catch (e) {
@@ -148,8 +170,14 @@ const ProductEdit: React.FC = (props) => (
         <TextInput source="factoryName" />
         <TextInput multiline source="description" />
         <TextInput source="ncm" />
-        <NumberInput source="cost" />
-        <NumberInput source="price" />
+        <NumberInput
+          source="cost"
+          format={(value) => (value ? Number(value).toFixed(2) : "")}
+        />
+        <NumberInput
+          source="price"
+          format={(value) => (value ? Number(value).toFixed(2) : "")}
+        />
         <SelectInput
           source="gender"
           choices={[
@@ -169,17 +197,18 @@ const ProductEdit: React.FC = (props) => (
         </ArrayInput>
       </FormTab>
       <FormTab label="Details">
-  <ImagesReorder />
+        <ImagesReorder />
         <ArrayInput source="images">
           <SimpleFormIterator>
             <ProductImageInput source="url" label="Product Image" />
             <TextInput source="color.name" label="Color Name" />
             <TextInput source="color.hex" label="Color Hex" />
-            <ArrayInput source="color.sizes">
+            <ArrayInput source="color.sizes" label="Tamanhos">
               <SimpleFormIterator>
-                <TextInput
+                <SelectInput
                   source="name"
-                  label="Size Name"
+                  label="Tamanho"
+                  choices={SIZE_OPTIONS}
                   validate={required()}
                 />
                 <TextInput source="sku" label="SKU" validate={required()} />
@@ -192,7 +221,12 @@ const ProductEdit: React.FC = (props) => (
         <ArrayInput source="taxComissions">
           <SimpleFormIterator>
             <TextInput source="name" label="Name" validate={required()} />
-            <NumberInput source="value" label="Value" validate={required()} />
+            <NumberInput
+              source="value"
+              label="Value"
+              validate={required()}
+              format={(value) => (value ? Number(value).toFixed(2) : "")}
+            />
             <ReferenceInput
               label="Subscription Plan"
               source="subscriptionPlanId"
