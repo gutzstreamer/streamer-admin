@@ -39,11 +39,12 @@ const SteamerRequestShow: React.FC<ShowProps> = (props) => (
     <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="name" />
+      <TextField source="atname" />
       <TextField source="email" />
       <TextField source="phone" />
       <TextField source="description" />
-      <DateField source="createdAt" />
-      <DateField source="updatedAt" />
+      <DateField source="createdAt" showTime />
+      <DateField source="updatedAt" showTime />
       <TextField source="status" />
       <TextField source="reason" />
       <ReferenceField source="userId" reference="users">
