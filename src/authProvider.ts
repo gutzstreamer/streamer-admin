@@ -13,13 +13,12 @@ export const authProvider: AuthProvider = {
           method: "POST",
           body: JSON.stringify({ email: username, password }),
           headers: new Headers({
-            "x-turnstile-token": captchaToken
-          })
+            "x-turnstile-token": captchaToken,
+          }),
         },
       );
       const { accessToken } = responseToken.json;
 
-      // Decodifica o token JWT para extrair os dados do usuário
       const payload = JSON.parse(atob(accessToken.split(".")[1]));
       const roles = payload["roles"] || [];
       const userId = payload["sub"] || payload["id"];
@@ -33,7 +32,6 @@ export const authProvider: AuthProvider = {
       }
 
       const user = {
-        password,
         id: userId,
         username: nickname,
         fullName: "Admin",
