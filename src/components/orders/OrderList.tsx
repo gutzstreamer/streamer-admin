@@ -6,11 +6,26 @@ import {
   DateField,
   NumberField,
   ReferenceField,
+  Filter,
+  SelectInput,
+  TextInput,
 } from "react-admin";
+
+import { statusOrderChoices } from "./index";
+
+const OrderListFilter: React.FC = (props) => (
+  <Filter {...props}>
+    <SelectInput
+      label="Origin Type"
+      source="originType"
+      choices={statusOrderChoices}
+    />
+  </Filter>
+);
 
 const OrderList: React.FC = (props) => {
   return (
-    <List {...props}>
+    <List {...props} filters={<OrderListFilter />}>
       <Datagrid rowClick="show">
         <TextField source="id" label="Order ID" />
         <ReferenceField source="userId" reference="users" label="User">
