@@ -16,8 +16,8 @@ import { statusOrderChoices } from "./index";
 const OrderListFilter: React.FC = (props) => (
   <Filter {...props}>
     <SelectInput
-      label="Origin Type"
-      source="originType"
+      label="Current Status"
+      source="currentStatus"
       choices={statusOrderChoices}
     />
   </Filter>
