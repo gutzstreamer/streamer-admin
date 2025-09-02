@@ -17,7 +17,7 @@ const OrderListFilter: React.FC = (props) => (
   <Filter {...props}>
     <SelectInput
       label="Current Status"
-      source="currentStatus"
+      source="status"
       choices={statusOrderChoices}
     />
   </Filter>
