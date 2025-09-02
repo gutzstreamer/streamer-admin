@@ -25,6 +25,7 @@ const OrderShow: React.FC = (props) => (
       >
         <TextField source="name" />
       </ReferenceField>
+      <TextField source="currentStatus" label="Status Atual" />
       <TextField source="paymentType" label="Tipo de Pagamento" />
       <TextField source="shippingSpeed" label="Velocidade de Envio" />
       <TextField source="deliveryMethodId" label="ID do Método de Entrega" />
