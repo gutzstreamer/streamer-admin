@@ -6,11 +6,19 @@ const ProductList: React.FC = (props) => (
     <Datagrid>
       <TextField source="id" />
       <TextField source="name" />
-      <TextField source="factoryName" />
-      <NumberField source="salePrice" />
-      <NumberField source="suggestedDiscountPrice" />
-      <NumberField source="suggestedPrice" />
+      <NumberField
+        source="cost"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
+      <NumberField
+        source="price"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
+      <TextField source="ncm" />
       <TextField source="gender" />
+      <TextField source="active" />
     </Datagrid>
   </List>
 );

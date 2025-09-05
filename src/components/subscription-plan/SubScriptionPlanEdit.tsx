@@ -8,12 +8,10 @@ const SubscriptionPlanEdit: React.FC = (props) => (
             <TextInput source="description" />
             <NumberInput source="price" />
             <NumberInput source="duration" />
-            <NumberInput source="commissionPlataform" />
-            <NumberInput source="commissionStreamer" />
-            <NumberInput source="donationFeeValue" />
-            <NumberInput source="storeFeeValue" />
-            <NumberInput source="allowedWithdrawals" />
-            <NumberInput source="withdrawalFeeValue" />
+            <NumberInput source="donationWithDrawallFee" />
+            <NumberInput source="donationWithDrawallLimit" />
+            <NumberInput source="marketWithDrawallFee" />
+            <NumberInput source="marketWithDrawallLimit" />
         </SimpleForm>
     </Edit>
 );

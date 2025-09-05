@@ -8,6 +8,11 @@ const UserList = (props: ListProps) => {
       <Datagrid>
         <TextField source="name" />
         <TextField source="id" />
+        <TextField source="email" />
+        <TextField source="phone" />
+        <TextField source="identityNumber" />
+        <TextField source="active" />
+        <TextField source="blocked" />
       </Datagrid>
     </List>
   );
