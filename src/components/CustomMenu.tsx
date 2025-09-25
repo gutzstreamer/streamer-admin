@@ -6,6 +6,7 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import SettingsIcon from "@mui/icons-material/Settings";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
 
@@ -14,6 +15,14 @@ export const CustomMenu = () => {
 
   return (
     <Menu>
+      {/* Dashboard */}
+      <MenuItemLink
+        to="/dashboard"
+        primaryText="📊 Dashboard"
+        leftIcon={<DashboardIcon />}
+      />
+      <Divider />
+      
       {/* Usuários */}
       <ListSubheader inset>Usuários</ListSubheader>
       <MenuItemLink

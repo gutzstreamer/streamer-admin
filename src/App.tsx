@@ -100,6 +100,7 @@ import ProductGridList from "./components/product-grids/ProductGridList";
 import ProductGridCreate from "./components/product-grids/ProductGridCreate";
 import ProductGridEdit from "./components/product-grids/ProductGridEdit";
 import ProductGridShow from "./components/product-grids/ProductGridShow";
+import Dashboard from "./components/Dashboard";
 
 export const App = () => (
   <Admin
@@ -107,6 +108,7 @@ export const App = () => (
     dataProvider={streamerDataProvider}
     authProvider={authProvider}
     loginPage={CustomLoginPage}
+    dashboard={Dashboard}
   >
     <Resource
       options={{ label: "Users" }}

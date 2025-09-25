@@ -8,12 +8,21 @@ import {
   DateField,
   Filter,
   TextInput,
+  SelectInput,
 } from "react-admin";
 import { ListProps } from "react-admin";
 
 const WalletFilter: React.FC = (props) => (
   <Filter {...props}>
     <TextInput label="User ID" source="userId" alwaysOn />
+    <SelectInput 
+      label="Type" 
+      source="type" 
+      choices={[
+        { id: 'market', name: 'Market' },
+        { id: 'donate', name: 'Donate' },
+      ]} 
+    />
   </Filter>
 );
 
