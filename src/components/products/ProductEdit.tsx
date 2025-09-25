@@ -8,15 +8,9 @@ import {
   SimpleFormIterator,
   required,
   BooleanInput,
-  ArrayField,
-  SingleFieldList,
-  ChipField,
   TabbedForm,
   FormTab,
   ReferenceInput,
-  ReferenceField,
-  ReferenceArrayInput,
-  SelectArrayInput,
 } from "react-admin";
 import ProductImageInput from "./ProductImageInput";
 import { Button, Card, CardContent } from "@mui/material";
@@ -195,6 +189,9 @@ const ProductEdit: React.FC = (props) => (
             </ReferenceInput>
           </SimpleFormIterator>
         </ArrayInput>
+        <ReferenceInput source="productGridId" reference="product-grid">
+          <SelectInput optionText="name" />
+        </ReferenceInput>
       </FormTab>
       <FormTab label="Details">
         <ImagesReorder />

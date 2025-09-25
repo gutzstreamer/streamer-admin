@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLogin, useNotify } from "react-admin";
 import Turnstile from "react-turnstile";
 
@@ -12,6 +12,9 @@ const CustomLoginPage = () => {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // ref para o widget do Turnstile
+  const turnstileWidget = useRef<any>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!captchaToken) {
@@ -23,6 +26,12 @@ const CustomLoginPage = () => {
       await login({ username: email, password, captchaToken });
     } catch (error: any) {
       notify(error?.message || "Login falhou", { type: "error" });
+
+      // 🔄 resetar captcha quando der erro
+      if (turnstileWidget.current) {
+        turnstileWidget.current.reset();
+      }
+      setCaptchaToken(null);
     } finally {
       setLoading(false);
     }
@@ -66,6 +75,10 @@ const CustomLoginPage = () => {
           <Turnstile
             sitekey={siteKey}
             onVerify={(token) => setCaptchaToken(token)}
+            onLoad={(widget) => {
+              // guarda o widget para resetar depois
+              turnstileWidget.current = widget;
+            }}
           />
         </div>
         <button

@@ -73,13 +73,11 @@ import {
   LocationOn,
   AccountBalanceWallet,
   SwapHoriz,
-  AssignmentInd,
   Storefront,
   MonetizationOn,
   LocalMall,
   Favorite,
   Category,
-  Settings,
   ShoppingCart,
   Cancel,
   Receipt,
@@ -88,8 +86,6 @@ import {
   Calculate,
   ToggleOn,
   Visibility,
-  Edit,
-  AddCircle,
   PlaylistAddCheck,
   SupportAgent,
 } from "@mui/icons-material";
@@ -100,6 +96,10 @@ import { SubscriptionUsageShow } from "./components/subscription-usages/Subscrip
 import ProductStreamerEdit from "./components/products-streamer/ProductStreamerEdit";
 import { ProfileEdit } from "./components/profile/ProfileEdit";
 import CustomLoginPage from "./components/CustomLoginPage";
+import ProductGridList from "./components/product-grids/ProductGridList";
+import ProductGridCreate from "./components/product-grids/ProductGridCreate";
+import ProductGridEdit from "./components/product-grids/ProductGridEdit";
+import ProductGridShow from "./components/product-grids/ProductGridShow";
 import Dashboard from "./components/Dashboard";
 
 export const App = () => (
@@ -236,6 +236,15 @@ export const App = () => (
       create={CategoryCreate}
       edit={CategoryEdit}
       show={CategoryShow}
+    />
+    <Resource
+      options={{ label: "Product Grid" }}
+      name="product-grid"
+      icon={PlaylistAddCheck}
+      list={ProductGridList}
+      create={ProductGridCreate}
+      edit={ProductGridEdit}
+      show={ProductGridShow}
     />
     <Resource
       options={{ label: "Products" }}

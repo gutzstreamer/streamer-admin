@@ -100,6 +100,11 @@ export const CustomMenu = () => {
         primaryText="Categorias"
         leftIcon={<LocalMallIcon />}
       />
+      <MenuItemLink
+        to="/product-grid"
+        primaryText="Grade de Produtos"
+        leftIcon={<LocalMallIcon />}
+      />
 
       <Divider />
 

@@ -103,6 +103,9 @@ const ProductCreate: React.FC = (props) => {
           >
             <SelectArrayInput optionText="name" />
           </ReferenceArrayInput>
+          <ReferenceInput source="productGridId" reference="product-grid">
+            <SelectInput optionText="name" />
+          </ReferenceInput>
         </FormTab>
         <FormTab label="Details">
           <ArrayInput source="images">
