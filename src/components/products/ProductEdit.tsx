@@ -8,15 +8,9 @@ import {
   SimpleFormIterator,
   required,
   BooleanInput,
-  ArrayField,
-  SingleFieldList,
-  ChipField,
   TabbedForm,
   FormTab,
   ReferenceInput,
-  ReferenceField,
-  ReferenceArrayInput,
-  SelectArrayInput,
 } from "react-admin";
 import ProductImageInput from "./ProductImageInput";
 import { Button, Card, CardContent } from "@mui/material";
