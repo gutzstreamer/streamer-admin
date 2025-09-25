@@ -1,13 +1,14 @@
 import React from "react";
-import { Show, SimpleShowLayout, TextField } from "react-admin";
+import { Show, SimpleShowLayout, TextField, ImageField } from "react-admin";
 
 const ProductGridShow: React.FC = (props) => (
   <Show {...props}>
     <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="name" />
-      <TextField source="url" />
+      <ImageField source="url" label="Image" />
     </SimpleShowLayout>
   </Show>
 );
+
 export default ProductGridShow;

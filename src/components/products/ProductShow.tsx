@@ -30,6 +30,9 @@ const ProductShow: React.FC = (props) => (
         locales="pt-BR"
       />
       <TextField source="gender" />
+      <ReferenceField source="productGridId" reference="product-grid" link="show">
+        <ChipField source="name" />
+      </ReferenceField>
       <ArrayField source="taxComissions">
         <SingleFieldList linkType={false}>
           <ChipField source="name" />

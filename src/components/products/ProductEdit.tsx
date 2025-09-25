@@ -189,6 +189,9 @@ const ProductEdit: React.FC = (props) => (
             </ReferenceInput>
           </SimpleFormIterator>
         </ArrayInput>
+        <ReferenceInput source="productGridId" reference="product-grid">
+          <SelectInput optionText="name" />
+        </ReferenceInput>
       </FormTab>
       <FormTab label="Details">
         <ImagesReorder />
