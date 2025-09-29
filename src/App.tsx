@@ -88,6 +88,8 @@ import {
   Visibility,
   PlaylistAddCheck,
   SupportAgent,
+  Tv,
+  Webhook,
 } from "@mui/icons-material";
 import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
@@ -101,6 +103,10 @@ import ProductGridCreate from "./components/product-grids/ProductGridCreate";
 import ProductGridEdit from "./components/product-grids/ProductGridEdit";
 import ProductGridShow from "./components/product-grids/ProductGridShow";
 import Dashboard from "./components/Dashboard";
+import StreamingPlatformIntegrationList from "./components/streaming-platform-integrations/StreamingPlatformIntegrationList";
+import StreamingPlatformIntegrationShow from "./components/streaming-platform-integrations/StreamingPlatformIntegrationShow";
+import PlatformWebhookList from "./components/platform-webhooks/PlatformWebhookList";
+import PlatformWebhookShow from "./components/platform-webhooks/PlatformWebhookShow";
 
 export const App = () => (
   <Admin
@@ -299,6 +305,20 @@ export const App = () => (
       icon={Factory}
       list={FactoryList}
       show={FactoryShow}
+    />
+    <Resource
+      options={{ label: "Streaming Platform Integrations" }}
+      name="streaming-platform-integrations"
+      icon={Tv}
+      list={StreamingPlatformIntegrationList}
+      show={StreamingPlatformIntegrationShow}
+    />
+    <Resource
+      options={{ label: "Platform Webhooks" }}
+      name="platform-webhooks"
+      icon={Webhook}
+      list={PlatformWebhookList}
+      show={PlatformWebhookShow}
     />
     <Resource
       options={{ label: "Calculation Fees" }}
