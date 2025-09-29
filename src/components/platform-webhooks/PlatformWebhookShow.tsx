@@ -20,7 +20,7 @@ const PlatformWebhookShow: React.FC = (props) => (
       <TextField source="subscriptionId" label="Subscription ID" />
       <ReferenceField
         source="integrationId"
-        reference="admin/streaming-platform-integrations"
+        reference="streaming-platform-integrations"
         label="Integration"
         link="show"
       >
