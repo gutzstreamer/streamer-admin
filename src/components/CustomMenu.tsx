@@ -22,7 +22,7 @@ export const CustomMenu = () => {
         leftIcon={<DashboardIcon />}
       />
       <Divider />
-      
+
       {/* Usuários */}
       <ListSubheader inset>Usuários</ListSubheader>
       <MenuItemLink
@@ -84,6 +84,16 @@ export const CustomMenu = () => {
         to="/withdrawal-requests"
         primaryText="Saques"
         leftIcon={<AccountBalanceWalletIcon />}
+      />
+      <MenuItemLink
+        to="/streaming-platform-integrations"
+        primaryText="Integrações"
+        leftIcon={<StorefrontIcon />}
+      />
+      <MenuItemLink
+        to="/platform-webhooks"
+        primaryText="Webhooks"
+        leftIcon={<StorefrontIcon />}
       />
 
       <Divider />
