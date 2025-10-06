@@ -13,7 +13,6 @@ import {
   DialogActions,
   Typography,
   Box,
-  Chip,
   Alert,
 } from "@mui/material";
 import ReplayIcon from "@mui/icons-material/Replay";
@@ -157,21 +156,14 @@ const OrderShowActions = () => {
             <Box>
               <Alert
                 severity={checkResult.success ? "success" : "error"}
-                sx={{ mb: 3 }}
+                sx={{ mb: 1.5 }}
+                icon={getStatusIcon(checkResult.status, checkResult.success)}
               >
                 <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                   {checkResult.title}
                 </Typography>
                 <Typography variant="body2">{checkResult.message}</Typography>
               </Alert>
-
-              <Box mb={2}>
-                <Chip
-                  label={checkResult.success ? "✅ Sucesso" : "❌ Erro"}
-                  color={checkResult.success ? "success" : "error"}
-                  size="small"
-                />
-              </Box>
 
               {/* Informações do Pedido */}
               {checkResult.order && (
@@ -226,8 +218,8 @@ const OrderShowActions = () => {
                 </Box>
               )}
 
-              {/* Status detalhado */}
-              <Box mt={2} p={2} bgcolor="grey.50" borderRadius={1}>
+              {/* Status técnico */}
+              <Box mt={1}>
                 <Typography variant="caption" color="text.secondary">
                   <strong>Status Técnico:</strong> {checkResult.status}
                 </Typography>
