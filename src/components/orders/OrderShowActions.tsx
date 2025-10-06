@@ -38,31 +38,11 @@ const OrderShowActions = () => {
   const notify = useNotify();
   const refresh = useRefresh();
 
-  const [loading, setLoading] = useState<"invoice" | "factory" | null>(null);
   const [loadingChecks, setLoadingChecks] = useState<
     "invoice" | "factory" | null
   >(null);
   const [checkResult, setCheckResult] = useState<CheckResult | null>(null);
   const [showResultDialog, setShowResultDialog] = useState(false);
-
-  const getStatusColor = (status: string, success: boolean) => {
-    if (!success) return "error";
-
-    switch (status) {
-      case "invoice_exists":
-      case "already_in_factory":
-      case "sent_successfully":
-        return "success";
-      case "invoice_generation_started":
-      case "found_and_synced":
-        return "info";
-      case "invalid_status":
-      case "generation_failed":
-        return "warning";
-      default:
-        return "default";
-    }
-  };
 
   const getStatusIcon = (status: string, success: boolean) => {
     if (!success) return <ErrorIcon />;
@@ -77,29 +57,6 @@ const OrderShowActions = () => {
         return <InfoIcon />;
       default:
         return <InfoIcon />;
-    }
-  };
-
-  const handleRetry = async (type: "invoice" | "factory") => {
-    if (!record) {
-      notify("Registro não encontrado.", { type: "warning" });
-      return;
-    }
-    setLoading(type);
-    try {
-      await streamerDataProvider.retry(
-        "orders",
-        { id: record.id.toString() },
-        type,
-      );
-      notify(`Retry ${type} executado com sucesso`, { type: "success" });
-      refresh();
-    } catch (error: any) {
-      notify(`Erro ao executar Retry ${type}: ${error.message}`, {
-        type: "error",
-      });
-    } finally {
-      setLoading(null);
     }
   };
 
@@ -178,46 +135,13 @@ const OrderShowActions = () => {
         >
           {loadingChecks === "factory" ? "Processando..." : "Check Factory"}
         </Button>
-
-        <Button
-          variant="outlined"
-          color="secondary"
-          size="small"
-          startIcon={
-            loading === "invoice" ? (
-              <CircularProgress size={16} color="inherit" />
-            ) : (
-              <ReplayIcon />
-            )
-          }
-          onClick={() => handleRetry("invoice")}
-          disabled={loading !== null}
-        >
-          {loading === "invoice" ? "Processando..." : "Retry Invoice"}
-        </Button>
-        <Button
-          variant="outlined"
-          color="secondary"
-          size="small"
-          startIcon={
-            loading === "factory" ? (
-              <CircularProgress size={16} color="inherit" />
-            ) : (
-              <ReplayIcon />
-            )
-          }
-          onClick={() => handleRetry("factory")}
-          disabled={loading !== null}
-        >
-          {loading === "factory" ? "Processando..." : "Retry Factory"}
-        </Button>
       </TopToolbar>
 
       {/* Modal para mostrar os resultados do check */}
       <Dialog
         open={showResultDialog}
         onClose={handleCloseDialog}
-        maxWidth="md"
+        maxWidth="sm"
         fullWidth
       >
         <DialogTitle>
@@ -233,87 +157,87 @@ const OrderShowActions = () => {
             <Box>
               <Alert
                 severity={checkResult.success ? "success" : "error"}
-                sx={{ mb: 2 }}
+                sx={{ mb: 3 }}
               >
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                   {checkResult.title}
                 </Typography>
-                <Typography variant="body1">{checkResult.message}</Typography>
+                <Typography variant="body2">{checkResult.message}</Typography>
               </Alert>
 
-              <Box display="flex" gap={1} mb={2}>
+              <Box mb={2}>
                 <Chip
-                  label={`Status: ${checkResult.status}`}
-                  color={
-                    getStatusColor(
-                      checkResult.status,
-                      checkResult.success,
-                    ) as any
-                  }
-                  variant="outlined"
-                />
-                <Chip
-                  label={checkResult.success ? "Sucesso" : "Erro"}
+                  label={checkResult.success ? "✅ Sucesso" : "❌ Erro"}
                   color={checkResult.success ? "success" : "error"}
+                  size="small"
                 />
               </Box>
 
-              {checkResult.invoice && (
-                <Box mt={2}>
-                  <Typography variant="subtitle1" gutterBottom>
-                    📄 Informações da Nota Fiscal:
-                  </Typography>
-                  <Box bgcolor="grey.100" p={2} borderRadius={1}>
-                    <Typography variant="body2">
-                      ID: {checkResult.invoice.id}
-                    </Typography>
-                    {checkResult.invoice.status && (
-                      <Typography variant="body2">
-                        Status: {checkResult.invoice.status}
-                      </Typography>
-                    )}
-                  </Box>
-                </Box>
-              )}
-
-              {checkResult.factoryOrder && (
-                <Box mt={2}>
-                  <Typography variant="subtitle1" gutterBottom>
-                    🏭 Informações da Fábrica:
-                  </Typography>
-                  <Box bgcolor="grey.100" p={2} borderRadius={1}>
-                    <Typography variant="body2">
-                      Order ID: {checkResult.factoryOrder.id}
-                    </Typography>
-                  </Box>
-                </Box>
-              )}
-
+              {/* Informações do Pedido */}
               {checkResult.order && (
-                <Box mt={2}>
-                  <Typography variant="subtitle1" gutterBottom>
-                    📦 Informações do Pedido:
+                <Box mb={2}>
+                  <Typography variant="subtitle2" color="primary" gutterBottom>
+                    � Pedido
                   </Typography>
-                  <Box bgcolor="grey.100" p={2} borderRadius={1}>
-                    <Typography variant="body2">
-                      ID: {checkResult.order.id}
-                    </Typography>
-                    <Typography variant="body2">
-                      Status Atual: {checkResult.order.currentStatus}
-                    </Typography>
-                    <Typography variant="body2">
-                      Valor Total: R${" "}
-                      {checkResult.order.totalAmount?.toFixed(2)}
-                    </Typography>
-                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    <strong>ID:</strong> {checkResult.order.id}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <strong>Status:</strong> {checkResult.order.currentStatus}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <strong>Valor:</strong> R${" "}
+                    {checkResult.order.totalAmount?.toFixed(2)}
+                  </Typography>
                 </Box>
               )}
+
+              {/* Informações da Nota Fiscal */}
+              {checkResult.invoice && (
+                <Box mb={2}>
+                  <Typography variant="subtitle2" color="primary" gutterBottom>
+                    📄 Nota Fiscal
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <strong>ID:</strong> {checkResult.invoice.id}
+                  </Typography>
+                  {checkResult.invoice.status && (
+                    <Typography variant="body2" color="text.secondary">
+                      <strong>Status:</strong> {checkResult.invoice.status}
+                    </Typography>
+                  )}
+                </Box>
+              )}
+
+              {/* Informações da Fábrica */}
+              {checkResult.factoryOrder && (
+                <Box mb={2}>
+                  <Typography variant="subtitle2" color="primary" gutterBottom>
+                    🏭 Fábrica
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <strong>Order ID:</strong> {checkResult.factoryOrder.id}
+                  </Typography>
+                  {checkResult.factoryOrder.status && (
+                    <Typography variant="body2" color="text.secondary">
+                      <strong>Status:</strong> {checkResult.factoryOrder.status}
+                    </Typography>
+                  )}
+                </Box>
+              )}
+
+              {/* Status detalhado */}
+              <Box mt={2} p={2} bgcolor="grey.50" borderRadius={1}>
+                <Typography variant="caption" color="text.secondary">
+                  <strong>Status Técnico:</strong> {checkResult.status}
+                </Typography>
+              </Box>
             </Box>
           )}
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
+          <Button onClick={handleCloseDialog} variant="contained">
             Fechar
           </Button>
         </DialogActions>
