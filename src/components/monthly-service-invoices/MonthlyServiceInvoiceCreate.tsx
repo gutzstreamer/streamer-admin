@@ -139,7 +139,7 @@ const MonthlyServiceInvoiceCreate: React.FC = (props) => {
                 Você está prestes a gerar uma nota fiscal mensal com os seguintes dados:
               </Typography>
               
-              <Box sx={{ mt: 2, p: 2, bgcolor: "grey.100", borderRadius: 1 }}>
+              <Box sx={{ mt: 2, p: 2, bgcolor: "action.hover", borderRadius: 1, border: 1, borderColor: "divider" }}>
                 <Typography><strong>Período:</strong> {getMonthName(formData.month)}/{formData.year}</Typography>
                 <Typography><strong>Streamer ID:</strong> {formData.streamerId}</Typography>
               </Box>
