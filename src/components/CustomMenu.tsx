@@ -86,6 +86,11 @@ export const CustomMenu = () => {
         leftIcon={<AccountBalanceWalletIcon />}
       />
       <MenuItemLink
+        to="/monthly-service-invoices"
+        primaryText="Notas Fiscais Mensais"
+        leftIcon={<AccountBalanceWalletIcon />}
+      />
+      <MenuItemLink
         to="/streaming-platform-integrations"
         primaryText="Integrações"
         leftIcon={<StorefrontIcon />}
