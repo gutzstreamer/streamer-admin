@@ -8,6 +8,7 @@ const SubscriptionPlanCreate: React.FC = (props) => (
             <TextInput source="description" />
             <NumberInput source="price" />
             <NumberInput source="duration" />
+            <NumberInput source="donationFee" />
             <NumberInput source="donationWithDrawallFee" />
             <NumberInput source="donationWithDrawallLimit" />
             <NumberInput source="marketWithDrawallFee" />
