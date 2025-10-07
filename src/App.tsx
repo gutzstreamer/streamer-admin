@@ -107,6 +107,11 @@ import StreamingPlatformIntegrationList from "./components/streaming-platform-in
 import StreamingPlatformIntegrationShow from "./components/streaming-platform-integrations/StreamingPlatformIntegrationShow";
 import PlatformWebhookList from "./components/platform-webhooks/PlatformWebhookList";
 import PlatformWebhookShow from "./components/platform-webhooks/PlatformWebhookShow";
+import MonthlyServiceInvoiceList from "./components/monthly-service-invoices/MonthlyServiceInvoiceList";
+import {
+  MonthlyServiceInvoiceShow,
+  MonthlyServiceInvoiceCreate,
+} from "./components/monthly-service-invoices";
 
 export const App = () => (
   <Admin
@@ -116,6 +121,13 @@ export const App = () => (
     loginPage={CustomLoginPage}
     dashboard={Dashboard}
   >
+    <Resource
+      name="monthly-service-invoices"
+      list={MonthlyServiceInvoiceList}
+      show={MonthlyServiceInvoiceShow}
+      create={MonthlyServiceInvoiceCreate}
+      options={{ label: "Service Invoices Monthly" }}
+    />
     <Resource
       options={{ label: "Users" }}
       name="users"
