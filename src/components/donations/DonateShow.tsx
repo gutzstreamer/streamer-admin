@@ -20,6 +20,12 @@ const DonateShow: React.FC = (props) => (
         options={{ style: "currency", currency: "BRL" }}
         locales="pt-BR"
       />
+      <NumberField source="fee" locales="pt-BR" />
+      <NumberField
+        source="netAmount"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
       <TextField source="message" />
       <TextField source="username" />
       <TextField source="paymentCode" />

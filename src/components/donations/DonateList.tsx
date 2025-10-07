@@ -32,6 +32,13 @@ const DonateList = (props: ListProps) => (
         options={{ style: "currency", currency: "BRL" }}
         locales="pt-BR"
       />
+      <NumberField source="fee" locales="pt-BR" />
+      <NumberField
+        source="netAmount"
+        options={{ style: "currency", currency: "BRL" }}
+        locales="pt-BR"
+      />
+      <TextField source="message" />
       <TextField source="username" />
       <DateField source="createdAt" />
     </Datagrid>
