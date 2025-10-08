@@ -77,7 +77,6 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
         body: JSON.stringify(params.data),
       }).then(({ json }) => {
         if (!json) {
-          console.error("Resposta da API vazia");
           return { data: { id: params.id, ...params.data } };
         }
         return { data: { id: params.id, ...json } };
