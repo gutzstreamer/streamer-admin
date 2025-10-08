@@ -90,6 +90,7 @@ import {
   SupportAgent,
   Tv,
   Webhook,
+  Dashboard as DashboardIcon,
 } from "@mui/icons-material";
 import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
@@ -121,6 +122,12 @@ export const App = () => (
     loginPage={CustomLoginPage}
     dashboard={Dashboard}
   >
+    <Resource
+      name="dashboard"
+      list={Dashboard}
+      icon={DashboardIcon}
+      options={{ label: "Dashboard" }}
+    />
     <Resource
       name="monthly-service-invoices"
       list={MonthlyServiceInvoiceList}
