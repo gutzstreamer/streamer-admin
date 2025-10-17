@@ -91,6 +91,7 @@ import {
   Tv,
   Webhook,
   Dashboard as DashboardIcon,
+  Mic,
 } from "@mui/icons-material";
 import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
@@ -113,6 +114,8 @@ import {
   MonthlyServiceInvoiceShow,
   MonthlyServiceInvoiceCreate,
 } from "./components/monthly-service-invoices";
+import AIVoiceList from "./components/ai-voices/AIVoiceList";
+import AIVoiceEdit from "./components/ai-voices/AIVoiceEdit";
 
 export const App = () => (
   <Admin
@@ -347,6 +350,13 @@ export const App = () => (
       show={CalculationFeeShow}
       edit={CalculationFeeEdit}
       create={CalculationFeeCreate}
+    />
+    <Resource
+      options={{ label: "AI Voices" }}
+      name="ai-voice"
+      icon={Mic}
+      list={AIVoiceList}
+      edit={AIVoiceEdit}
     />
   </Admin>
 );
