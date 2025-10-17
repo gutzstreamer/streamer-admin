@@ -63,9 +63,12 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     const url = `${apiUrl}/${resource}${hasFilter ? "" : "/all"}?${queryString}`;
 
     return httpClient(url).then(({ headers, json }) => {
+      const data = json.data ? json.data : json;
+      const total = json.pagination?.total ?? json.total ?? (Array.isArray(data) ? data.length : 0);
+      
       return {
-        data: json.data ? json.data : json,
-        total: json.pagination?.total ?? json.total ?? 0,
+        data,
+        total,
       };
     });
   },
