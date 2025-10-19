@@ -72,6 +72,11 @@ export const CustomMenu = () => {
         leftIcon={<LocalMallIcon />}
       />
       <MenuItemLink
+        to="/refer"
+        primaryText="Indicações"
+        leftIcon={<PeopleIcon />}
+      />
+      <MenuItemLink
         to="/donations"
         primaryText="Doações"
         leftIcon={<LocalMallIcon />}

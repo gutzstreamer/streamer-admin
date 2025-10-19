@@ -116,6 +116,7 @@ import {
 } from "./components/monthly-service-invoices";
 import AIVoiceList from "./components/ai-voices/AIVoiceList";
 import AIVoiceEdit from "./components/ai-voices/AIVoiceEdit";
+import refer from "./components/refer";
 
 export const App = () => (
   <Admin
@@ -357,6 +358,12 @@ export const App = () => (
       icon={Mic}
       list={AIVoiceList}
       edit={AIVoiceEdit}
+    />
+    <Resource
+      options={{ label: "Indicações" }}
+      name="refer"
+      icon={People}
+      {...refer}
     />
   </Admin>
 );
