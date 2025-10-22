@@ -154,16 +154,15 @@ const SyncClonedVoicesButton: React.FC = () => {
   );
 };
 
-const ListActions = () => (
-  <TopToolbar>
-    <SyncClonedVoicesButton />
-  </TopToolbar>
-);
-
 const AIVoiceList: React.FC = (props) => (
   <>
-    <ElevenLabsStatus />
-    <List {...props} actions={<ListActions />}>
+    <Box display="flex" justifyContent="space-between" alignItems="center" gap={2} mb={2}>
+      <Box flex={1}>
+        <ElevenLabsStatus />
+      </Box>
+      <SyncClonedVoicesButton />
+    </Box>
+    <List {...props}>
       <Datagrid rowClick="edit">
         <TextField source="name" label="Nome" />
         <TextField source="category" label="Categoria" />
