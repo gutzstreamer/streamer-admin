@@ -49,6 +49,7 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
       Object.entries(filter).filter(([_, v]) => v !== undefined && v !== ""),
     );
 
+    // Lógica padrão para todos os resources
     const query = {
       ...cleanFilter,
       page: pagination?.page ?? 1,
@@ -60,12 +61,18 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     const queryString = new URLSearchParams(query as any).toString();
 
     const hasFilter = Object.keys(cleanFilter).length > 0;
-    const url = `${apiUrl}/${resource}${hasFilter ? "" : "/all"}?${queryString}`;
+    
+    // 🦏 Refer não tem endpoint /all, sempre usa o endpoint raiz
+    const useAllEndpoint = resource !== 'refer' && !hasFilter;
+    const url = `${apiUrl}/${resource}${useAllEndpoint ? "/all" : ""}?${queryString}`;
 
-    return httpClient(url).then(({ headers, json }) => {
+    return httpClient(url).then(({ json }) => {
+      const data = json.data ? json.data : json;
+      const total = json.pagination?.total ?? json.total ?? (Array.isArray(data) ? data.length : 0);
+      
       return {
-        data: json.data ? json.data : json,
-        total: json.pagination?.total ?? json.total ?? 0,
+        data,
+        total,
       };
     });
   },

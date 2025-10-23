@@ -7,6 +7,7 @@ import LocalMallIcon from "@mui/icons-material/LocalMall";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import MicIcon from "@mui/icons-material/Mic";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
 
@@ -69,6 +70,11 @@ export const CustomMenu = () => {
         to="/commission-streamer"
         primaryText="Comissões"
         leftIcon={<LocalMallIcon />}
+      />
+      <MenuItemLink
+        to="/refer"
+        primaryText="Indicações"
+        leftIcon={<PeopleIcon />}
       />
       <MenuItemLink
         to="/donations"
@@ -165,7 +171,15 @@ export const CustomMenu = () => {
         primaryText="Taxas"
         leftIcon={<AccountBalanceWalletIcon />}
       />
+      <Divider />
 
+      {/* Vozes de IA */}
+      <ListSubheader inset>Alertas</ListSubheader>
+      <MenuItemLink
+        to="/ai-voice"
+        primaryText="Gerenciar Vozes"
+        leftIcon={<MicIcon />}
+      />
       <Divider />
 
       {/* Sistema */}
@@ -180,6 +194,8 @@ export const CustomMenu = () => {
         primaryText="Feature Toggles"
         leftIcon={<SettingsIcon />}
       />
+
+
     </Menu>
   );
 };

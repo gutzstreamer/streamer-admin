@@ -15,7 +15,6 @@ const StreamerFilter: React.FC = (props) => (
     <TextInput label="User ID" source="userId" alwaysOn />
     <TextInput label="Name" source="name" alwaysOn />
     <TextInput label="Atname" source="atname" alwaysOn />
-    <TextInput label="Referral Atname" source="referralAtname" alwaysOn />
   </Filter>
 );
 
@@ -30,7 +29,6 @@ const StreamerList: React.FC = (props) => {
         <ReferenceField source="userId" reference="users">
           <TextField source="name" />
         </ReferenceField>
-        <TextField source="referralAtname" />
         <ShowButton />
         <EditButton />
       </Datagrid>
