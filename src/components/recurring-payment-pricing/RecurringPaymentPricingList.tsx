@@ -48,10 +48,10 @@ export const RecurringPaymentPricingList = (props: ListProps) => (
       <SelectField source="resourceType" choices={resourceTypeChoices} />
       <SelectField source="interval" choices={intervalChoices} />
       <NumberField
-        source="amount"
+        source="price"
         options={{ style: "currency", currency: "BRL" }}
-        transform={(value: number) => value / 100}
       />
+      <TextField source="durationDays" label="Duração (dias)" />
       <BooleanField source="isActive" />
       <DateField source="createdAt" showTime />
     </Datagrid>

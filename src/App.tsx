@@ -172,7 +172,10 @@ export const App = () => (
       create={SubscriptionPlanCreate}
       edit={SubscriptionPlanEdit}
       show={SubscriptionPlanShow}
-    />Preços Recorrentes" }}
+    />
+
+    <Resource
+      options={{ label: "Preços Recorrentes" }}
       name="recurring-payment-pricing"
       icon={Repeat}
       list={RecurringPaymentPricingList}
@@ -194,8 +197,6 @@ export const App = () => (
       list={RecurringPaymentTransactionList}
       show={RecurringPaymentTransactionShow}
     />
-    <Resource
-      options={{ label: "
     <Resource
       options={{ label: "User Subscriptions" }}
       name="subscription"

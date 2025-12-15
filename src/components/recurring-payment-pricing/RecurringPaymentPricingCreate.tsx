@@ -8,6 +8,8 @@ import {
   ReferenceInput,
   required,
 } from "react-admin";
+import { useFormContext, useWatch } from "react-hook-form";
+import { useEffect } from "react";
 
 const intervalChoices = [
   { id: "MONTHLY", name: "Mensal" },
@@ -22,6 +24,66 @@ const resourceTypeChoices = [
   { id: "CUSTOM", name: "Personalizado" },
 ];
 
+const ResourceIdField = () => {
+  const resourceType = useWatch({ name: "resourceType" });
+
+  if (resourceType === "SUBSCRIPTION_PLAN") {
+    return (
+      <ReferenceInput
+        source="resourceId"
+        reference="subscription-plan"
+        label="Plano"
+      >
+        <SelectInput optionText="name" />
+      </ReferenceInput>
+    );
+  }
+
+  return (
+    <TextInput
+      source="resourceId"
+      disabled
+      helperText="Funcionalidade ainda não disponível para este tipo de recurso"
+    />
+  );
+};
+
+const DurationDaysField = () => {
+  const { setValue } = useFormContext();
+  const interval = useWatch({ name: "interval" });
+
+  const durationMap: Record<string, number> = {
+    MONTHLY: 30,
+    QUARTERLY: 90,
+    YEARLY: 365,
+  };
+
+  const calculatedDays = durationMap[interval] || 30;
+
+  useEffect(() => {
+    setValue("durationDays", calculatedDays);
+  }, [interval, calculatedDays, setValue]);
+
+  const helperText =
+    interval === "MONTHLY"
+      ? "Mensal (30 dias)"
+      : interval === "QUARTERLY"
+        ? "Trimestral (90 dias)"
+        : interval === "YEARLY"
+          ? "Anual (365 dias)"
+          : "";
+
+  return (
+    <NumberInput
+      source="durationDays"
+      label="Duração (dias)"
+      validate={required()}
+      readOnly
+      helperText={`Calculado automaticamente: ${helperText}`}
+    />
+  );
+};
+
 export const RecurringPaymentPricingCreate = (props: any) => (
   <Create {...props}>
     <SimpleForm>
@@ -33,27 +95,17 @@ export const RecurringPaymentPricingCreate = (props: any) => (
         defaultValue="SUBSCRIPTION_PLAN"
       />
 
-      {/* Vincular ao Subscription Plan (condicional) */}
-      <ReferenceInput
-        source="resourceId"
-        reference="subscription-plan"
-        label="Plano de Assinatura"
-      >
-        <SelectInput optionText="name" />
-      </ReferenceInput>
+      {/* Resource ID - UUID do recurso (plano, membership, etc) */}
+      <ResourceIdField />
 
-      {/* Informações do Preço */}
+      {/* Nome do Pricing */}
       <TextInput source="name" validate={required()} />
+
+      {/* Descrição */}
       <TextInput source="description" multiline rows={3} />
 
-      {/* Valor em REAIS (converter para centavos no transform) */}
-      <NumberInput
-        source="amount"
-        label="Valor (R$)"
-        validate={required()}
-        format={(v: number) => v / 100}
-        parse={(v: number) => Math.round(v * 100)}
-      />
+      {/* Preço */}
+      <NumberInput source="price" label="Preço (R$)" validate={required()} />
 
       {/* Intervalo de Cobrança */}
       <SelectInput
@@ -63,8 +115,19 @@ export const RecurringPaymentPricingCreate = (props: any) => (
         defaultValue="MONTHLY"
       />
 
+      {/* Duração em dias (calculado automaticamente) */}
+      <DurationDaysField />
+
       {/* Status */}
       <BooleanInput source="isActive" defaultValue={true} />
+
+      {/* Metadata (JSON) */}
+      <TextInput
+        source="metadata"
+        multiline
+        rows={3}
+        helperText="JSON opcional"
+      />
     </SimpleForm>
   </Create>
 );

@@ -41,10 +41,10 @@ export const RecurringPaymentPricingShow = (props: any) => (
       <TextField source="name" />
       <TextField source="description" />
       <NumberField
-        source="amount"
+        source="price"
         options={{ style: "currency", currency: "BRL" }}
-        transform={(value: number) => value / 100}
       />
+      <TextField source="durationDays" label="Duração (dias)" />
       <SelectField source="interval" choices={intervalChoices} />
 
       {/* Status */}

@@ -40,10 +40,11 @@ const SubscriptionPlanShow: React.FC = (props) => (
         <Datagrid rowClick="show">
           <TextField source="name" />
           <SelectField source="interval" choices={intervalChoices} />
+          <NumberField source="durationDays" label="Duração (dias)" />
           <NumberField
-            source="amount"
+            source="price"
+            label="Preço"
             options={{ style: "currency", currency: "BRL" }}
-            transform={(v: number) => v / 100}
           />
           <BooleanField source="isActive" />
         </Datagrid>

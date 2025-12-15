@@ -8,6 +8,9 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MicIcon from "@mui/icons-material/Mic";
+import RepeatIcon from "@mui/icons-material/Repeat";
+import PaymentIcon from "@mui/icons-material/Payment";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
 
@@ -170,6 +173,25 @@ export const CustomMenu = () => {
         to="/calculation-fee"
         primaryText="Taxas"
         leftIcon={<AccountBalanceWalletIcon />}
+      />
+      <Divider />
+
+      {/* Pagamentos Recorrentes */}
+      <ListSubheader inset>Recorrentes</ListSubheader>
+      <MenuItemLink
+        to="/recurring-payment-pricing"
+        primaryText="Preços"
+        leftIcon={<RepeatIcon />}
+      />
+      <MenuItemLink
+        to="/recurring-payment-subscription"
+        primaryText="Assinaturas"
+        leftIcon={<PaymentIcon />}
+      />
+      <MenuItemLink
+        to="/recurring-payment-transaction"
+        primaryText="Transações"
+        leftIcon={<ReceiptIcon />}
       />
       <Divider />
 
