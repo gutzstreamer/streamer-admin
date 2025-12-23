@@ -118,6 +118,17 @@ import AIVoiceList from "./components/ai-voices/AIVoiceList";
 import AIVoiceEdit from "./components/ai-voices/AIVoiceEdit";
 import refer from "./components/refer";
 
+// Virtual Products imports
+import { VirtualProductList } from "./components/virtual-products/VirtualProductList";
+import { VirtualProductShow } from "./components/virtual-products/VirtualProductShow";
+import { VirtualOrderList } from "./components/virtual-orders/VirtualOrderList";
+import { VirtualOrderShow } from "./components/virtual-orders/VirtualOrderShow";
+import { ProductKeyList } from "./components/product-keys/ProductKeyList";
+import { ProductKeyCreate } from "./components/product-keys/ProductKeyCreate";
+import { ProductKeyShow } from "./components/product-keys/ProductKeyShow";
+import { BookingList } from "./components/bookings/BookingList";
+import { BookingShow } from "./components/bookings/BookingShow";
+
 export const App = () => (
   <Admin
     layout={Layout}
@@ -359,6 +370,39 @@ export const App = () => (
       list={AIVoiceList}
       edit={AIVoiceEdit}
     />
+    
+    {/* Virtual Products Resources */}
+    <Resource
+      options={{ label: "Virtual Products" }}
+      name="virtual-products"
+      icon={Storefront}
+      list={VirtualProductList}
+      show={VirtualProductShow}
+    />
+    <Resource
+      options={{ label: "Virtual Orders" }}
+      name="virtual-orders"
+      icon={ShoppingCart}
+      list={VirtualOrderList}
+      show={VirtualOrderShow}
+    />
+    <Resource
+      options={{ label: "Product Keys" }}
+      name="product-keys"
+      icon={PlaylistAddCheck}
+      list={ProductKeyList}
+      create={ProductKeyCreate}
+      show={ProductKeyShow}
+    />
+    <Resource
+      options={{ label: "Bookings" }}
+      name="bookings"
+      icon={Favorite}
+      list={BookingList}
+      show={BookingShow}
+    />
+    <Resource name="virtual-product-key-configs" />
+    <Resource name="virtual-product-slots" />
     <Resource
       options={{ label: "Indicações" }}
       name="refer"

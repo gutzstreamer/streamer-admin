@@ -64,14 +64,24 @@ export const ReferCreate = () => {
         <Box display="flex" gap={2} width="100%">
           <NumberInput
             source="commissionPercent"
-            label="Percentual de Comissão (%)"
+            label="Comissão Produtos Físicos (%)"
             validate={[number(), minValue(0), maxValue(100)]}
             defaultValue={0}
-            helperText="Percentual que o indicador recebe das vendas do indicado (0-100)"
+            helperText="% sobre vendas físicas (marketplace)"
             sx={{ flex: 1 }}
           />
 
           <NumberInput
+            source="commissionPercentVirtual"
+            label="Comissão Produtos Virtuais (%)"
+            validate={[number(), minValue(0), maxValue(100)]}
+            defaultValue={0}
+            helperText="% sobre vendas virtuais (atividades/downloads/keys)"
+            sx={{ flex: 1 }}
+          />
+        </Box>
+
+        <Box display="flex" gap={2} width="100%">
             source="durationMonths"
             label="Duração (meses)"
             validate={[number(), minValue(0)]}

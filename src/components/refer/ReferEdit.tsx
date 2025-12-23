@@ -63,9 +63,17 @@ export const ReferEdit = () => {
         </Typography>
         <NumberInput
           source="commissionPercent"
-          label="Percentual de Comissão (%)"
+          label="Percentual de Comissão - Produtos Físicos (%)"
           validate={[required(), minValue(0), maxValue(100)]}
-          helperText="Percentual que o indicador receberá das vendas do indicado"
+          helperText="Percentual que o indicador receberá das vendas de produtos físicos do indicado"
+          fullWidth
+        />
+
+        <NumberInput
+          source="commissionPercentVirtual"
+          label="Percentual de Comissão - Produtos Virtuais (%)"
+          validate={[required(), minValue(0), maxValue(100)]}
+          helperText="Percentual que o indicador receberá das vendas de produtos virtuais (atividades/downloads/keys)"
           fullWidth
         />
 
