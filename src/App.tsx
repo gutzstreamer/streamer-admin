@@ -92,6 +92,8 @@ import {
   Webhook,
   Dashboard as DashboardIcon,
   Mic,
+  Repeat,
+  Payment,
 } from "@mui/icons-material";
 import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
@@ -117,6 +119,20 @@ import {
 import AIVoiceList from "./components/ai-voices/AIVoiceList";
 import AIVoiceEdit from "./components/ai-voices/AIVoiceEdit";
 import refer from "./components/refer";
+import {
+  RecurringPaymentPricingList,
+  RecurringPaymentPricingCreate,
+  RecurringPaymentPricingEdit,
+  RecurringPaymentPricingShow,
+} from "./components/recurring-payment-pricing";
+import {
+  RecurringPaymentSubscriptionList,
+  RecurringPaymentSubscriptionShow,
+} from "./components/recurring-payment-subscription";
+import {
+  RecurringPaymentTransactionList,
+  RecurringPaymentTransactionShow,
+} from "./components/recurring-payment-transaction";
 
 export const App = () => (
   <Admin
@@ -156,7 +172,30 @@ export const App = () => (
       create={SubscriptionPlanCreate}
       edit={SubscriptionPlanEdit}
       show={SubscriptionPlanShow}
+    />Preços Recorrentes" }}
+      name="recurring-payment-pricing"
+      icon={Repeat}
+      list={RecurringPaymentPricingList}
+      create={RecurringPaymentPricingCreate}
+      edit={RecurringPaymentPricingEdit}
+      show={RecurringPaymentPricingShow}
     />
+    <Resource
+      options={{ label: "Assinaturas Recorrentes" }}
+      name="recurring-payment-subscription"
+      icon={Payment}
+      list={RecurringPaymentSubscriptionList}
+      show={RecurringPaymentSubscriptionShow}
+    />
+    <Resource
+      options={{ label: "Transações Recorrentes" }}
+      name="recurring-payment-transaction"
+      icon={Receipt}
+      list={RecurringPaymentTransactionList}
+      show={RecurringPaymentTransactionShow}
+    />
+    <Resource
+      options={{ label: "
     <Resource
       options={{ label: "User Subscriptions" }}
       name="subscription"
