@@ -9,6 +9,7 @@ import {
   SimpleShowLayout,
   SingleFieldList,
   TextField,
+  TopToolbar,
   useDataProvider,
   useNotify,
   useRecordContext,
@@ -47,8 +48,14 @@ const ReloadAlertPageButton: React.FC = () => {
   );
 };
 
+const StreamerShowActions = () => (
+  <TopToolbar>
+    <ReloadAlertPageButton />
+  </TopToolbar>
+);
+
 const StreamerShow: React.FC = (props) => (
-  <Show {...props}>
+  <Show {...props} actions={<StreamerShowActions />}>
     <SimpleShowLayout>
       <TextField source="id" />
       <TextField source="name" />
@@ -69,7 +76,6 @@ const StreamerShow: React.FC = (props) => (
           <ChipField source="url" />
         </SingleFieldList>
       </ArrayField>
-      <ReloadAlertPageButton />
     </SimpleShowLayout>
   </Show>
 );
