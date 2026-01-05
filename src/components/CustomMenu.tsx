@@ -8,6 +8,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MicIcon from "@mui/icons-material/Mic";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
 
@@ -105,6 +106,16 @@ export const CustomMenu = () => {
         to="/platform-webhooks"
         primaryText="Webhooks"
         leftIcon={<StorefrontIcon />}
+      />
+
+      <Divider />
+
+      {/* Monitoramento */}
+      <ListSubheader inset>Monitoramento</ListSubheader>
+      <MenuItemLink
+        to="/chat-mentions"
+        primaryText="Menções no Chat"
+        leftIcon={<ChatBubbleIcon />}
       />
 
       <Divider />

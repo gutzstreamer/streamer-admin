@@ -133,6 +133,8 @@ import {
   RecurringPaymentTransactionList,
   RecurringPaymentTransactionShow,
 } from "./components/recurring-payment-transaction";
+import Chat from "@mui/icons-material/Chat";
+import ChatMentionList from "./components/chat-mentions/ChatMentionList";
 
 export const App = () => (
   <Admin
@@ -172,7 +174,9 @@ export const App = () => (
       create={SubscriptionPlanCreate}
       edit={SubscriptionPlanEdit}
       show={SubscriptionPlanShow}
-    />Preços Recorrentes" }}
+    />
+    <Resource
+      options={{ label: "Preços Recorrentes" }}
       name="recurring-payment-pricing"
       icon={Repeat}
       list={RecurringPaymentPricingList}
@@ -194,8 +198,6 @@ export const App = () => (
       list={RecurringPaymentTransactionList}
       show={RecurringPaymentTransactionShow}
     />
-    <Resource
-      options={{ label: "
     <Resource
       options={{ label: "User Subscriptions" }}
       name="subscription"
@@ -381,6 +383,12 @@ export const App = () => (
       icon={Webhook}
       list={PlatformWebhookList}
       show={PlatformWebhookShow}
+    />
+    <Resource
+      options={{ label: "Chat Mentions" }}
+      name="chat-mentions"
+      icon={Chat}
+      list={ChatMentionList}
     />
     <Resource
       options={{ label: "Calculation Fees" }}
