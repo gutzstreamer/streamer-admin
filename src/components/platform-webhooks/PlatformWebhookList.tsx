@@ -9,9 +9,16 @@ import {
   SelectInput,
   TextInput,
   ChipField,
+  TopToolbar,
+  Button,
+  useNotify,
+  useRefresh,
+  useDataProvider,
 } from "react-admin";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 import { webhookStatusChoices, eventTypeChoices } from "./index";
+import { DataProviderWithCustomMethods } from "../../dataProvider";
 
 const PlatformWebhookListFilter: React.FC = (props) => (
   <Filter {...props}>
@@ -31,11 +38,48 @@ const PlatformWebhookListFilter: React.FC = (props) => (
   </Filter>
 );
 
+const PlatformWebhookListActions: React.FC = () => {
+  const notify = useNotify();
+  const refresh = useRefresh();
+  const dataProvider = useDataProvider<DataProviderWithCustomMethods>();
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleRenew = async () => {
+    setIsLoading(true);
+    try {
+      await dataProvider.renewYouTubeWebhooks();
+      notify("YouTube webhook renewal triggered", { type: "info" });
+      refresh();
+    } catch (error: any) {
+      const message =
+        error?.body?.message ||
+        error?.message ||
+        "Failed to trigger YouTube webhook renewal";
+      notify(message, { type: "warning" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <TopToolbar>
+      <Button
+        label="Renovar webhooks YouTube"
+        onClick={handleRenew}
+        disabled={isLoading}
+      >
+        <RefreshIcon />
+      </Button>
+    </TopToolbar>
+  );
+};
+
 const PlatformWebhookList: React.FC = (props) => {
   return (
-    <List 
-      {...props} 
+    <List
+      {...props}
       filters={<PlatformWebhookListFilter />}
+      actions={<PlatformWebhookListActions />}
     >
       <Datagrid rowClick="show">
         <TextField source="id" label="Webhook ID" />

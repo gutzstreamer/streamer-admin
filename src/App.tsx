@@ -94,6 +94,7 @@ import {
   Mic,
   Repeat,
   Payment,
+  EmojiEvents,
 } from "@mui/icons-material";
 import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
@@ -133,6 +134,16 @@ import {
   RecurringPaymentTransactionList,
   RecurringPaymentTransactionShow,
 } from "./components/recurring-payment-transaction";
+import PlatformBenefitList from "./components/platform-benefits/PlatformBenefitList";
+import PlatformBenefitCreate from "./components/platform-benefits/PlatformBenefitCreate";
+import PlatformBenefitEdit from "./components/platform-benefits/PlatformBenefitEdit";
+import PlatformBenefitShow from "./components/platform-benefits/PlatformBenefitShow";
+import TierConfigList from "./components/tier-config/TierConfigList";
+import TierConfigCreate from "./components/tier-config/TierConfigCreate";
+import TierConfigEdit from "./components/tier-config/TierConfigEdit";
+import TierConfigShow from "./components/tier-config/TierConfigShow";
+import FanPlanList from "./components/fan-plans/FanPlanList";
+import FanPlanShow from "./components/fan-plans/FanPlanShow";
 
 export const App = () => (
   <Admin
@@ -172,7 +183,9 @@ export const App = () => (
       create={SubscriptionPlanCreate}
       edit={SubscriptionPlanEdit}
       show={SubscriptionPlanShow}
-    />Preços Recorrentes" }}
+    />
+    <Resource
+      options={{ label: "Preços Recorrentes" }}
       name="recurring-payment-pricing"
       icon={Repeat}
       list={RecurringPaymentPricingList}
@@ -194,8 +207,6 @@ export const App = () => (
       list={RecurringPaymentTransactionList}
       show={RecurringPaymentTransactionShow}
     />
-    <Resource
-      options={{ label: "
     <Resource
       options={{ label: "User Subscriptions" }}
       name="subscription"
@@ -331,6 +342,31 @@ export const App = () => (
       create={FeatureToggleCreate}
       edit={FeatureToggleEdit}
       show={FeatureToggleShow}
+    />
+    <Resource
+      options={{ label: "Platform Benefits" }}
+      name="platform-benefits"
+      icon={EmojiEvents}
+      list={PlatformBenefitList}
+      create={PlatformBenefitCreate}
+      edit={PlatformBenefitEdit}
+      show={PlatformBenefitShow}
+    />
+    <Resource
+      options={{ label: "Tier Config" }}
+      name="tier-config"
+      icon={ToggleOn}
+      list={TierConfigList}
+      create={TierConfigCreate}
+      edit={TierConfigEdit}
+      show={TierConfigShow}
+    />
+    <Resource
+      options={{ label: "Fan Plans" }}
+      name="fan-plans"
+      icon={Subscriptions}
+      list={FanPlanList}
+      show={FanPlanShow}
     />
     <Resource
       name="orders"

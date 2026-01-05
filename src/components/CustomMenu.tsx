@@ -8,6 +8,9 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MicIcon from "@mui/icons-material/Mic";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import LayersIcon from "@mui/icons-material/Layers";
+import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
 
@@ -188,6 +191,21 @@ export const CustomMenu = () => {
         to="/subscription-plan"
         primaryText="Planos de Assinatura"
         leftIcon={<SettingsIcon />}
+      />
+      <MenuItemLink
+        to="/platform-benefits"
+        primaryText="Benefícios da Plataforma"
+        leftIcon={<EmojiEventsIcon />}
+      />
+      <MenuItemLink
+        to="/tier-config"
+        primaryText="Configuração de Tiers"
+        leftIcon={<LayersIcon />}
+      />
+      <MenuItemLink
+        to="/fan-plans"
+        primaryText="Planos de Fãs"
+        leftIcon={<DashboardCustomizeIcon />}
       />
       <MenuItemLink
         to="/feature-toggles"
