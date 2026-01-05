@@ -12,7 +12,21 @@ import {
 } from "react-admin";
 
 const filters = [
-  <TextInput key="broadcasterId" source="broadcasterId" label="Broadcaster ID" />,
+  <TextInput
+    key="broadcasterId"
+    source="broadcasterId"
+    label="Broadcaster ID"
+  />,
+  <SelectInput
+    key="platform"
+    source="platform"
+    label="Plataforma"
+    choices={[
+      { id: "twitch", name: "Twitch" },
+      { id: "youtube", name: "YouTube" },
+      { id: "kick", name: "Kick" },
+    ]}
+  />,
   <SelectInput
     key="matchType"
     source="matchType"
@@ -41,6 +55,7 @@ const ChatMentionList = (props: ListProps) => (
     <Datagrid rowClick={false}>
       <TextField source="broadcasterId" label="Broadcaster ID" />
       <TextField source="broadcasterName" label="Canal" />
+      <TextField source="platform" label="Plataforma" />
       <TextField source="displayName" label="Autor" />
       <TextField source="matchType" label="Tipo" />
       <TextField source="matchedKeyword" label="Keyword" />
