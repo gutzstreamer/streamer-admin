@@ -22,9 +22,9 @@ const filters = [
     source="platform"
     label="Plataforma"
     choices={[
-      { id: "twitch", name: "Twitch" },
-      { id: "youtube", name: "YouTube" },
-      { id: "kick", name: "Kick" },
+      { id: "TWITCH", name: "Twitch" },
+      { id: "YOUTUBE", name: "YouTube" },
+      { id: "KICK", name: "Kick" },
     ]}
   />,
   <SelectInput
@@ -55,7 +55,10 @@ const ChatMentionList = (props: ListProps) => (
     <Datagrid rowClick={false}>
       <TextField source="broadcasterId" label="Broadcaster ID" />
       <TextField source="broadcasterName" label="Canal" />
-      <TextField source="platform" label="Plataforma" />
+      <FunctionField
+        label="Plataforma"
+        render={(record: any) => record.platform || "-"}
+      />
       <TextField source="displayName" label="Autor" />
       <TextField source="matchType" label="Tipo" />
       <TextField source="matchedKeyword" label="Keyword" />
