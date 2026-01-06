@@ -15,6 +15,7 @@ import {
   LinearProgress,
   Switch,
   FormControlLabel,
+  Button,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -31,6 +32,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchUtils, useNotify } from "react-admin";
@@ -81,6 +84,7 @@ type DetailResponse = {
 };
 
 const apiUrl = import.meta.env.VITE_SIMPLE_REST_URL;
+const adminApi = `${apiUrl}/admin/alerts`;
 
 const formatDateTime = (value?: string | null) => {
   if (!value) return "-";
@@ -103,7 +107,15 @@ const PayloadPreview = ({ payload }: { payload: any }) => {
   return <Typography variant="body2">{text}</Typography>;
 };
 
-const AlertCard = ({ alert, showStatus = false }: { alert: AlertRecord; showStatus?: boolean }) => {
+const AlertCard = ({
+  alert,
+  showStatus = false,
+  onDelete,
+}: {
+  alert: AlertRecord;
+  showStatus?: boolean;
+  onDelete?: (id: string) => void;
+}) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "done":
@@ -220,6 +232,22 @@ const AlertCard = ({ alert, showStatus = false }: { alert: AlertRecord; showStat
             <PayloadPreview payload={alert.payload} />
           </Box>
         </Grid>
+
+        {onDelete && (
+          <Grid item xs={12}>
+            <Stack direction="row" justifyContent="flex-end">
+              <Tooltip title="Remover da fila">
+                <IconButton
+                  size="small"
+                  color="error"
+                  onClick={() => onDelete(alert.id)}
+                >
+                  <DeleteForeverIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+          </Grid>
+        )}
 
         {typeof alert.attempts === "number" && alert.attempts > 0 && (
           <Grid item xs={12}>
@@ -377,6 +405,24 @@ const AlertQueueDetailPage = () => {
     return { queuedAlerts, processingAlerts, processedAlerts };
   }, [detail]);
 
+  const requeueStuck = async () => {
+    if (!id) return;
+    try {
+      const url = `${adminApi}/streamers/${id}/requeue-stuck`;
+      await fetchUtils.fetchJson(url, {
+        method: "POST",
+        headers: buildHeaders(),
+      });
+      notify("Alertas travados reprocessados", { type: "info" });
+      loadDetail();
+    } catch (error: any) {
+      notify(
+        `Falha ao reprocessar travados: ${error?.message || "erro desconhecido"}`,
+        { type: "error" },
+      );
+    }
+  };
+
   return (
     <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: 3 }}>
       {/* Header */}
@@ -460,6 +506,19 @@ const AlertQueueDetailPage = () => {
           >
             <RefreshIcon />
           </IconButton>
+        </Tooltip>
+
+        <Tooltip title="Reprocessar travados">
+          <Button
+            variant="outlined"
+            color="warning"
+            size="small"
+            startIcon={<RestartAltIcon />}
+            onClick={requeueStuck}
+            sx={{ ml: 1 }}
+          >
+            Reprocessar
+          </Button>
         </Tooltip>
       </Stack>
 
