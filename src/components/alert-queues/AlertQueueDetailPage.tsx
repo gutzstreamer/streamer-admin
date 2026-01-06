@@ -111,10 +111,12 @@ const AlertCard = ({
   alert,
   showStatus = false,
   onDelete,
+  onRetry,
 }: {
   alert: AlertRecord;
   showStatus?: boolean;
   onDelete?: (id: string) => void;
+  onRetry?: (id: string) => void;
 }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -246,6 +248,27 @@ const AlertCard = ({
                 </IconButton>
               </Tooltip>
             </Stack>
+          </Grid>
+        )}
+
+        {onRetry && alert.status === "failed" && (
+          <Grid item xs={12}>
+            <Tooltip title="Reprocessar este alerta">
+              <Button
+                fullWidth
+                variant="contained"
+                color="warning"
+                size="small"
+                startIcon={<RestartAltIcon />}
+                onClick={() => onRetry(alert.id)}
+                sx={{
+                  fontWeight: "bold",
+                  textTransform: "none",
+                }}
+              >
+                Reprocessar Alerta
+              </Button>
+            </Tooltip>
           </Grid>
         )}
 
@@ -418,6 +441,24 @@ const AlertQueueDetailPage = () => {
     } catch (error: any) {
       notify(
         `Falha ao reprocessar travados: ${error?.message || "erro desconhecido"}`,
+        { type: "error" },
+      );
+    }
+  };
+
+  const retryAlert = async (alertId: string) => {
+    try {
+      const url = `${apiUrl}/alerts/retry-alert`;
+      await fetchUtils.fetchJson(url, {
+        method: "POST",
+        headers: buildHeaders(),
+        body: JSON.stringify({ alertId }),
+      });
+      notify("Alerta reprocessado com sucesso", { type: "success" });
+      loadDetail();
+    } catch (error: any) {
+      notify(
+        `Falha ao reprocessar alerta: ${error?.message || "erro desconhecido"}`,
         { type: "error" },
       );
     }
@@ -1077,7 +1118,7 @@ const AlertQueueDetailPage = () => {
                   <Stack spacing={2}>
                     {processedAlerts.length > 0 ? (
                       processedAlerts.map((alert) => (
-                        <AlertCard key={alert.id} alert={alert} showStatus />
+                        <AlertCard key={alert.id} alert={alert} showStatus onRetry={retryAlert} />
                       ))
                     ) : (
                       <Paper
