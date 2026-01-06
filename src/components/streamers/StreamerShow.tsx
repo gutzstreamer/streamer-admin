@@ -28,7 +28,7 @@ const ReloadAlertPageButton: React.FC = () => {
 
     try {
       setLoading(true);
-      await dataProvider.getOne(`streamers/${record.id}/reload-page`, { id: "" });
+      await dataProvider.getOne(`streamers/${record.id}/refresh-page`, { id: "" });
       notify("Página de alerta recarregada com sucesso!", { type: "success" });
     } catch (error: any) {
       notify(error?.message || "Erro ao recarregar página de alerta", { type: "error" });
