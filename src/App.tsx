@@ -138,6 +138,7 @@ import ChatMentionList from "./components/chat-mentions/ChatMentionList";
 import { CustomRoutes } from "react-admin";
 import { Route } from "react-router-dom";
 import AlertQueuesPage from "./components/alert-queues/AlertQueuesPage";
+import AlertQueueDetailPage from "./components/alert-queues/AlertQueueDetailPage";
 
 export const App = () => (
   <Admin
@@ -162,6 +163,7 @@ export const App = () => (
     />
     <CustomRoutes>
       <Route path="/alert-queues" element={<AlertQueuesPage />} />
+      <Route path="/alert-queues/:id" element={<AlertQueueDetailPage />} />
     </CustomRoutes>
     <Resource
       options={{ label: "Users" }}
