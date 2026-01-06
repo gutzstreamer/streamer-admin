@@ -63,6 +63,7 @@ type AlertRecord = {
   status: string;
   priority: number;
   payload: any;
+  failureReason?: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -73,6 +74,7 @@ type DetailResponse = {
   state: AlertState | null;
   stats: AlertStats;
   current: AlertRecord | null;
+  inProgress?: AlertRecord[];
   queued: AlertRecord[];
   recent: AlertRecord[];
 };
@@ -218,6 +220,17 @@ const AlertCard = ({ alert, showStatus = false }: { alert: AlertRecord; showStat
           </Box>
         </Grid>
 
+        {alert.status === "failed" && alert.failureReason && (
+          <Grid item xs={12}>
+            <Typography variant="caption" color="text.secondary">
+              Motivo da falha
+            </Typography>
+            <Typography variant="body2" color="error.main" fontWeight="bold">
+              {alert.failureReason}
+            </Typography>
+          </Grid>
+        )}
+
         <Grid item xs={12}>
           <Typography variant="caption" color="text.secondary">
             {showStatus ? "Atualizado" : "Criado"}
@@ -238,7 +251,13 @@ const AlertQueueDetailPage = () => {
   const [detail, setDetail] = useState<DetailResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(false);
-  const [refreshInterval, setRefreshInterval] = useState(30000); // 30 segundos
+  const [refreshInterval] = useState(30000); // 30 segundos
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+
+  const normalizeAlert = (alert: any): AlertRecord => ({
+    ...alert,
+    status: (alert?.status || "").toString().toLowerCase(),
+  });
 
   const loadDetail = async () => {
     if (!id) return;
@@ -248,7 +267,20 @@ const AlertQueueDetailPage = () => {
       const { json } = await fetchUtils.fetchJson(url, {
         headers: buildHeaders(),
       });
-      setDetail(json as DetailResponse);
+      console.log('🔍 Dados carregados da API:', json);
+      console.log('📊 Estatísticas:', json.stats);
+      console.log('🎯 Alerta atual:', json.current);
+      console.log('⏳ Fila de alertas:', json.queued);
+      console.log('✅ Alertas recentes:', json.recent);
+      const normalized: DetailResponse = {
+        ...(json as DetailResponse),
+        current: json.current ? normalizeAlert(json.current) : null,
+        inProgress: (json.inProgress || []).map(normalizeAlert),
+        queued: (json.queued || []).map(normalizeAlert),
+        recent: (json.recent || []).map(normalizeAlert),
+      };
+      setDetail(normalized);
+      setLastUpdate(new Date());
     } catch (error: any) {
       notify(
         `Falha ao carregar detalhes: ${error?.message || "erro desconhecido"}`,
@@ -286,6 +318,42 @@ const AlertQueueDetailPage = () => {
   const totalAlerts = (detail?.stats.queued || 0) + (detail?.stats.inProgress || 0) + (detail?.stats.failed || 0);
   const progressPercent = totalAlerts > 0 ? ((detail?.stats.done || 0) / ((detail?.stats.done || 0) + totalAlerts)) * 100 : 0;
 
+  // Particiona por status para exibir corretamente cada coluna
+  const { queuedAlerts, processingAlerts, processedAlerts } = useMemo(() => {
+    if (!detail) {
+      return {
+        queuedAlerts: [] as AlertRecord[],
+        processingAlerts: [] as AlertRecord[],
+        processedAlerts: [] as AlertRecord[],
+      };
+    }
+
+    const queuedAlerts = (detail.queued || []).filter(
+      (a) => a.status === "queued",
+    );
+
+    const processingAlerts: AlertRecord[] = [];
+    const inProgressList = detail.inProgress || [];
+
+    // Adiciona o current se estiver em progresso
+    if (detail.current && detail.current.status === "in_progress") {
+      processingAlerts.push(detail.current);
+    }
+
+    // Adiciona demais em progresso retornados pelo backend
+    inProgressList.forEach((a) => {
+      if (!processingAlerts.some((p) => p.id === a.id)) {
+        processingAlerts.push(a);
+      }
+    });
+
+    const processedAlerts = (detail.recent || []).filter((a) =>
+      ["done", "failed", "skipped", "expired"].includes(a.status),
+    );
+
+    return { queuedAlerts, processingAlerts, processedAlerts };
+  }, [detail]);
+
   return (
     <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: 3 }}>
       {/* Header */}
@@ -305,6 +373,22 @@ const AlertQueueDetailPage = () => {
         </Typography>
         {loading && <CircularProgress size={24} />}
         <Box sx={{ flexGrow: 1 }} />
+        
+        {/* Última atualização */}
+        {lastUpdate && (
+          <Paper
+            elevation={1}
+            sx={{
+              px: 2,
+              py: 1,
+              bgcolor: "#1a1a1a",
+            }}
+          >
+            <Typography variant="caption" color="text.secondary">
+              Última atualização: {lastUpdate.toLocaleTimeString()}
+            </Typography>
+          </Paper>
+        )}
         
         {/* Toggle de Auto-Refresh */}
         <Paper
@@ -358,6 +442,26 @@ const AlertQueueDetailPage = () => {
 
       {detail?.success && detail.streamer && (
         <>
+          {/* Debug Info - Remover em produção */}
+          <Paper
+            elevation={1}
+            sx={{
+              p: 1.5,
+              mb: 2,
+              bgcolor: "#1a1a1a",
+              border: "1px solid rgba(255, 193, 7, 0.3)",
+            }}
+          >
+            <Typography variant="caption" color="warning.main" fontWeight="bold">
+              🔍 Debug: {detail.queued?.length || 0} aguardando | {processingAlerts.length} processando | {detail.recent?.length || 0} processados
+            </Typography>
+            {detail.stats && (
+              <Typography variant="caption" color="text.secondary" display="block">
+                Stats API: queued={detail.stats.queued}, inProgress={detail.stats.inProgress}, done={detail.stats.done}, failed={detail.stats.failed}
+              </Typography>
+            )}
+          </Paper>
+
           {/* Card do Streamer */}
           <Card elevation={3} sx={{ mb: 3, bgcolor: "#1a1a1a" }}>
             <CardContent sx={{ p: 3 }}>
@@ -630,7 +734,7 @@ const AlertQueueDetailPage = () => {
                   subheader={
                     <Stack direction="row" spacing={1} mt={1} alignItems="center">
                       <Chip
-                        label={`${detail.queued.length} ${detail.queued.length === 1 ? "alerta" : "alertas"}`}
+                        label={`${queuedAlerts.length} ${queuedAlerts.length === 1 ? "alerta" : "alertas"}`}
                         size="small"
                         sx={{
                           bgcolor: "rgba(255, 152, 0, 0.2)",
@@ -638,7 +742,7 @@ const AlertQueueDetailPage = () => {
                           fontWeight: "bold",
                         }}
                       />
-                      {detail.queued.length > 0 && (
+                      {queuedAlerts.length > 0 && (
                         <Typography variant="caption" color="text.secondary">
                           Próximo será processado
                         </Typography>
@@ -658,8 +762,8 @@ const AlertQueueDetailPage = () => {
                   }}
                 >
                   <Stack spacing={2}>
-                    {detail.queued.length > 0 ? (
-                      detail.queued.map((alert, index) => (
+                    {queuedAlerts.length > 0 ? (
+                      queuedAlerts.map((alert, index) => (
                         <Box key={alert.id} position="relative">
                           {index === 0 && (
                             <Chip
@@ -722,15 +826,15 @@ const AlertQueueDetailPage = () => {
                   subheader={
                     <Stack direction="row" spacing={1} mt={1} alignItems="center">
                       <Chip
-                        label={detail.current ? "1 alerta ativo" : "Nenhum"}
+                        label={`${processingAlerts.length} ${processingAlerts.length === 1 ? 'alerta' : 'alertas'}`}
                         size="small"
                         sx={{
-                          bgcolor: detail.current ? "rgba(245, 87, 108, 0.2)" : "rgba(158, 158, 158, 0.2)",
-                          color: detail.current ? "#f5576c" : "grey.500",
+                          bgcolor: processingAlerts.length > 0 ? "rgba(245, 87, 108, 0.2)" : "rgba(158, 158, 158, 0.2)",
+                          color: processingAlerts.length > 0 ? "#f5576c" : "grey.500",
                           fontWeight: "bold",
                         }}
                       />
-                      {detail.current && (
+                      {processingAlerts.length > 0 && (
                         <Box
                           sx={{
                             width: 8,
@@ -759,29 +863,35 @@ const AlertQueueDetailPage = () => {
                     maxHeight: "70vh",
                   }}
                 >
-                  {detail.current ? (
-                    <Box position="relative">
-                      <Chip
-                        label="EM EXECUÇÃO"
-                        size="small"
-                        sx={{
-                          position: "absolute",
-                          top: -8,
-                          right: -8,
-                          zIndex: 1,
-                          bgcolor: "#f5576c",
-                          color: "white",
-                          fontWeight: "bold",
-                          animation: "pulse 2s infinite",
-                        }}
-                      />
-                      <AlertCard alert={detail.current} />
+                  {processingAlerts.length > 0 ? (
+                    <Stack spacing={2}>
+                      {processingAlerts.map((alert, index) => (
+                        <Box key={alert.id} position="relative">
+                          {index === 0 && (
+                            <Chip
+                              label="ATUAL"
+                              size="small"
+                              sx={{
+                                position: "absolute",
+                                top: -8,
+                                right: -8,
+                                zIndex: 1,
+                                bgcolor: "#f5576c",
+                                color: "white",
+                                fontWeight: "bold",
+                                animation: "pulse 2s infinite",
+                              }}
+                            />
+                          )}
+                          <AlertCard alert={alert} />
+                        </Box>
+                      ))}
                       
                       {/* Indicador de fluxo */}
                       <Box
                         sx={{
-                          mt: 3,
-                          mb: 2,
+                          mt: 1,
+                          mb: 1,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -813,7 +923,7 @@ const AlertQueueDetailPage = () => {
                           Será movido para &quot;Processados&quot; ao concluir
                         </Typography>
                       </Paper>
-                    </Box>
+                    </Stack>
                   ) : (
                     <Paper
                       elevation={0}
@@ -857,7 +967,7 @@ const AlertQueueDetailPage = () => {
                   subheader={
                     <Stack direction="row" spacing={1} mt={1} alignItems="center">
                       <Chip
-                        label={`${detail.recent.length} ${detail.recent.length === 1 ? "alerta" : "alertas"}`}
+                        label={`${processedAlerts.length} ${processedAlerts.length === 1 ? "alerta" : "alertas"}`}
                         size="small"
                         sx={{
                           bgcolor: "rgba(0, 242, 254, 0.2)",
@@ -883,8 +993,8 @@ const AlertQueueDetailPage = () => {
                   }}
                 >
                   <Stack spacing={2}>
-                    {detail.recent.length > 0 ? (
-                      detail.recent.map((alert) => (
+                    {processedAlerts.length > 0 ? (
+                      processedAlerts.map((alert) => (
                         <AlertCard key={alert.id} alert={alert} showStatus />
                       ))
                     ) : (
