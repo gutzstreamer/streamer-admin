@@ -64,6 +64,7 @@ type AlertRecord = {
   priority: number;
   payload: any;
   failureReason?: string | null;
+  attempts?: number | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -220,6 +221,27 @@ const AlertCard = ({ alert, showStatus = false }: { alert: AlertRecord; showStat
           </Box>
         </Grid>
 
+        {typeof alert.attempts === "number" && alert.attempts > 0 && (
+          <Grid item xs={12}>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Chip
+                label={`Reprocessando (tentativas: ${alert.attempts})`}
+                size="small"
+                color="warning"
+                sx={{ fontWeight: "bold" }}
+              />
+              {alert.failureReason && (
+                <Chip
+                  label={alert.failureReason}
+                  size="small"
+                  color="error"
+                  variant="outlined"
+                />
+              )}
+            </Stack>
+          </Grid>
+        )}
+
         {alert.status === "failed" && alert.failureReason && (
           <Grid item xs={12}>
             <Typography variant="caption" color="text.secondary">
@@ -257,6 +279,7 @@ const AlertQueueDetailPage = () => {
   const normalizeAlert = (alert: any): AlertRecord => ({
     ...alert,
     status: (alert?.status || "").toString().toLowerCase(),
+    attempts: alert?.attempts ?? 0,
   });
 
   const loadDetail = async () => {
@@ -824,11 +847,11 @@ const AlertQueueDetailPage = () => {
                     </Stack>
                   }
                   subheader={
-                    <Stack direction="row" spacing={1} mt={1} alignItems="center">
-                      <Chip
-                        label={`${processingAlerts.length} ${processingAlerts.length === 1 ? 'alerta' : 'alertas'}`}
-                        size="small"
-                        sx={{
+                  <Stack direction="row" spacing={1} mt={1} alignItems="center">
+                    <Chip
+                      label={`${processingAlerts.length} ${processingAlerts.length === 1 ? 'alerta' : 'alertas'}`}
+                      size="small"
+                      sx={{
                           bgcolor: processingAlerts.length > 0 ? "rgba(245, 87, 108, 0.2)" : "rgba(158, 158, 158, 0.2)",
                           color: processingAlerts.length > 0 ? "#f5576c" : "grey.500",
                           fontWeight: "bold",
@@ -849,7 +872,7 @@ const AlertQueueDetailPage = () => {
                           }}
                         />
                       )}
-                    </Stack>
+                  </Stack>
                   }
                   sx={{
                     pb: 1,
