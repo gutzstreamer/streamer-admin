@@ -135,6 +135,9 @@ import {
 } from "./components/recurring-payment-transaction";
 import Chat from "@mui/icons-material/Chat";
 import ChatMentionList from "./components/chat-mentions/ChatMentionList";
+import { CustomRoutes } from "react-admin";
+import { Route } from "react-router-dom";
+import AlertQueuesPage from "./components/alert-queues/AlertQueuesPage";
 
 export const App = () => (
   <Admin
@@ -157,6 +160,9 @@ export const App = () => (
       create={MonthlyServiceInvoiceCreate}
       options={{ label: "Service Invoices Monthly" }}
     />
+    <CustomRoutes>
+      <Route path="/alert-queues" element={<AlertQueuesPage />} />
+    </CustomRoutes>
     <Resource
       options={{ label: "Users" }}
       name="users"

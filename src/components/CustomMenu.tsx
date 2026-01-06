@@ -11,6 +11,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 
 export const CustomMenu = () => {
   const [open] = useSidebarState();
@@ -116,6 +117,11 @@ export const CustomMenu = () => {
         to="/chat-mentions"
         primaryText="Menções no Chat"
         leftIcon={<ChatBubbleIcon />}
+      />
+      <MenuItemLink
+        to="/alert-queues"
+        primaryText="Filas de Alertas"
+        leftIcon={<NotificationsActiveIcon />}
       />
 
       <Divider />
