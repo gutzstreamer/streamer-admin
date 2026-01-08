@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
   Typography,
   Grid,
   Box,
-  Button,
   Divider,
   Chip,
   LinearProgress,
@@ -55,9 +54,41 @@ interface WithdrawalMetricsProps {
   };
 }
 
-export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) => {
-  const [period, setPeriod] = useState<'total' | 'last30Days'>('total');
+interface WithdrawalMetricsProps {
+  data: {
+    total: {
+      completed: {
+        totalAmount: number;
+        totalFee: number;
+        finalAmount: number;
+        count: number;
+      };
+      pending: {
+        totalAmount: number;
+        totalFee: number;
+        finalAmount: number;
+        count: number;
+      };
+    };
+    last30Days: {
+      completed: {
+        totalAmount: number;
+        totalFee: number;
+        finalAmount: number;
+        count: number;
+      };
+      pending: {
+        totalAmount: number;
+        totalFee: number;
+        finalAmount: number;
+        count: number;
+      };
+    };
+  };
+  useTotal?: boolean;
+}
 
+export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data, useTotal = false }) => {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -65,7 +96,7 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
     }).format(value);
   };
 
-  const currentData = data[period];
+  const currentData = useTotal ? data.total : data.last30Days;
   
   // Calcular percentuais e estatísticas
   const totalSaques = currentData.completed.count + currentData.pending.count;
@@ -103,54 +134,19 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
       />
       
       <CardContent sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Header com Toggle */}
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={4}>
-          <Box display="flex" alignItems="center" gap={2}>
-            <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 48, height: 48 }}>
-              <MonetizationOn sx={{ fontSize: 28 }} />
-            </Avatar>
-            <Box>
-              <Typography variant="h5" fontWeight="bold">
-                💸 Métricas de Saques
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                Análise completa de transações
-              </Typography>
-            </Box>
+        {/* Header */}
+        <Box display="flex" alignItems="center" gap={2} mb={4}>
+          <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 48, height: 48 }}>
+            <MonetizationOn sx={{ fontSize: 28 }} />
+          </Avatar>
+          <Box>
+            <Typography variant="h5" fontWeight="bold">
+              💸 Métricas de Saques
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              Análise completa de transações
+            </Typography>
           </Box>
-          
-          <Stack direction="row" spacing={1}>
-            <Button
-              variant={period === 'total' ? 'contained' : 'outlined'}
-              size="small"
-              onClick={() => setPeriod('total')}
-              sx={{ 
-                color: period === 'total' ? 'primary.main' : 'white',
-                borderColor: 'rgba(255,255,255,0.3)',
-                bgcolor: period === 'total' ? 'white' : 'transparent',
-                '&:hover': {
-                  bgcolor: period === 'total' ? 'grey.100' : 'rgba(255,255,255,0.1)',
-                }
-              }}
-            >
-              Total
-            </Button>
-            <Button
-              variant={period === 'last30Days' ? 'contained' : 'outlined'}
-              size="small"
-              onClick={() => setPeriod('last30Days')}
-              sx={{ 
-                color: period === 'last30Days' ? 'primary.main' : 'white',
-                borderColor: 'rgba(255,255,255,0.3)',
-                bgcolor: period === 'last30Days' ? 'white' : 'transparent',
-                '&:hover': {
-                  bgcolor: period === 'last30Days' ? 'grey.100' : 'rgba(255,255,255,0.1)',
-                }
-              }}
-            >
-              30 dias
-            </Button>
-          </Stack>
         </Box>
 
         {/* Estatísticas Rápidas */}
@@ -392,7 +388,7 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
         {/* Resumo Financeiro Detalhado */}
         <Box>
           <Typography variant="h6" fontWeight="bold" mb={3} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            📊 Resumo Financeiro ({period === 'total' ? 'Total Histórico' : 'Últimos 30 dias'})
+            📊 Resumo Financeiro
           </Typography>
           
           {/* Cards de Resumo */}

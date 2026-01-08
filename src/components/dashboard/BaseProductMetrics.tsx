@@ -1,12 +1,10 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import {
   Card,
   CardContent,
   Typography,
   Box,
   Grid,
-  ToggleButton,
-  ToggleButtonGroup,
   Paper,
 } from '@mui/material';
 import { Inventory } from '@mui/icons-material';
@@ -29,41 +27,14 @@ interface BaseProductMetricsProps {
 }
 
 export const BaseProductMetrics: React.FC<BaseProductMetricsProps> = memo(({ data }) => {
-  const [period, setPeriod] = useState<'total' | 'last30Days'>('last30Days');
-
-  const currentData = data[period];
-
-  const handlePeriodChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    newPeriod: 'total' | 'last30Days' | null,
-  ) => {
-    if (newPeriod !== null) {
-      setPeriod(newPeriod);
-    }
-  };
+  const currentData = data.last30Days;
 
   return (
     <Card>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <Inventory color="primary" />
-            <Typography variant="h6">📦 Produtos Base</Typography>
-          </Box>
-          
-          <ToggleButtonGroup
-            value={period}
-            exclusive
-            onChange={handlePeriodChange}
-            size="small"
-          >
-            <ToggleButton value="last30Days">
-              Últimos 30 dias
-            </ToggleButton>
-            <ToggleButton value="total">
-              Total Geral
-            </ToggleButton>
-          </ToggleButtonGroup>
+        <Box display="flex" alignItems="center" gap={1} mb={2}>
+          <Inventory color="primary" />
+          <Typography variant="h6">📦 Produtos Base</Typography>
         </Box>
 
         {/* Card Status dos Produtos Base */}
