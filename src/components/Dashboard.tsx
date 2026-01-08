@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Grid,
@@ -7,6 +7,9 @@ import {
   Alert,
   Card,
   CardContent,
+  TextField,
+  Stack,
+  Button,
 } from '@mui/material';
 import {
   Refresh,
@@ -15,6 +18,8 @@ import {
   Inventory,
   Cancel,
   LocalShipping,
+  FilterAlt,
+  Clear,
 } from '@mui/icons-material';
 import { useDashboardData } from '../hooks/useDashboardData';
 import { StoreMetrics } from './dashboard/StoreMetrics';
@@ -26,7 +31,22 @@ import { WalletMetrics } from './dashboard/WalletMetrics';
 import { WithdrawalMetrics } from './dashboard/WithdrawalMetrics';
 
 const Dashboard: React.FC = () => {
-  const { metrics, loading, error, refetch } = useDashboardData();
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const { metrics, loading, error, refetch } = useDashboardData(startDate, endDate);
+
+  const handleClearFilters = () => {
+    setStartDate(undefined);
+    setEndDate(undefined);
+  };
+
+  const handleApplyQuickFilter = (days: number) => {
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - days);
+    setStartDate(start);
+    setEndDate(end);
+  };
 
   if (loading) {
     return (
@@ -89,6 +109,75 @@ const Dashboard: React.FC = () => {
           />
         </Box>
       </Box>
+
+      {/* Filtros de Data */}
+      <Card sx={{ mb: 3, bgcolor: '#f5f5f5' }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <FilterAlt /> Filtrar por Período
+          </Typography>
+          <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+            <TextField
+              label="Data Início"
+              type="date"
+              value={startDate ? startDate.toISOString().split('T')[0] : ''}
+              onChange={(e) => setStartDate(e.target.value ? new Date(e.target.value) : undefined)}
+              InputLabelProps={{ shrink: true }}
+              size="small"
+            />
+            <TextField
+              label="Data Fim"
+              type="date"
+              value={endDate ? endDate.toISOString().split('T')[0] : ''}
+              onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : undefined)}
+              InputLabelProps={{ shrink: true }}
+              size="small"
+            />
+            <Button
+              variant="outlined"
+              onClick={() => handleApplyQuickFilter(7)}
+              size="small"
+            >
+              Últimos 7 dias
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => handleApplyQuickFilter(30)}
+              size="small"
+            >
+              Últimos 30 dias
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => handleApplyQuickFilter(90)}
+              size="small"
+            >
+              Últimos 90 dias
+            </Button>
+            {(startDate || endDate) && (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleClearFilters}
+                size="small"
+                startIcon={<Clear />}
+              >
+                Limpar Filtros
+              </Button>
+            )}
+          </Stack>
+          {(startDate || endDate) && (
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+              {startDate && endDate 
+                ? `Exibindo dados de ${startDate.toLocaleDateString('pt-BR')} até ${endDate.toLocaleDateString('pt-BR')}`
+                : startDate
+                ? `Exibindo dados a partir de ${startDate.toLocaleDateString('pt-BR')}`
+                : `Exibindo dados até ${endDate.toLocaleDateString('pt-BR')}`
+              }
+            </Typography>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Métricas rápidas */}
       <Grid container spacing={3} mb={4}>
