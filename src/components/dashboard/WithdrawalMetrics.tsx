@@ -153,40 +153,40 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data, useT
         <Grid container spacing={3} mb={4}>
           <Grid item xs={3}>
             <Box textAlign="center">
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                 {totalSaques}
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                 Total Saques
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={3}>
             <Box textAlign="center">
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                 {formatCurrency(averageWithdrawal)}
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                 Ticket Médio
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={3}>
             <Box textAlign="center">
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                 {feePercentage.toFixed(1)}%
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                 Taxa Média
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={3}>
             <Box textAlign="center">
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                 {completedPercentage.toFixed(0)}%
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                 Concluídos
               </Typography>
             </Box>
@@ -249,11 +249,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data, useT
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <Receipt sx={{ fontSize: 18, color: '#4caf50' }} />
-                      <Typography variant="body2" sx={{ color: '#4caf50' }}>
+                      <Typography variant="body2" sx={{ color: '#4caf50', fontSize: '0.75rem' }}>
                         Valor Solicitado
                       </Typography>
                     </Box>
-                    <Typography variant="h6" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.completed.totalAmount)}
                     </Typography>
                   </Box>
@@ -261,11 +261,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data, useT
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <TrendingDown sx={{ fontSize: 18, color: '#ff5722' }} />
-                      <Typography variant="body2" sx={{ color: '#ff5722' }}>
+                      <Typography variant="body2" sx={{ color: '#ff5722', fontSize: '0.75rem' }}>
                         Taxas Cobradas
                       </Typography>
                     </Box>
-                    <Typography variant="h6" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.completed.totalFee)}
                     </Typography>
                   </Box>
@@ -275,11 +275,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data, useT
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <Paid sx={{ fontSize: 18, color: '#4caf50' }} />
-                      <Typography variant="body2" sx={{ color: '#4caf50' }}>
+                      <Typography variant="body2" sx={{ color: '#4caf50', fontSize: '0.75rem' }}>
                         Valor Final Pago
                       </Typography>
                     </Box>
-                    <Typography variant="h5" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.4rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.completed.finalAmount)}
                     </Typography>
                   </Box>
@@ -343,11 +343,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data, useT
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <Receipt sx={{ fontSize: 18, color: '#ff9800' }} />
-                      <Typography variant="body2" sx={{ color: '#ff9800' }}>
+                      <Typography variant="body2" sx={{ color: '#ff9800', fontSize: '0.75rem' }}>
                         Valor Solicitado
                       </Typography>
                     </Box>
-                    <Typography variant="h6" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.pending.totalAmount)}
                     </Typography>
                   </Box>
@@ -355,11 +355,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data, useT
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <TrendingDown sx={{ fontSize: 18, color: '#ff5722' }} />
-                      <Typography variant="body2" sx={{ color: '#ff5722' }}>
+                      <Typography variant="body2" sx={{ color: '#ff5722', fontSize: '0.75rem' }}>
                         Taxas a Cobrar
                       </Typography>
                     </Box>
-                    <Typography variant="h6" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.pending.totalFee)}
                     </Typography>
                   </Box>
@@ -369,11 +369,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data, useT
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <AttachMoney sx={{ fontSize: 18, color: '#ff9800' }} />
-                      <Typography variant="body2" sx={{ color: '#ff9800' }}>
+                      <Typography variant="body2" sx={{ color: '#ff9800', fontSize: '0.75rem' }}>
                         Valor Final a Pagar
                       </Typography>
                     </Box>
-                    <Typography variant="h5" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.4rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.pending.finalAmount)}
                     </Typography>
                   </Box>

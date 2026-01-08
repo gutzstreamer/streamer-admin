@@ -150,10 +150,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(76, 175, 80, 0.8)', mx: 'auto', mb: 2 }}>
                   <ShoppingCart />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {formatCurrency(currentData.totalRevenue)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Receita Total
                 </Typography>
               </Box>
@@ -174,10 +174,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(33, 150, 243, 0.8)', mx: 'auto', mb: 2 }}>
                   <AccountBalance />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {formatCurrency(currentData.pixRevenue)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Vendas PIX
                 </Typography>
               </Box>
@@ -198,10 +198,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(156, 39, 176, 0.8)', mx: 'auto', mb: 2 }}>
                   <CreditCard />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {formatCurrency(currentData.creditCardRevenue)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Vendas Cartão
                 </Typography>
               </Box>
@@ -222,10 +222,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(255, 152, 0, 0.8)', mx: 'auto', mb: 2 }}>
                   <LocalShipping />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {formatCurrency(currentData.shippingRevenue)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Receita Frete
                 </Typography>
               </Box>
@@ -246,10 +246,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(255, 193, 7, 0.8)', mx: 'auto', mb: 2 }}>
                   <Payments />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {formatCurrency(currentData.commissionsPaid)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Comissões Pagas
                 </Typography>
               </Box>
@@ -270,10 +270,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(244, 67, 54, 0.8)', mx: 'auto', mb: 2 }}>
                   <TrendingUp />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {formatCurrency(currentData.averageTicket)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Ticket Médio
                 </Typography>
               </Box>
@@ -302,10 +302,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
             <Avatar sx={{ bgcolor: 'rgba(33, 150, 243, 0.8)', mx: 'auto', mb: 2, width: 56, height: 56 }}>
               <ShoppingCart sx={{ fontSize: 32 }} />
             </Avatar>
-            <Typography variant="h3" fontWeight="bold" color="white" mb={1}>
+            <Typography variant="h4" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' } }}>
               {currentData.totalOrders.toLocaleString()}
             </Typography>
-            <Typography variant="h6" sx={{ opacity: 0.9, fontWeight: 500 }}>
+            <Typography variant="h6" sx={{ opacity: 0.9, fontWeight: 500, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
               Total de Pedidos
             </Typography>
           </Box>
@@ -325,10 +325,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(255, 152, 0, 0.8)', mx: 'auto', mb: 1, width: 32, height: 32 }}>
                   <Pending sx={{ fontSize: 20 }} />
                 </Avatar>
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   {currentData.ordersPending.toLocaleString()}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                   Pendentes
                 </Typography>
               </Box>
@@ -347,10 +347,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(76, 175, 80, 0.8)', mx: 'auto', mb: 1, width: 32, height: 32 }}>
                   <CheckCircle sx={{ fontSize: 20 }} />
                 </Avatar>
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   {currentData.ordersPaid.toLocaleString()}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                   Pagos
                 </Typography>
               </Box>
@@ -369,10 +369,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(33, 150, 243, 0.8)', mx: 'auto', mb: 1, width: 32, height: 32 }}>
                   <Build sx={{ fontSize: 20 }} />
                 </Avatar>
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   {currentData.ordersFactory.toLocaleString()}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                   Produção
                 </Typography>
               </Box>
@@ -391,10 +391,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(156, 39, 176, 0.8)', mx: 'auto', mb: 1, width: 32, height: 32 }}>
                   <LocalShippingOutlined sx={{ fontSize: 20 }} />
                 </Avatar>
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   {currentData.ordersShipped.toLocaleString()}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                   Enviados
                 </Typography>
               </Box>
@@ -413,10 +413,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(76, 175, 80, 0.8)', mx: 'auto', mb: 1, width: 32, height: 32 }}>
                   <Done sx={{ fontSize: 20 }} />
                 </Avatar>
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   {currentData.ordersDelivered.toLocaleString()}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                   Entregues
                 </Typography>
               </Box>
@@ -435,10 +435,10 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal 
                 <Avatar sx={{ bgcolor: 'rgba(244, 67, 54, 0.8)', mx: 'auto', mb: 1, width: 32, height: 32 }}>
                   <Cancel sx={{ fontSize: 20 }} />
                 </Avatar>
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   {currentData.ordersCanceled.toLocaleString()}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                   Cancelados
                 </Typography>
               </Box>

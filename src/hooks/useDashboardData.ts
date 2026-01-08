@@ -84,6 +84,7 @@ export interface DashboardMetrics {
       totalAmount: number; // Valor total arrecadado
       averageDonation: number; // Média por doação
       highestDonation: number; // Maior doação
+      totalFees: number; // Total em taxas
       topStreamers: Array<{ name: string; amount: number }>;
     };
     last30Days: {
@@ -91,6 +92,7 @@ export interface DashboardMetrics {
       totalAmount: number;
       averageDonation: number;
       highestDonation: number;
+      totalFees: number; // Total em taxas dos últimos 30 dias
       topStreamers: Array<{ name: string; amount: number }>;
     };
   };
@@ -672,6 +674,16 @@ export const useDashboardData = (customStartDate?: Date, customEndDate?: Date) =
         donations30dCount > 0 ? donations30dAmount / donations30dCount : 0;
       const donations30dHighest = Math.max(
         ...donationsLast30Days.map((d: any) => d.amount || 0),
+        0,
+      );
+      const donations30dTotalFees = donationsLast30Days.reduce(
+        (sum: number, donation: any) => sum + (donation.totalFee || 0),
+        0,
+      );
+
+      // Total de taxas para todas as doações
+      const allDonationsTotalFees = donationsData.data.reduce(
+        (sum: number, donation: any) => sum + (donation.totalFee || 0),
         0,
       );
 
@@ -1268,6 +1280,7 @@ export const useDashboardData = (customStartDate?: Date, customEndDate?: Date) =
             totalAmount: allDonationsAmount,
             averageDonation: allDonationsAverage,
             highestDonation: allDonationsHighest,
+            totalFees: allDonationsTotalFees,
             topStreamers: topStreamersTotal,
           },
           last30Days: {
@@ -1275,6 +1288,7 @@ export const useDashboardData = (customStartDate?: Date, customEndDate?: Date) =
             totalAmount: donations30dAmount,
             averageDonation: donations30dAverage,
             highestDonation: donations30dHighest,
+            totalFees: donations30dTotalFees,
             topStreamers: topStreamers30d,
           },
         },

@@ -15,22 +15,16 @@ import {
   AttachMoney,
   TrendingUp,
   Star,
+  Receipt,
+  Percent,
 } from '@mui/icons-material';
-import {
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-} from 'recharts';
 
 interface DonationData {
   total30d: number;
   totalAmount30d: number;
   average30d: number;
   highest30d: number;
+  totalFees30d: number;
   topStreamers: Array<{ name: string; amount: number }>;
 }
 
@@ -45,13 +39,6 @@ export const DonationMetrics: React.FC<DonationMetricsProps> = ({ data }) => {
       currency: 'BRL',
     }).format(value);
 
-  const donationStats = [
-    { metric: 'Total (30d)', value: data.total30d },
-    { metric: 'Valor Total', value: data.totalAmount30d / 100 }, // Dividir para melhor visualização
-    { metric: 'Média', value: data.average30d },
-    { metric: 'Maior', value: data.highest30d },
-  ];
-
   return (
     <Card>
       <CardContent>
@@ -61,63 +48,108 @@ export const DonationMetrics: React.FC<DonationMetricsProps> = ({ data }) => {
         </Box>
 
         <Grid container spacing={3}>
-          {/* Métricas rápidas */}
-          <Grid item xs={12} sm={6}>
-            <Box mb={2}>
-              <Typography variant="subtitle2" color="text.secondary">
-                Total de Doações (30d)
-              </Typography>
-              <Typography variant="h4" color="primary.main">
-                {data.total30d}
-              </Typography>
-            </Box>
-            
-            <Box mb={2}>
-              <Typography variant="subtitle2" color="text.secondary">
-                Valor Total (30d)
-              </Typography>
-              <Typography variant="h5" color="success.main">
-                {formatCurrency(data.totalAmount30d)}
-              </Typography>
-            </Box>
-            
-            <Box>
-              <Typography variant="subtitle2" color="text.secondary">
-                Doação Média
-              </Typography>
-              <Typography variant="h5" color="warning.main">
-                {formatCurrency(data.average30d)}
-              </Typography>
-            </Box>
+          {/* Primeira linha - 3 cards */}
+          <Grid item xs={12} sm={6} md={4}>
+            <Card elevation={2}>
+              <CardContent>
+                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <Favorite color="primary" />
+                  <Typography variant="subtitle2" color="text.secondary" fontSize="0.75rem">
+                    Total de Doações (30d)
+                  </Typography>
+                </Box>
+                <Typography variant="h5" color="primary.main" sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                  {data.total30d}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <Card elevation={2}>
+              <CardContent>
+                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <AttachMoney color="success" />
+                  <Typography variant="subtitle2" color="text.secondary" fontSize="0.75rem">
+                    Valor Total (30d)
+                  </Typography>
+                </Box>
+                <Typography variant="h5" color="success.main" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
+                  {formatCurrency(data.totalAmount30d)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <Card elevation={2}>
+              <CardContent>
+                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <TrendingUp color="info" />
+                  <Typography variant="subtitle2" color="text.secondary" fontSize="0.75rem">
+                    Doação Média
+                  </Typography>
+                </Box>
+                <Typography variant="h5" color="info.main" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
+                  {formatCurrency(data.average30d)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          {/* Segunda linha - 3 cards */}
+          <Grid item xs={12} sm={6} md={4}>
+            <Card elevation={2}>
+              <CardContent>
+                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <Star color="warning" />
+                  <Typography variant="subtitle2" color="text.secondary" fontSize="0.75rem">
+                    Maior Doação
+                  </Typography>
+                </Box>
+                <Typography variant="h5" color="warning.main" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
+                  {formatCurrency(data.highest30d)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <Card elevation={2}>
+              <CardContent>
+                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <Receipt color="error" />
+                  <Typography variant="subtitle2" color="text.secondary" fontSize="0.75rem">
+                    Total em Taxas
+                  </Typography>
+                </Box>
+                <Typography variant="h5" color="error.main" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
+                  {formatCurrency(data.totalFees30d)}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          
+          <Grid item xs={12} sm={6} md={4}>
+            <Card elevation={2}>
+              <CardContent>
+                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <Percent sx={{ color: '#9c27b0' }} />
+                  <Typography variant="subtitle2" color="text.secondary" fontSize="0.75rem">
+                    % de Taxa
+                  </Typography>
+                </Box>
+                <Typography variant="h5" sx={{ color: '#9c27b0', fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                  {data.totalAmount30d > 0 
+                    ? ((data.totalFees30d / data.totalAmount30d) * 100).toFixed(2)
+                    : '0.00'
+                  }%
+                </Typography>
+              </CardContent>
+            </Card>
           </Grid>
 
-          {/* Gráfico de Estatísticas */}
-          <Grid item xs={12} sm={6}>
-            <Typography variant="subtitle2" color="text.secondary" mb={1}>
-              Estatísticas de Doações
-            </Typography>
-            <Box height={200}>
-              <ResponsiveContainer>
-                <AreaChart data={donationStats}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="metric" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => 
-                    typeof value === 'number' && value > 100 
-                      ? formatCurrency(value) 
-                      : value
-                  } />
-                  <Area 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#FF6B6B" 
-                    fill="#FF6B6B" 
-                    fillOpacity={0.3}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </Box>
-          </Grid>
+
 
           {/* Top Streamers por Doações */}
           <Grid item xs={12} md={8}>
