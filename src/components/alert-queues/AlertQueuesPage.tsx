@@ -156,7 +156,7 @@ const AlertQueuesPage = () => {
       setLoading(true);
       const params = new URLSearchParams({
         page: "1",
-        pageSize: "50",
+        pageSize: "100",
       });
       if (search) params.set("search", search);
       const url = `${apiUrl}/admin/alerts/overview?${params.toString()}`;
@@ -443,7 +443,7 @@ const AlertQueuesPage = () => {
       </Paper>
 
       {/* Lista de Streamers em Cards */}
-      <Grid container spacing={2.5}>
+      <Grid container spacing={{ xs: 1, sm: 1.5 }}>
         {filteredOverview.map((item) => {
           const online =
             item.state?.lastHeartbeat &&
@@ -452,240 +452,199 @@ const AlertQueuesPage = () => {
           const isPaused = item.state?.paused;
           const hasQueue = item.stats.queued > 0;
           const hasErrors = item.stats.failed > 0;
-          
-          const totalAlerts = item.stats.queued + item.stats.inProgress + item.stats.failed;
 
           return (
-            <Grid item xs={12} sm={6} lg={4} key={item.streamerId}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2.4} key={item.streamerId}>
               <Card
-                elevation={3}
+                elevation={2}
                 sx={{
-                  height: "100%",
                   position: "relative",
-                  transition: "all 0.3s ease",
+                  transition: "all 0.2s ease",
                   bgcolor: "#1a1a1a",
                   border: isPaused
-                    ? "2px solid #ff9800"
+                    ? "1px solid #ff9800"
                     : !online
-                      ? "2px solid #9e9e9e"
+                      ? "1px solid #616161"
                       : hasErrors
-                        ? "2px solid #f44336"
-                        : "2px solid transparent",
+                        ? "1px solid #f44336"
+                        : "1px solid rgba(255,255,255,0.12)",
                   "&:hover": {
-                    transform: "translateY(-4px)",
-                    boxShadow: 6,
+                    transform: "translateY(-2px)",
+                    boxShadow: 4,
+                    borderColor: "primary.main",
                   },
                 }}
               >
-                {/* Badge de Status */}
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 12,
-                    right: 12,
-                    zIndex: 1,
-                  }}
-                >
-                  {isPaused ? (
-                    <Chip
-                      icon={<PauseCircleFilledIcon />}
-                      label="Pausado"
-                      color="warning"
-                      size="small"
-                    />
-                  ) : online ? (
-                    <Chip
-                      icon={<PlayCircleFilledWhiteIcon />}
-                      label="Online"
-                      color="success"
-                      size="small"
-                    />
-                  ) : (
-                    <Chip label="Offline" size="small" color="default" />
-                  )}
-                </Box>
-
-                <CardContent sx={{ pb: 1.5 }}>
-                  {/* Header do Card */}
-                  <Stack direction="row" spacing={2} alignItems="flex-start" mb={2} pr={10}>
+                <CardContent sx={{ p: { xs: 1, sm: 1.25 }, pb: "8px !important" }}>
+                  {/* Header Ultra Compacto */}
+                  <Stack 
+                    direction="row" 
+                    spacing={1} 
+                    alignItems="center" 
+                    mb={1}
+                  >
                     <Avatar
                       sx={{
-                        bgcolor: online ? "success.main" : "grey.400",
-                        width: 48,
-                        height: 48,
+                        bgcolor: online ? "success.main" : "grey.600",
+                        width: { xs: 28, sm: 32 },
+                        height: { xs: 28, sm: 32 },
+                        fontSize: { xs: "0.85rem", sm: "0.95rem" },
                       }}
                     >
                       {item.streamerName.charAt(0).toUpperCase()}
                     </Avatar>
                     <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                       <Typography
-                        variant="h6"
-                        fontWeight="bold"
+                        variant="subtitle2"
+                        fontWeight="600"
                         noWrap
-                        sx={{ mb: 0.5 }}
+                        sx={{ fontSize: { xs: "0.8rem", sm: "0.875rem" }, lineHeight: 1.2 }}
                       >
                         {item.streamerName}
                       </Typography>
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{
-                          display: "block",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        ID: {item.streamerId}
-                      </Typography>
+                      <Chip
+                        icon={isPaused ? <PauseCircleFilledIcon sx={{ fontSize: 10 }} /> : online ? <PlayCircleFilledWhiteIcon sx={{ fontSize: 10 }} /> : undefined}
+                        label={isPaused ? "Pausado" : online ? "Online" : "Off"}
+                        color={isPaused ? "warning" : online ? "success" : "default"}
+                        size="small"
+                        sx={{ height: 14, fontSize: "0.6rem", mt: 0.25, "& .MuiChip-label": { px: 0.5 } }}
+                      />
                     </Box>
                   </Stack>
 
-                  {/* Métricas Principais */}
-                  <Grid container spacing={1.5} mb={2}>
+                  {/* Métricas Ultra Compactas */}
+                  <Grid container spacing={0.5} mb={1}>
                     <Grid item xs={4}>
-                      <Paper
-                        variant="outlined"
+                      <Box
                         sx={{
-                          p: 1.5,
+                          p: { xs: 0.5, sm: 0.625 },
                           textAlign: "center",
-                          bgcolor: hasQueue ? "rgba(255, 152, 0, 0.15)" : "#0d0d0d",
-                          borderColor: hasQueue ? "rgba(255, 152, 0, 0.3)" : "rgba(255,255,255,0.12)",
+                          bgcolor: hasQueue ? "rgba(255, 152, 0, 0.1)" : "rgba(255,255,255,0.03)",
+                          borderRadius: 0.75,
+                          border: hasQueue ? "1px solid rgba(255, 152, 0, 0.3)" : "1px solid rgba(255,255,255,0.08)",
                         }}
                       >
-                        <Typography variant="h5" fontWeight="bold" color={hasQueue ? "warning.main" : "text.secondary"}>
+                        <Typography 
+                          variant="body1" 
+                          fontWeight="700" 
+                          color={hasQueue ? "warning.main" : "text.secondary"}
+                          sx={{ fontSize: { xs: "0.95rem", sm: "1.05rem" }, lineHeight: 1 }}
+                        >
                           {item.stats.queued}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Na Fila
+                        <Typography 
+                          variant="caption" 
+                          color="text.secondary"
+                          sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" } }}
+                        >
+                          Fila
                         </Typography>
-                      </Paper>
+                      </Box>
                     </Grid>
                     <Grid item xs={4}>
-                      <Paper
-                        variant="outlined"
+                      <Box
                         sx={{
-                          p: 1.5,
+                          p: { xs: 0.5, sm: 0.625 },
                           textAlign: "center",
-                          bgcolor: item.stats.inProgress > 0 ? "rgba(76, 175, 80, 0.15)" : "#0d0d0d",
-                          borderColor: item.stats.inProgress > 0 ? "rgba(76, 175, 80, 0.3)" : "rgba(255,255,255,0.12)",
+                          bgcolor: item.stats.inProgress > 0 ? "rgba(76, 175, 80, 0.1)" : "rgba(255,255,255,0.03)",
+                          borderRadius: 0.75,
+                          border: item.stats.inProgress > 0 ? "1px solid rgba(76, 175, 80, 0.3)" : "1px solid rgba(255,255,255,0.08)",
                         }}
                       >
                         <Typography
-                          variant="h5"
-                          fontWeight="bold"
+                          variant="body1"
+                          fontWeight="700"
                           color={item.stats.inProgress > 0 ? "success.main" : "text.secondary"}
+                          sx={{ fontSize: { xs: "0.95rem", sm: "1.05rem" }, lineHeight: 1 }}
                         >
                           {item.stats.inProgress}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography 
+                          variant="caption" 
+                          color="text.secondary"
+                          sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" } }}
+                        >
                           Ativo
                         </Typography>
-                      </Paper>
+                      </Box>
                     </Grid>
                     <Grid item xs={4}>
-                      <Paper
-                        variant="outlined"
+                      <Box
                         sx={{
-                          p: 1.5,
+                          p: { xs: 0.5, sm: 0.625 },
                           textAlign: "center",
-                          bgcolor: hasErrors ? "rgba(244, 67, 54, 0.15)" : "#0d0d0d",
-                          borderColor: hasErrors ? "rgba(244, 67, 54, 0.3)" : "rgba(255,255,255,0.12)",
+                          bgcolor: hasErrors ? "rgba(244, 67, 54, 0.1)" : "rgba(255,255,255,0.03)",
+                          borderRadius: 0.75,
+                          border: hasErrors ? "1px solid rgba(244, 67, 54, 0.3)" : "1px solid rgba(255,255,255,0.08)",
                         }}
                       >
-                        <Typography variant="h5" fontWeight="bold" color={hasErrors ? "error.main" : "text.secondary"}>
+                        <Typography 
+                          variant="body1" 
+                          fontWeight="700" 
+                          color={hasErrors ? "error.main" : "text.secondary"}
+                          sx={{ fontSize: { xs: "0.95rem", sm: "1.05rem" }, lineHeight: 1 }}
+                        >
                           {item.stats.failed}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography 
+                          variant="caption" 
+                          color="text.secondary"
+                          sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" } }}
+                        >
                           Falhas
                         </Typography>
-                      </Paper>
+                      </Box>
                     </Grid>
                   </Grid>
 
-                  {/* Barra de Progresso */}
-                  {totalAlerts > 0 && (
-                    <Box mb={2}>
-                      <Stack direction="row" justifyContent="space-between" mb={0.5}>
-                        <Typography variant="caption" color="text.secondary">
-                          Atividade
-                        </Typography>
-                        <Typography variant="caption" fontWeight="bold">
-                          {totalAlerts} alertas
-                        </Typography>
-                      </Stack>
-                      <LinearProgress
-                        variant="determinate"
-                        value={totalAlerts > 0 ? (item.stats.done / (item.stats.done + totalAlerts)) * 100 : 0}
-                        sx={{ height: 6, borderRadius: 3 }}
-                      />
-                    </Box>
+                  {/* Info Mínima - Só heartbeat se online */}
+                  {online && item.state?.lastHeartbeat && (
+                    <Typography 
+                      variant="caption" 
+                      color="text.secondary"
+                      sx={{ 
+                        fontSize: { xs: "0.6rem", sm: "0.625rem" },
+                        display: "block",
+                        textAlign: "center",
+                        mb: 0.5
+                      }}
+                    >
+                      {new Date(item.state.lastHeartbeat).toLocaleTimeString('pt-BR', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
+                    </Typography>
                   )}
 
-                  <Divider sx={{ my: 1.5 }} />
-
-                  {/* Informações Adicionais */}
-                  <Stack spacing={1}>
-                    {item.state?.currentAlertId && (
-                      <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Typography variant="caption" color="text.secondary">
-                          Alerta Atual:
-                        </Typography>
-                        <Chip
-                          label={item.state.currentAlertId.slice(0, 8)}
-                          size="small"
-                          variant="outlined"
-                          sx={{ fontSize: "0.7rem" }}
-                        />
-                      </Stack>
-                    )}
-                    {item.state?.activeDisplayId && (
-                      <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Typography variant="caption" color="text.secondary">
-                          Display:
-                        </Typography>
-                        <Chip
-                          label={item.state.activeDisplayId.slice(0, 8)}
-                          size="small"
-                          variant="outlined"
-                          sx={{ fontSize: "0.7rem" }}
-                        />
-                      </Stack>
-                    )}
-                    {item.state?.lastHeartbeat && (
-                      <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Typography variant="caption" color="text.secondary">
-                          Último Heartbeat:
-                        </Typography>
-                        <Typography variant="caption" fontWeight="medium">
-                          {new Date(item.state.lastHeartbeat).toLocaleTimeString()}
-                        </Typography>
-                      </Stack>
-                    )}
-                  </Stack>
-                </CardContent>
-
-                <Divider sx={{ borderColor: "rgba(255,255,255,0.12)" }} />
-
-                {/* Botão de Ver Detalhes */}
-                <Box sx={{ p: 1.5, bgcolor: "#0d0d0d" }}>
+                  {/* Botão Ver Detalhes Ultra Compacto */}
                   <IconButton
                     component={RouterLink}
                     to={`/alert-queues/${item.streamerId}`}
-                    fullWidth
+                    size="small"
                     sx={{
                       width: "100%",
-                      borderRadius: 1,
-                      bgcolor: "primary.main",
-                      color: "white",
+                      py: { xs: 0.375, sm: 0.5 },
+                      borderRadius: 0.75,
+                      bgcolor: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      color: "primary.main",
                       "&:hover": {
-                        bgcolor: "primary.dark",
+                        bgcolor: "primary.main",
+                        color: "white",
+                        borderColor: "primary.main",
                       },
                     }}
                   >
-                    <VisibilityIcon sx={{ mr: 1 }} />
-                    <Typography variant="button">Ver Detalhes</Typography>
+                    <VisibilityIcon sx={{ fontSize: { xs: 14, sm: 16 }, mr: 0.5 }} />
+                    <Typography 
+                      variant="caption" 
+                      fontWeight="600"
+                      sx={{ fontSize: { xs: "0.65rem", sm: "0.7rem" } }}
+                    >
+                      Detalhes
+                    </Typography>
                   </IconButton>
-                </Box>
+                </CardContent>
               </Card>
             </Grid>
           );

@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import {
   Card,
   CardContent,
@@ -6,7 +6,6 @@ import {
   Box,
   Grid,
   Avatar,
-  Button,
   Stack,
   Chip,
 } from '@mui/material';
@@ -78,18 +77,17 @@ interface StoreData {
 
 interface StoreMetricsProps {
   data: StoreData;
+  useTotal?: boolean;
 }
 
-export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data }) => {
-  const [period, setPeriod] = useState<'total' | 'last30Days'>('last30Days');
-
+export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data, useTotal = false }) => {
   const formatCurrency = (value: number) => 
     new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
 
-  const currentData = data[period];
+  const currentData = useTotal ? data.total : data.last30Days;
 
   return (
     <Card 
@@ -115,54 +113,19 @@ export const StoreMetrics: React.FC<StoreMetricsProps> = memo(({ data }) => {
       />
       
       <CardContent sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Header com Toggle */}
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={4}>
-          <Box display="flex" alignItems="center" gap={2}>
-            <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 48, height: 48 }}>
-              <ShoppingCart sx={{ fontSize: 28 }} />
-            </Avatar>
-            <Box>
-              <Typography variant="h5" fontWeight="bold">
-                🏪 Métricas da Loja
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                Análise comercial por período
-              </Typography>
-            </Box>
+        {/* Header */}
+        <Box display="flex" alignItems="center" gap={2} mb={4}>
+          <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 48, height: 48 }}>
+            <ShoppingCart sx={{ fontSize: 28 }} />
+          </Avatar>
+          <Box>
+            <Typography variant="h5" fontWeight="bold">
+              🏪 Métricas da Loja
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              Análise comercial por período
+            </Typography>
           </Box>
-          
-          <Stack direction="row" spacing={1}>
-            <Button
-              variant={period === 'total' ? 'contained' : 'outlined'}
-              size="small"
-              onClick={() => setPeriod('total')}
-              sx={{ 
-                color: period === 'total' ? 'primary.main' : 'white',
-                borderColor: 'rgba(255,255,255,0.3)',
-                bgcolor: period === 'total' ? 'white' : 'transparent',
-                '&:hover': {
-                  bgcolor: period === 'total' ? 'grey.100' : 'rgba(255,255,255,0.1)',
-                }
-              }}
-            >
-              Total
-            </Button>
-            <Button
-              variant={period === 'last30Days' ? 'contained' : 'outlined'}
-              size="small"
-              onClick={() => setPeriod('last30Days')}
-              sx={{ 
-                color: period === 'last30Days' ? 'primary.main' : 'white',
-                borderColor: 'rgba(255,255,255,0.3)',
-                bgcolor: period === 'last30Days' ? 'white' : 'transparent',
-                '&:hover': {
-                  bgcolor: period === 'last30Days' ? 'grey.100' : 'rgba(255,255,255,0.1)',
-                }
-              }}
-            >
-              Últimos 30 Dias
-            </Button>
-          </Stack>
         </Box>
 
         {/* Métricas Financeiras - Grid 3x2 */}

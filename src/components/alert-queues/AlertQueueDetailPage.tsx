@@ -148,9 +148,9 @@ const AlertCard = ({
 
   return (
     <Paper
-      elevation={2}
+      elevation={1}
       sx={{
-        p: 2,
+        p: { xs: 1, sm: 1.5 },
         bgcolor: "#0d0d0d",
         border: "1px solid rgba(255,255,255,0.08)",
         transition: "all 0.2s",
@@ -160,159 +160,112 @@ const AlertCard = ({
         },
       }}
     >
-      <Grid container spacing={1.5}>
-        <Grid item xs={12}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+      <Stack spacing={0.75}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Chip
+            label={alert.type}
+            size="small"
+            color="primary"
+            sx={{ height: 20, fontSize: "0.7rem" }}
+          />
+          {showStatus && (
             <Chip
-              label={alert.type}
+              label={alert.status}
               size="small"
-              color="primary"
-              variant="outlined"
-              sx={{ fontWeight: "bold" }}
+              color={getStatusColor(alert.status)}
+              icon={getStatusIcon(alert.status) || undefined}
+              sx={{ height: 20, fontSize: "0.7rem" }}
             />
-            {showStatus && (
-              <Chip
-                label={alert.status}
-                size="small"
-                color={getStatusColor(alert.status)}
-                icon={getStatusIcon(alert.status) || undefined}
-              />
-            )}
-          </Stack>
-        </Grid>
+          )}
+        </Stack>
         
-        <Grid item xs={12}>
-          <Typography variant="caption" color="text.secondary">
+        <Box>
+          <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
             ID
           </Typography>
-          <Typography variant="body2" fontFamily="monospace" fontSize="0.75rem">
-            {alert.id.slice(0, 16)}...
+          <Typography variant="body2" fontFamily="monospace" fontSize="0.7rem">
+            {alert.id.slice(0, 12)}...
           </Typography>
+        </Box>
+
+        <Grid container spacing={0.5}>
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
+              Fonte
+            </Typography>
+            <Typography variant="body2" fontSize="0.75rem">
+              {alert.sourceType}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={6}>
+            <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
+              Prioridade
+            </Typography>
+            <Box mt={0.25}>
+              <Chip
+                label={alert.priority}
+                size="small"
+                color={
+                  alert.priority >= 5
+                    ? "error"
+                    : alert.priority >= 3
+                      ? "warning"
+                      : "default"
+                }
+                sx={{ height: 18, fontSize: "0.65rem" }}
+              />
+            </Box>
+          </Grid>
         </Grid>
 
-        <Grid item xs={6}>
-          <Typography variant="caption" color="text.secondary">
-            Fonte
-          </Typography>
-          <Typography variant="body2" fontSize="0.85rem">
-            {alert.sourceType}
-          </Typography>
-        </Grid>
-
-        <Grid item xs={6}>
-          <Typography variant="caption" color="text.secondary">
-            Prioridade
-          </Typography>
-          <Box mt={0.5}>
-            <Chip
-              label={alert.priority}
-              size="small"
-              color={
-                alert.priority >= 5
-                  ? "error"
-                  : alert.priority >= 3
-                    ? "warning"
-                    : "default"
-              }
-            />
-          </Box>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Typography variant="caption" color="text.secondary">
+        <Box>
+          <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
             Payload
           </Typography>
           <Box
             sx={{
-              mt: 0.5,
-              p: 1,
+              mt: 0.25,
+              p: 0.75,
               bgcolor: "#000",
-              borderRadius: 1,
-              fontSize: "0.75rem",
+              borderRadius: 0.75,
+              fontSize: "0.7rem",
             }}
           >
             <PayloadPreview payload={alert.payload} />
           </Box>
-        </Grid>
-
-        {onDelete && (
-          <Grid item xs={12}>
-            <Stack direction="row" justifyContent="flex-end">
-              <Tooltip title="Remover da fila">
-                <IconButton
-                  size="small"
-                  color="error"
-                  onClick={() => onDelete(alert.id)}
-                >
-                  <DeleteForeverIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </Stack>
-          </Grid>
-        )}
+        </Box>
 
         {onRetry && alert.status === "failed" && (
-          <Grid item xs={12}>
-            <Tooltip title="Reprocessar este alerta">
-              <Button
-                fullWidth
-                variant="contained"
-                color="warning"
-                size="small"
-                startIcon={<RestartAltIcon />}
-                onClick={() => onRetry(alert.id)}
-                sx={{
-                  fontWeight: "bold",
-                  textTransform: "none",
-                }}
-              >
-                Reprocessar Alerta
-              </Button>
-            </Tooltip>
-          </Grid>
-        )}
-
-        {typeof alert.attempts === "number" && alert.attempts > 0 && (
-          <Grid item xs={12}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Chip
-                label={`Reprocessando (tentativas: ${alert.attempts})`}
-                size="small"
-                color="warning"
-                sx={{ fontWeight: "bold" }}
-              />
-              {alert.failureReason && (
-                <Chip
-                  label={alert.failureReason}
-                  size="small"
-                  color="error"
-                  variant="outlined"
-                />
-              )}
-            </Stack>
-          </Grid>
+          <Button
+            fullWidth
+            variant="contained"
+            color="warning"
+            size="small"
+            startIcon={<RestartAltIcon fontSize="small" />}
+            onClick={() => onRetry(alert.id)}
+            sx={{
+              py: 0.5,
+              fontSize: "0.7rem",
+              textTransform: "none",
+            }}
+          >
+            Reprocessar
+          </Button>
         )}
 
         {alert.status === "failed" && alert.failureReason && (
-          <Grid item xs={12}>
-            <Typography variant="caption" color="text.secondary">
-              Motivo da falha
-            </Typography>
-            <Typography variant="body2" color="error.main" fontWeight="bold">
+          <Box>
+            <Typography variant="caption" color="error.main" fontSize="0.65rem" fontWeight="bold">
               {alert.failureReason}
             </Typography>
-          </Grid>
+          </Box>
         )}
 
-        <Grid item xs={12}>
-          <Typography variant="caption" color="text.secondary">
-            {showStatus ? "Atualizado" : "Criado"}
-          </Typography>
-          <Typography variant="caption" display="block">
-            {formatDateTime(showStatus ? alert.updatedAt : alert.createdAt)}
-          </Typography>
-        </Grid>
-      </Grid>
+        <Typography variant="caption" color="text.secondary" fontSize="0.625rem">
+          {formatDateTime(showStatus ? alert.updatedAt : alert.createdAt)}
+        </Typography>
+      </Stack>
     </Paper>
   );
 };
@@ -465,81 +418,66 @@ const AlertQueueDetailPage = () => {
   };
 
   return (
-    <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: 3 }}>
+    <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: { xs: 1.5, sm: 2 } }}>
       {/* Header */}
-      <Stack direction="row" alignItems="center" spacing={2} mb={3}>
+      <Stack direction="row" alignItems="center" spacing={{ xs: 0.75, sm: 1 }} mb={2}>
         <IconButton
           onClick={() => navigate("/alert-queues")}
+          size="small"
           sx={{
             bgcolor: "#1e1e1e",
             "&:hover": { bgcolor: "#2a2a2a" },
           }}
         >
-          <ArrowBackIcon />
+          <ArrowBackIcon fontSize="small" />
         </IconButton>
-        <QueueIcon sx={{ fontSize: 32, color: "primary.main" }} />
-        <Typography variant="h4" fontWeight="bold">
+        <QueueIcon sx={{ fontSize: { xs: 20, sm: 24 }, color: "primary.main" }} />
+        <Typography variant="h6" fontWeight="bold" fontSize={{ xs: "1rem", sm: "1.15rem" }}>
           Detalhes da Fila
         </Typography>
-        {loading && <CircularProgress size={24} />}
+        {loading && <CircularProgress size={16} />}
         <Box sx={{ flexGrow: 1 }} />
         
-        {/* Última atualização */}
+        {/* Última atualização - oculto em mobile */}
         {lastUpdate && (
           <Paper
             elevation={1}
             sx={{
-              px: 2,
-              py: 1,
+              display: { xs: "none", md: "block" },
+              px: 1.5,
+              py: 0.5,
               bgcolor: "#1a1a1a",
             }}
           >
-            <Typography variant="caption" color="text.secondary">
-              Última atualização: {lastUpdate.toLocaleTimeString()}
+            <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+              {lastUpdate.toLocaleTimeString()}
             </Typography>
           </Paper>
         )}
         
         {/* Toggle de Auto-Refresh */}
-        <Paper
-          elevation={1}
-          sx={{
-            px: 2,
-            py: 0.5,
-            bgcolor: "#1a1a1a",
-            border: autoRefresh ? "1px solid #4caf50" : "1px solid rgba(255,255,255,0.12)",
-          }}
-        >
-          <FormControlLabel
-            control={
-              <Switch
-                checked={autoRefresh}
-                onChange={(e) => setAutoRefresh(e.target.checked)}
-                color="success"
-                size="small"
-              />
-            }
-            label={
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Typography variant="body2">Auto-Refresh</Typography>
-                {autoRefresh && (
-                  <Chip
-                    label={`${refreshInterval / 1000}s`}
-                    size="small"
-                    color="success"
-                    sx={{ height: 20, fontSize: "0.7rem" }}
-                  />
-                )}
-              </Stack>
-            }
-            sx={{ m: 0 }}
-          />
-        </Paper>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={autoRefresh}
+              onChange={(e) => setAutoRefresh(e.target.checked)}
+              color="success"
+              size="small"
+            />
+          }
+          label={
+            <Typography variant="body2" fontSize="0.75rem">
+              Auto
+            </Typography>
+          }
+          sx={{ m: 0, display: { xs: "none", sm: "flex" } }}
+        />
 
         <Tooltip title="Recarregar">
           <IconButton
             onClick={loadDetail}
             color="primary"
+            size="small"
             sx={{
               bgcolor: "#1e1e1e",
               "&:hover": { bgcolor: "#2a2a2a" },
@@ -565,68 +503,51 @@ const AlertQueueDetailPage = () => {
 
       {detail?.success && detail.streamer && (
         <>
-          {/* Debug Info - Remover em produção */}
-          <Paper
-            elevation={1}
-            sx={{
-              p: 1.5,
-              mb: 2,
-              bgcolor: "#1a1a1a",
-              border: "1px solid rgba(255, 193, 7, 0.3)",
-            }}
-          >
-            <Typography variant="caption" color="warning.main" fontWeight="bold">
-              🔍 Debug: {detail.queued?.length || 0} aguardando | {processingAlerts.length} processando | {detail.recent?.length || 0} processados
-            </Typography>
-            {detail.stats && (
-              <Typography variant="caption" color="text.secondary" display="block">
-                Stats API: queued={detail.stats.queued}, inProgress={detail.stats.inProgress}, done={detail.stats.done}, failed={detail.stats.failed}
-              </Typography>
-            )}
-          </Paper>
-
           {/* Card do Streamer */}
-          <Card elevation={3} sx={{ mb: 3, bgcolor: "#1a1a1a" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Stack direction="row" spacing={3} alignItems="center" mb={3}>
+          <Card elevation={1} sx={{ mb: 1.5, bgcolor: "#1a1a1a" }}>
+            <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
+              <Stack direction="row" spacing={{ xs: 1.5, sm: 2 }} alignItems="center" mb={1.5}>
                 <Avatar
                   sx={{
                     bgcolor: online ? "success.main" : "grey.400",
-                    width: 64,
-                    height: 64,
-                    fontSize: "1.5rem",
+                    width: { xs: 36, sm: 44 },
+                    height: { xs: 36, sm: 44 },
+                    fontSize: { xs: "1rem", sm: "1.25rem" },
                   }}
                 >
                   {detail.streamer.name.charAt(0).toUpperCase()}
                 </Avatar>
                 <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="h4" fontWeight="bold" gutterBottom>
+                  <Typography variant="h6" fontWeight="bold" fontSize={{ xs: "0.95rem", sm: "1.1rem" }}>
                     {detail.streamer.name}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
                     ID: {detail.streamer.id}
                   </Typography>
                 </Box>
                 <Box>
                   {isPaused ? (
                     <Chip
-                      icon={<PauseCircleFilledIcon />}
+                      icon={<PauseCircleFilledIcon fontSize="small" />}
                       label="Pausado"
                       color="warning"
-                      sx={{ fontSize: "1rem", px: 2, py: 2.5 }}
+                      size="small"
+                      sx={{ fontSize: "0.7rem", height: 24 }}
                     />
                   ) : online ? (
                     <Chip
-                      icon={<PlayCircleFilledWhiteIcon />}
+                      icon={<PlayCircleFilledWhiteIcon fontSize="small" />}
                       label="Online"
                       color="success"
-                      sx={{ fontSize: "1rem", px: 2, py: 2.5 }}
+                      size="small"
+                      sx={{ fontSize: "0.7rem", height: 24 }}
                     />
                   ) : (
                     <Chip
                       label="Offline"
                       color="default"
-                      sx={{ fontSize: "1rem", px: 2, py: 2.5 }}
+                      size="small"
+                      sx={{ fontSize: "0.7rem", height: 24 }}
                     />
                   )}
                 </Box>
@@ -634,21 +555,21 @@ const AlertQueueDetailPage = () => {
 
               {/* Barra de Progresso Geral */}
               {totalAlerts > 0 && (
-                <Box mb={3}>
-                  <Stack direction="row" justifyContent="space-between" mb={1}>
-                    <Typography variant="body2" color="text.secondary">
+                <Box mb={1.5}>
+                  <Stack direction="row" justifyContent="space-between" mb={0.5}>
+                    <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
                       Progresso Total
                     </Typography>
-                    <Typography variant="body2" fontWeight="bold">
-                      {detail.stats.done} concluídos / {detail.stats.done + totalAlerts} total
+                    <Typography variant="caption" fontWeight="bold" fontSize="0.7rem">
+                      {detail.stats.done} / {detail.stats.done + totalAlerts}
                     </Typography>
                   </Stack>
                   <LinearProgress
                     variant="determinate"
                     value={progressPercent}
                     sx={{
-                      height: 10,
-                      borderRadius: 5,
+                      height: 6,
+                      borderRadius: 3,
                       bgcolor: "#0d0d0d",
                     }}
                   />
@@ -656,67 +577,67 @@ const AlertQueueDetailPage = () => {
               )}
 
               {/* Informações de Estado */}
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6} md={4}>
+              <Grid container spacing={1}>
+                <Grid item xs={12} sm={4}>
                   <Paper
                     elevation={1}
                     sx={{
-                      p: 2,
+                      p: 1,
                       bgcolor: "#0d0d0d",
-                      borderRadius: 2,
+                      borderRadius: 1,
                     }}
                   >
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <ScheduleIcon color="primary" />
+                    <Stack direction="row" spacing={0.75} alignItems="center">
+                      <ScheduleIcon fontSize="small" color="primary" />
                       <Box>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
                           Alerta Atual
                         </Typography>
-                        <Typography variant="body2" fontWeight="medium" noWrap>
+                        <Typography variant="caption" fontWeight="medium" display="block" fontSize="0.7rem" noWrap>
                           {detail.state?.currentAlertId?.slice(0, 12) || "Nenhum"}
                         </Typography>
                       </Box>
                     </Stack>
                   </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid item xs={12} sm={4}>
                   <Paper
                     elevation={1}
                     sx={{
-                      p: 2,
+                      p: 1,
                       bgcolor: "#0d0d0d",
-                      borderRadius: 2,
+                      borderRadius: 1,
                     }}
                   >
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <MonitorHeartIcon color="primary" />
+                    <Stack direction="row" spacing={0.75} alignItems="center">
+                      <MonitorHeartIcon fontSize="small" color="primary" />
                       <Box>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
                           Display Ativo
                         </Typography>
-                        <Typography variant="body2" fontWeight="medium" noWrap>
+                        <Typography variant="caption" fontWeight="medium" display="block" fontSize="0.7rem" noWrap>
                           {detail.state?.activeDisplayId?.slice(0, 12) || "N/D"}
                         </Typography>
                       </Box>
                     </Stack>
                   </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={4}>
+                <Grid item xs={12} sm={4}>
                   <Paper
                     elevation={1}
                     sx={{
-                      p: 2,
+                      p: 1,
                       bgcolor: "#0d0d0d",
-                      borderRadius: 2,
+                      borderRadius: 1,
                     }}
                   >
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <MonitorHeartIcon color={online ? "success" : "disabled"} />
+                    <Stack direction="row" spacing={0.75} alignItems="center">
+                      <MonitorHeartIcon fontSize="small" color={online ? "success" : "disabled"} />
                       <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Último Heartbeat
+                        <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
+                          Heartbeat
                         </Typography>
-                        <Typography variant="body2" fontWeight="medium">
+                        <Typography variant="caption" fontWeight="medium" display="block" fontSize="0.7rem">
                           {detail.state?.lastHeartbeat
                             ? new Date(detail.state.lastHeartbeat).toLocaleTimeString()
                             : "-"}
@@ -730,102 +651,102 @@ const AlertQueueDetailPage = () => {
           </Card>
 
           {/* Estatísticas */}
-          <Grid container spacing={2} mb={3}>
-            <Grid item xs={12} sm={6} md={3}>
+          <Grid container spacing={1} mb={1.5}>
+            <Grid item xs={6} sm={3}>
               <Paper
-                elevation={2}
+                elevation={1}
                 sx={{
-                  p: 2.5,
+                  p: 1.5,
                   background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                   color: "white",
                 }}
               >
                 <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
                   <Box>
-                    <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5 }}>
+                    <Typography variant="caption" sx={{ opacity: 0.9, fontSize: "0.7rem" }}>
                       Na Fila
                     </Typography>
-                    <Typography variant="h3" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold" fontSize={{ xs: "1.25rem", sm: "1.5rem" }}>
                       {detail.stats.queued}
                     </Typography>
                   </Box>
-                  <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)" }}>
-                    <QueueIcon />
+                  <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 32, height: 32 }}>
+                    <QueueIcon fontSize="small" />
                   </Avatar>
                 </Stack>
               </Paper>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={6} sm={3}>
               <Paper
-                elevation={2}
+                elevation={1}
                 sx={{
-                  p: 2.5,
+                  p: 1.5,
                   background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
                   color: "white",
                 }}
               >
                 <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
                   <Box>
-                    <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5 }}>
+                    <Typography variant="caption" sx={{ opacity: 0.9, fontSize: "0.7rem" }}>
                       Em Andamento
                     </Typography>
-                    <Typography variant="h3" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold" fontSize={{ xs: "1.25rem", sm: "1.5rem" }}>
                       {detail.stats.inProgress}
                     </Typography>
                   </Box>
-                  <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)" }}>
-                    <TrendingUpIcon />
+                  <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 32, height: 32 }}>
+                    <TrendingUpIcon fontSize="small" />
                   </Avatar>
                 </Stack>
               </Paper>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={6} sm={3}>
               <Paper
-                elevation={2}
+                elevation={1}
                 sx={{
-                  p: 2.5,
+                  p: 1.5,
                   background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
                   color: "white",
                 }}
               >
                 <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
                   <Box>
-                    <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5 }}>
+                    <Typography variant="caption" sx={{ opacity: 0.9, fontSize: "0.7rem" }}>
                       Concluídos
                     </Typography>
-                    <Typography variant="h3" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold" fontSize={{ xs: "1.25rem", sm: "1.5rem" }}>
                       {detail.stats.done}
                     </Typography>
                   </Box>
-                  <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)" }}>
-                    <CheckCircleOutlineIcon />
+                  <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 32, height: 32 }}>
+                    <CheckCircleOutlineIcon fontSize="small" />
                   </Avatar>
                 </Stack>
               </Paper>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={6} sm={3}>
               <Paper
-                elevation={2}
+                elevation={1}
                 sx={{
-                  p: 2.5,
+                  p: 1.5,
                   background: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
                   color: "white",
                 }}
               >
                 <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
                   <Box>
-                    <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5 }}>
+                    <Typography variant="caption" sx={{ opacity: 0.9, fontSize: "0.7rem" }}>
                       Com Falhas
                     </Typography>
-                    <Typography variant="h3" fontWeight="bold">
+                    <Typography variant="h6" fontWeight="bold" fontSize={{ xs: "1.25rem", sm: "1.5rem" }}>
                       {detail.stats.failed}
                     </Typography>
                   </Box>
-                  <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)" }}>
-                    <ErrorOutlineIcon />
+                  <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 32, height: 32 }}>
+                    <ErrorOutlineIcon fontSize="small" />
                   </Avatar>
                 </Stack>
               </Paper>
@@ -833,11 +754,11 @@ const AlertQueueDetailPage = () => {
           </Grid>
 
           {/* Visualização de Fila em 3 Colunas */}
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             {/* Coluna 1: Aguardando na Fila */}
             <Grid item xs={12} md={4}>
               <Card
-                elevation={3}
+                elevation={1}
                 sx={{
                   bgcolor: "#1a1a1a",
                   height: "100%",
@@ -847,58 +768,58 @@ const AlertQueueDetailPage = () => {
               >
                 <CardHeader
                   title={
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <QueueIcon sx={{ color: "#ff9800" }} />
-                      <Typography variant="h6" fontWeight="bold">
+                    <Stack direction="row" alignItems="center" spacing={0.75}>
+                      <QueueIcon fontSize="small" sx={{ color: "#ff9800" }} />
+                      <Typography variant="body1" fontWeight="bold" fontSize="0.9rem">
                         Aguardando
                       </Typography>
                     </Stack>
                   }
                   subheader={
-                    <Stack direction="row" spacing={1} mt={1} alignItems="center">
-                      <Chip
-                        label={`${queuedAlerts.length} ${queuedAlerts.length === 1 ? "alerta" : "alertas"}`}
-                        size="small"
-                        sx={{
-                          bgcolor: "rgba(255, 152, 0, 0.2)",
-                          color: "#ff9800",
-                          fontWeight: "bold",
-                        }}
-                      />
-                      {queuedAlerts.length > 0 && (
-                        <Typography variant="caption" color="text.secondary">
-                          Próximo será processado
-                        </Typography>
-                      )}
-                    </Stack>
+                    <Chip
+                      label={`${queuedAlerts.length}`}
+                      size="small"
+                      sx={{
+                        bgcolor: "rgba(255, 152, 0, 0.2)",
+                        color: "#ff9800",
+                        fontWeight: "bold",
+                        height: 20,
+                        fontSize: "0.7rem",
+                        mt: 0.5,
+                      }}
+                    />
                   }
                   sx={{
+                    p: 1.5,
                     pb: 1,
-                    borderBottom: "3px solid #ff9800",
+                    borderBottom: "2px solid #ff9800",
                   }}
                 />
                 <CardContent
                   sx={{
                     flexGrow: 1,
                     overflow: "auto",
-                    maxHeight: "70vh",
+                    maxHeight: "65vh",
+                    p: 1,
                   }}
                 >
-                  <Stack spacing={2}>
+                  <Stack spacing={1}>
                     {queuedAlerts.length > 0 ? (
                       queuedAlerts.map((alert, index) => (
                         <Box key={alert.id} position="relative">
                           {index === 0 && (
                             <Chip
-                              label="Próximo"
+                              label="Próx"
                               size="small"
                               color="warning"
                               sx={{
                                 position: "absolute",
-                                top: -8,
-                                right: -8,
+                                top: -6,
+                                right: -6,
                                 zIndex: 1,
                                 fontWeight: "bold",
+                                height: 18,
+                                fontSize: "0.65rem",
                               }}
                             />
                           )}
@@ -909,14 +830,14 @@ const AlertQueueDetailPage = () => {
                       <Paper
                         elevation={0}
                         sx={{
-                          p: 4,
+                          p: 2,
                           textAlign: "center",
                           bgcolor: "#0d0d0d",
-                          borderRadius: 2,
+                          borderRadius: 1,
                         }}
                       >
-                        <QueueIcon sx={{ fontSize: 48, color: "grey.700", mb: 1 }} />
-                        <Typography variant="body2" color="text.secondary">
+                        <QueueIcon sx={{ fontSize: 32, color: "grey.700", mb: 0.5 }} />
+                        <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
                           Nenhum alerta aguardando
                         </Typography>
                       </Paper>
@@ -929,7 +850,7 @@ const AlertQueueDetailPage = () => {
             {/* Coluna 2: Processando Agora */}
             <Grid item xs={12} md={4}>
               <Card
-                elevation={3}
+                elevation={1}
                 sx={{
                   bgcolor: "#1a1a1a",
                   height: "100%",
@@ -939,29 +860,31 @@ const AlertQueueDetailPage = () => {
               >
                 <CardHeader
                   title={
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <PlayArrowIcon sx={{ color: "#f5576c" }} />
-                      <Typography variant="h6" fontWeight="bold">
+                    <Stack direction="row" alignItems="center" spacing={0.75}>
+                      <PlayArrowIcon fontSize="small" sx={{ color: "#f5576c" }} />
+                      <Typography variant="body1" fontWeight="bold" fontSize="0.9rem">
                         Processando
                       </Typography>
                     </Stack>
                   }
                   subheader={
-                  <Stack direction="row" spacing={1} mt={1} alignItems="center">
-                    <Chip
-                      label={`${processingAlerts.length} ${processingAlerts.length === 1 ? 'alerta' : 'alertas'}`}
-                      size="small"
-                      sx={{
+                    <Stack direction="row" spacing={0.75} mt={0.5} alignItems="center">
+                      <Chip
+                        label={`${processingAlerts.length}`}
+                        size="small"
+                        sx={{
                           bgcolor: processingAlerts.length > 0 ? "rgba(245, 87, 108, 0.2)" : "rgba(158, 158, 158, 0.2)",
                           color: processingAlerts.length > 0 ? "#f5576c" : "grey.500",
                           fontWeight: "bold",
+                          height: 20,
+                          fontSize: "0.7rem",
                         }}
                       />
                       {processingAlerts.length > 0 && (
                         <Box
                           sx={{
-                            width: 8,
-                            height: 8,
+                            width: 6,
+                            height: 6,
                             borderRadius: "50%",
                             bgcolor: "#f5576c",
                             animation: "pulse 2s infinite",
@@ -972,22 +895,24 @@ const AlertQueueDetailPage = () => {
                           }}
                         />
                       )}
-                  </Stack>
+                    </Stack>
                   }
                   sx={{
+                    p: 1.5,
                     pb: 1,
-                    borderBottom: "3px solid #f5576c",
+                    borderBottom: "2px solid #f5576c",
                   }}
                 />
                 <CardContent
                   sx={{
                     flexGrow: 1,
                     overflow: "auto",
-                    maxHeight: "70vh",
+                    maxHeight: "65vh",
+                    p: 1,
                   }}
                 >
                   {processingAlerts.length > 0 ? (
-                    <Stack spacing={2}>
+                    <Stack spacing={1}>
                       {processingAlerts.map((alert, index) => (
                         <Box key={alert.id} position="relative">
                           {index === 0 && (
@@ -996,12 +921,14 @@ const AlertQueueDetailPage = () => {
                               size="small"
                               sx={{
                                 position: "absolute",
-                                top: -8,
-                                right: -8,
+                                top: -6,
+                                right: -6,
                                 zIndex: 1,
                                 bgcolor: "#f5576c",
                                 color: "white",
                                 fontWeight: "bold",
+                                height: 18,
+                                fontSize: "0.65rem",
                                 animation: "pulse 2s infinite",
                               }}
                             />
@@ -1051,14 +978,14 @@ const AlertQueueDetailPage = () => {
                     <Paper
                       elevation={0}
                       sx={{
-                        p: 4,
+                        p: 2,
                         textAlign: "center",
                         bgcolor: "#0d0d0d",
-                        borderRadius: 2,
+                        borderRadius: 1,
                       }}
                     >
-                      <PlayArrowIcon sx={{ fontSize: 48, color: "grey.700", mb: 1 }} />
-                      <Typography variant="body2" color="text.secondary">
+                      <PlayArrowIcon sx={{ fontSize: 32, color: "grey.700", mb: 0.5 }} />
+                      <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
                         Nenhum alerta sendo processado
                       </Typography>
                     </Paper>
@@ -1070,7 +997,7 @@ const AlertQueueDetailPage = () => {
             {/* Coluna 3: Processados Recentemente */}
             <Grid item xs={12} md={4}>
               <Card
-                elevation={3}
+                elevation={1}
                 sx={{
                   bgcolor: "#1a1a1a",
                   height: "100%",
@@ -1080,42 +1007,42 @@ const AlertQueueDetailPage = () => {
               >
                 <CardHeader
                   title={
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <CheckCircleOutlineIcon sx={{ color: "#00f2fe" }} />
-                      <Typography variant="h6" fontWeight="bold">
+                    <Stack direction="row" alignItems="center" spacing={0.75}>
+                      <CheckCircleOutlineIcon fontSize="small" sx={{ color: "#00f2fe" }} />
+                      <Typography variant="body1" fontWeight="bold" fontSize="0.9rem">
                         Processados
                       </Typography>
                     </Stack>
                   }
                   subheader={
-                    <Stack direction="row" spacing={1} mt={1} alignItems="center">
-                      <Chip
-                        label={`${processedAlerts.length} ${processedAlerts.length === 1 ? "alerta" : "alertas"}`}
-                        size="small"
-                        sx={{
-                          bgcolor: "rgba(0, 242, 254, 0.2)",
-                          color: "#00f2fe",
-                          fontWeight: "bold",
-                        }}
-                      />
-                      <Typography variant="caption" color="text.secondary">
-                        Histórico recente
-                      </Typography>
-                    </Stack>
+                    <Chip
+                      label={`${processedAlerts.length}`}
+                      size="small"
+                      sx={{
+                        bgcolor: "rgba(0, 242, 254, 0.2)",
+                        color: "#00f2fe",
+                        fontWeight: "bold",
+                        height: 20,
+                        fontSize: "0.7rem",
+                        mt: 0.5,
+                      }}
+                    />
                   }
                   sx={{
+                    p: 1.5,
                     pb: 1,
-                    borderBottom: "3px solid #00f2fe",
+                    borderBottom: "2px solid #00f2fe",
                   }}
                 />
                 <CardContent
                   sx={{
                     flexGrow: 1,
                     overflow: "auto",
-                    maxHeight: "70vh",
+                    maxHeight: "65vh",
+                    p: 1,
                   }}
                 >
-                  <Stack spacing={2}>
+                  <Stack spacing={1}>
                     {processedAlerts.length > 0 ? (
                       processedAlerts.map((alert) => (
                         <AlertCard key={alert.id} alert={alert} showStatus onRetry={retryAlert} />
@@ -1124,14 +1051,14 @@ const AlertQueueDetailPage = () => {
                       <Paper
                         elevation={0}
                         sx={{
-                          p: 4,
+                          p: 2,
                           textAlign: "center",
                           bgcolor: "#0d0d0d",
-                          borderRadius: 2,
+                          borderRadius: 1,
                         }}
                       >
-                        <CheckCircleOutlineIcon sx={{ fontSize: 48, color: "grey.700", mb: 1 }} />
-                        <Typography variant="body2" color="text.secondary">
+                        <CheckCircleOutlineIcon sx={{ fontSize: 32, color: "grey.700", mb: 0.5 }} />
+                        <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
                           Nenhum alerta processado recentemente
                         </Typography>
                       </Paper>

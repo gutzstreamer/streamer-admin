@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import {
   Card,
   CardContent,
@@ -6,7 +6,6 @@ import {
   Box,
   Grid,
   Avatar,
-  Button,
   Stack,
   Chip,
 } from '@mui/material';
@@ -65,12 +64,11 @@ import {
 
 interface ProductMetricsProps {
   data: ProductData;
+  useTotal?: boolean;
 }
 
-export const ProductMetrics: React.FC<ProductMetricsProps> = memo(({ data }) => {
-  const [period, setPeriod] = useState<'total' | 'last30Days'>('last30Days');
-
-  const currentData = data[period];
+export const ProductMetrics: React.FC<ProductMetricsProps> = memo(({ data, useTotal = false }) => {
+  const currentData = useTotal ? data.total : data.last30Days;
 
   return (
     <Card 
@@ -96,54 +94,19 @@ export const ProductMetrics: React.FC<ProductMetricsProps> = memo(({ data }) => 
       />
       
       <CardContent sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Header com Toggle */}
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={4}>
-          <Box display="flex" alignItems="center" gap={2}>
-            <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 48, height: 48 }}>
-              <Inventory sx={{ fontSize: 28 }} />
-            </Avatar>
-            <Box>
-              <Typography variant="h5" fontWeight="bold">
-                📦 Produtos
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                Análise de produtos por período
-              </Typography>
-            </Box>
+        {/* Header */}
+        <Box display="flex" alignItems="center" gap={2} mb={4}>
+          <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 48, height: 48 }}>
+            <Inventory sx={{ fontSize: 28 }} />
+          </Avatar>
+          <Box>
+            <Typography variant="h5" fontWeight="bold">
+              📦 Produtos
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              Análise de produtos por período
+            </Typography>
           </Box>
-          
-          <Stack direction="row" spacing={1}>
-            <Button
-              variant={period === 'total' ? 'contained' : 'outlined'}
-              size="small"
-              onClick={() => setPeriod('total')}
-              sx={{ 
-                color: period === 'total' ? 'primary.main' : 'white',
-                borderColor: 'rgba(255,255,255,0.3)',
-                bgcolor: period === 'total' ? 'white' : 'transparent',
-                '&:hover': {
-                  bgcolor: period === 'total' ? 'grey.100' : 'rgba(255,255,255,0.1)',
-                }
-              }}
-            >
-              Total
-            </Button>
-            <Button
-              variant={period === 'last30Days' ? 'contained' : 'outlined'}
-              size="small"
-              onClick={() => setPeriod('last30Days')}
-              sx={{ 
-                color: period === 'last30Days' ? 'primary.main' : 'white',
-                borderColor: 'rgba(255,255,255,0.3)',
-                bgcolor: period === 'last30Days' ? 'white' : 'transparent',
-                '&:hover': {
-                  bgcolor: period === 'last30Days' ? 'grey.100' : 'rgba(255,255,255,0.1)',
-                }
-              }}
-            >
-              Últimos 30 Dias
-            </Button>
-          </Stack>
         </Box>
 
         {/* Card principal - Total de Produtos */}
