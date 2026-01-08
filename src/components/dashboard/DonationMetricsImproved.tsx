@@ -14,6 +14,8 @@ import {
   TrendingUp,
   Star,
   AttachMoney,
+  Receipt,
+  Percent,
 } from '@mui/icons-material';
 
 interface DonationData {
@@ -22,6 +24,7 @@ interface DonationData {
     totalAmount: number;
     averageDonation: number;
     highestDonation: number;
+    totalFees: number;
     topStreamers: Array<{ name: string; amount: number }>;
   };
   last30Days: {
@@ -29,6 +32,7 @@ interface DonationData {
     totalAmount: number;
     averageDonation: number;
     highestDonation: number;
+    totalFees: number;
     topStreamers: Array<{ name: string; amount: number }>;
   };
 }
@@ -89,8 +93,9 @@ export const DonationMetricsImproved: React.FC<DonationMetricsProps> = memo(({ d
         {/* Cards das métricas principais */}
         <Box mb={4}>
           <Grid container spacing={3}>
+            {/* Primeira linha - 3 cards */}
             {/* Total de Doações */}
-            <Grid item xs={6} md={3}>
+            <Grid item xs={12} sm={6} md={4}>
               <Box 
                 sx={{ 
                   p: 3, 
@@ -104,17 +109,17 @@ export const DonationMetricsImproved: React.FC<DonationMetricsProps> = memo(({ d
                 <Avatar sx={{ bgcolor: 'rgba(233, 30, 99, 0.8)', mx: 'auto', mb: 2 }}>
                   <Favorite />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {currentData.totalDonations.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Total de Doações
                 </Typography>
               </Box>
             </Grid>
 
             {/* Valor Total Arrecadado */}
-            <Grid item xs={6} md={3}>
+            <Grid item xs={12} sm={6} md={4}>
               <Box 
                 sx={{ 
                   p: 3, 
@@ -128,17 +133,17 @@ export const DonationMetricsImproved: React.FC<DonationMetricsProps> = memo(({ d
                 <Avatar sx={{ bgcolor: 'rgba(76, 175, 80, 0.8)', mx: 'auto', mb: 2 }}>
                   <AttachMoney />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {formatCurrency(currentData.totalAmount)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Valor Total Arrecadado
                 </Typography>
               </Box>
             </Grid>
 
             {/* Média por Doação */}
-            <Grid item xs={6} md={3}>
+            <Grid item xs={12} sm={6} md={4}>
               <Box 
                 sx={{ 
                   p: 3, 
@@ -152,17 +157,18 @@ export const DonationMetricsImproved: React.FC<DonationMetricsProps> = memo(({ d
                 <Avatar sx={{ bgcolor: 'rgba(33, 150, 243, 0.8)', mx: 'auto', mb: 2 }}>
                   <TrendingUp />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {formatCurrency(currentData.averageDonation)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Média por Doação
                 </Typography>
               </Box>
             </Grid>
-
+            
+            {/* Segunda linha - 3 cards */}
             {/* Maior Doação */}
-            <Grid item xs={6} md={3}>
+            <Grid item xs={12} sm={6} md={4}>
               <Box 
                 sx={{ 
                   p: 3, 
@@ -176,11 +182,62 @@ export const DonationMetricsImproved: React.FC<DonationMetricsProps> = memo(({ d
                 <Avatar sx={{ bgcolor: 'rgba(255, 152, 0, 0.8)', mx: 'auto', mb: 2 }}>
                   <Star />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {formatCurrency(currentData.highestDonation)}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Maior Doação
+                </Typography>
+              </Box>
+            </Grid>
+            
+            {/* Total em Taxas */}
+            <Grid item xs={12} sm={6} md={4}>
+              <Box 
+                sx={{ 
+                  p: 3, 
+                  bgcolor: 'rgba(244, 67, 54, 0.3)',
+                  borderRadius: 3,
+                  border: '1px solid rgba(244, 67, 54, 0.4)',
+                  textAlign: 'center',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <Avatar sx={{ bgcolor: 'rgba(244, 67, 54, 0.8)', mx: 'auto', mb: 2 }}>
+                  <Receipt />
+                </Avatar>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
+                  {formatCurrency(currentData.totalFees)}
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
+                  Total em Taxas
+                </Typography>
+              </Box>
+            </Grid>
+            
+            {/* % de Taxa */}
+            <Grid item xs={12} sm={6} md={4}>
+              <Box 
+                sx={{ 
+                  p: 3, 
+                  bgcolor: 'rgba(156, 39, 176, 0.3)',
+                  borderRadius: 3,
+                  border: '1px solid rgba(156, 39, 176, 0.4)',
+                  textAlign: 'center',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <Avatar sx={{ bgcolor: 'rgba(156, 39, 176, 0.8)', mx: 'auto', mb: 2 }}>
+                  <Percent />
+                </Avatar>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                  {currentData.totalAmount > 0 
+                    ? ((currentData.totalFees / currentData.totalAmount) * 100).toFixed(2)
+                    : '0.00'
+                  }%
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
+                  % de Taxa
                 </Typography>
               </Box>
             </Grid>

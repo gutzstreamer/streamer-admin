@@ -113,10 +113,10 @@ export const WalletMetrics: React.FC<WalletMetricsProps> = ({ data }) => {
                     backdropFilter: 'blur(10px)'
                   }}
                 >
-                  <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                  <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                     {formatCurrency(currentData.storeBalanceReleased)}
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                  <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                     Saldo Liberado
                   </Typography>
                 </Box>
@@ -134,10 +134,10 @@ export const WalletMetrics: React.FC<WalletMetricsProps> = ({ data }) => {
                     backdropFilter: 'blur(10px)'
                   }}
                 >
-                  <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                  <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                     {formatCurrency(currentData.storeBalancePending)}
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                  <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                     Saldo Pendente
                   </Typography>
                 </Box>
@@ -175,10 +175,10 @@ export const WalletMetrics: React.FC<WalletMetricsProps> = ({ data }) => {
                     backdropFilter: 'blur(10px)'
                   }}
                 >
-                  <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                  <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                     {formatCurrency(currentData.donationBalanceReleased)}
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                  <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                     Saldo Liberado
                   </Typography>
                 </Box>
@@ -196,10 +196,10 @@ export const WalletMetrics: React.FC<WalletMetricsProps> = ({ data }) => {
                     backdropFilter: 'blur(10px)'
                   }}
                 >
-                  <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                  <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                     {formatCurrency(currentData.donationBalancePending)}
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                  <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                     Saldo Pendente
                   </Typography>
                 </Box>
@@ -225,10 +225,10 @@ export const WalletMetrics: React.FC<WalletMetricsProps> = ({ data }) => {
                   border: '1px solid rgba(76, 175, 80, 0.3)'
                 }}
               >
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   {formatCurrency(totalReleased)}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                   Total Liberado
                 </Typography>
               </Box>
@@ -244,10 +244,10 @@ export const WalletMetrics: React.FC<WalletMetricsProps> = ({ data }) => {
                   border: '1px solid rgba(255, 152, 0, 0.3)'
                 }}
               >
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   {formatCurrency(totalPending)}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                   Total Pendente
                 </Typography>
               </Box>
@@ -263,10 +263,10 @@ export const WalletMetrics: React.FC<WalletMetricsProps> = ({ data }) => {
                   border: '1px solid rgba(255,255,255,0.2)'
                 }}
               >
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                   {formatCurrency(totalBalance)}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                   Saldo Total
                 </Typography>
               </Box>

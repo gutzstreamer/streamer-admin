@@ -102,9 +102,9 @@ const PayloadPreview = ({ payload }: { payload: any }) => {
     if (payload.productStreamerName && payload.total) {
       return `${payload.productStreamerName} - R$ ${payload.total}`;
     }
-    return JSON.stringify(payload).slice(0, 80);
+    return JSON.stringify(payload).slice(0, 60);
   }, [payload]);
-  return <Typography variant="body2">{text}</Typography>;
+  return <Typography variant="caption" fontSize="0.65rem">{text}</Typography>;
 };
 
 const AlertCard = ({
@@ -150,7 +150,7 @@ const AlertCard = ({
     <Paper
       elevation={1}
       sx={{
-        p: { xs: 1, sm: 1.5 },
+        p: { xs: 0.75, sm: 1 },
         bgcolor: "#0d0d0d",
         border: "1px solid rgba(255,255,255,0.08)",
         transition: "all 0.2s",
@@ -160,13 +160,13 @@ const AlertCard = ({
         },
       }}
     >
-      <Stack spacing={0.75}>
+      <Stack spacing={0.5}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Chip
             label={alert.type}
             size="small"
             color="primary"
-            sx={{ height: 20, fontSize: "0.7rem" }}
+            sx={{ height: 18, fontSize: "0.65rem", px: 0.5 }}
           />
           {showStatus && (
             <Chip
@@ -174,62 +174,58 @@ const AlertCard = ({
               size="small"
               color={getStatusColor(alert.status)}
               icon={getStatusIcon(alert.status) || undefined}
-              sx={{ height: 20, fontSize: "0.7rem" }}
+              sx={{ height: 18, fontSize: "0.65rem", px: 0.5 }}
             />
           )}
         </Stack>
         
         <Box>
-          <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
-            ID
+          <Typography variant="caption" color="text.secondary" fontSize="0.6rem" display="inline" mr={0.5}>
+            ID:
           </Typography>
-          <Typography variant="body2" fontFamily="monospace" fontSize="0.7rem">
+          <Typography variant="caption" fontFamily="monospace" fontSize="0.65rem" display="inline">
             {alert.id.slice(0, 12)}...
           </Typography>
         </Box>
 
-        <Grid container spacing={0.5}>
-          <Grid item xs={6}>
-            <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
-              Fonte
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Box flex={1}>
+            <Typography variant="caption" color="text.secondary" fontSize="0.6rem" display="inline" mr={0.5}>
+              Fonte:
             </Typography>
-            <Typography variant="body2" fontSize="0.75rem">
+            <Typography variant="caption" fontSize="0.7rem" display="inline">
               {alert.sourceType}
             </Typography>
-          </Grid>
-
-          <Grid item xs={6}>
-            <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
-              Prioridade
+          </Box>
+          <Box>
+            <Typography variant="caption" color="text.secondary" fontSize="0.6rem" display="inline" mr={0.5}>
+              Prior:
             </Typography>
-            <Box mt={0.25}>
-              <Chip
-                label={alert.priority}
-                size="small"
-                color={
-                  alert.priority >= 5
-                    ? "error"
-                    : alert.priority >= 3
-                      ? "warning"
-                      : "default"
-                }
-                sx={{ height: 18, fontSize: "0.65rem" }}
-              />
-            </Box>
-          </Grid>
-        </Grid>
+            <Chip
+              label={alert.priority}
+              size="small"
+              color={
+                alert.priority >= 5
+                  ? "error"
+                  : alert.priority >= 3
+                    ? "warning"
+                    : "default"
+              }
+              sx={{ height: 16, fontSize: "0.6rem", px: 0.5 }}
+            />
+          </Box>
+        </Stack>
 
         <Box>
-          <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
+          <Typography variant="caption" color="text.secondary" fontSize="0.6rem" mb={0.25}>
             Payload
           </Typography>
           <Box
             sx={{
-              mt: 0.25,
-              p: 0.75,
+              p: 0.5,
               bgcolor: "#000",
-              borderRadius: 0.75,
-              fontSize: "0.7rem",
+              borderRadius: 0.5,
+              fontSize: "0.65rem",
             }}
           >
             <PayloadPreview payload={alert.payload} />
@@ -242,11 +238,11 @@ const AlertCard = ({
             variant="contained"
             color="warning"
             size="small"
-            startIcon={<RestartAltIcon fontSize="small" />}
+            startIcon={<RestartAltIcon sx={{ fontSize: 14 }} />}
             onClick={() => onRetry(alert.id)}
             sx={{
-              py: 0.5,
-              fontSize: "0.7rem",
+              py: 0.25,
+              fontSize: "0.65rem",
               textTransform: "none",
             }}
           >
@@ -256,13 +252,13 @@ const AlertCard = ({
 
         {alert.status === "failed" && alert.failureReason && (
           <Box>
-            <Typography variant="caption" color="error.main" fontSize="0.65rem" fontWeight="bold">
-              {alert.failureReason}
+            <Typography variant="caption" color="error.main" fontSize="0.6rem" fontWeight="bold">
+              ⚠ {alert.failureReason}
             </Typography>
           </Box>
         )}
 
-        <Typography variant="caption" color="text.secondary" fontSize="0.625rem">
+        <Typography variant="caption" color="text.secondary" fontSize="0.6rem">
           {formatDateTime(showStatus ? alert.updatedAt : alert.createdAt)}
         </Typography>
       </Stack>

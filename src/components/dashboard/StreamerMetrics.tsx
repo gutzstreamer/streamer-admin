@@ -114,10 +114,10 @@ export const StreamerMetrics: React.FC<StreamerMetricsProps> = memo(({ data }) =
                 <Avatar sx={{ bgcolor: 'rgba(76, 175, 80, 0.8)', mx: 'auto', mb: 2 }}>
                   <Public />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {currentData.streamersPublic.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Criadores Públicos
                 </Typography>
               </Box>
@@ -138,10 +138,10 @@ export const StreamerMetrics: React.FC<StreamerMetricsProps> = memo(({ data }) =
                 <Avatar sx={{ bgcolor: 'rgba(255, 152, 0, 0.8)', mx: 'auto', mb: 2 }}>
                   <VisibilityOff />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {currentData.streamersPrivate.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Criadores Privados
                 </Typography>
               </Box>
@@ -162,10 +162,10 @@ export const StreamerMetrics: React.FC<StreamerMetricsProps> = memo(({ data }) =
                 <Avatar sx={{ bgcolor: 'rgba(33, 150, 243, 0.8)', mx: 'auto', mb: 2 }}>
                   <Inventory />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {currentData.streamersWithProducts.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Com Produtos
                 </Typography>
               </Box>
@@ -186,10 +186,10 @@ export const StreamerMetrics: React.FC<StreamerMetricsProps> = memo(({ data }) =
                 <Avatar sx={{ bgcolor: 'rgba(156, 39, 176, 0.8)', mx: 'auto', mb: 2 }}>
                   <Group />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {currentData.totalStreamers.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Total de Criadores
                 </Typography>
               </Box>
@@ -215,10 +215,10 @@ export const StreamerMetrics: React.FC<StreamerMetricsProps> = memo(({ data }) =
                 }}
               >
                 <HourglassEmpty sx={{ color: '#FFA726', mb: 1, fontSize: 32 }} />
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h5" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {currentData.requestsPending.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                <Typography variant="body2" sx={{ opacity: 0.8, fontSize: '0.75rem' }}>
                   Pendentes
                 </Typography>
               </Box>
@@ -235,10 +235,10 @@ export const StreamerMetrics: React.FC<StreamerMetricsProps> = memo(({ data }) =
                 }}
               >
                 <CheckCircle sx={{ color: '#66BB6A', mb: 1, fontSize: 32 }} />
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h5" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {currentData.requestsApproved.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                <Typography variant="body2" sx={{ opacity: 0.8, fontSize: '0.75rem' }}>
                   Aprovadas
                 </Typography>
               </Box>
@@ -255,10 +255,10 @@ export const StreamerMetrics: React.FC<StreamerMetricsProps> = memo(({ data }) =
                 }}
               >
                 <Cancel sx={{ color: '#EF5350', mb: 1, fontSize: 32 }} />
-                <Typography variant="h5" fontWeight="bold" color="white">
+                <Typography variant="h5" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                   {currentData.requestsRejected.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                <Typography variant="body2" sx={{ opacity: 0.8, fontSize: '0.75rem' }}>
                   Rejeitadas
                 </Typography>
               </Box>
