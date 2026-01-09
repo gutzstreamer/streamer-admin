@@ -31,8 +31,7 @@ const DonateShow: React.FC = (props) => (
       <TextField source="paymentCode" />
       <TextField source="qrCode" />
       <TextField source="transactionId" />
-      <DateField source="createdAt" label="Created At" showTime/>
-      <DateField source="updatedAt" label="Updated At" showTime/>
+      <DateField source="createdAt" label="Created At" showTime />
     </SimpleShowLayout>
   </Show>
 );
