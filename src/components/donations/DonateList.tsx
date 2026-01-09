@@ -40,7 +40,7 @@ const DonateList = (props: ListProps) => (
       />
       <TextField source="message" />
       <TextField source="username" />
-      <DateField source="createdAt" />
+      <DateField source="createdAt" label="Created At" showTime />
     </Datagrid>
   </List>
 );
