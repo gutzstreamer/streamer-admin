@@ -139,6 +139,8 @@ import { CustomRoutes } from "react-admin";
 import { Route } from "react-router-dom";
 import AlertQueuesPage from "./components/alert-queues/AlertQueuesPage";
 import AlertQueueDetailPage from "./components/alert-queues/AlertQueueDetailPage";
+import MusicthonQueuesPage from "./components/musicthon-queues/MusicthonQueuesPage";
+import MusicthonQueueDetailPage from "./components/musicthon-queues/MusicthonQueueDetailPage";
 
 export const App = () => (
   <Admin
@@ -164,6 +166,11 @@ export const App = () => (
     <CustomRoutes>
       <Route path="/alert-queues" element={<AlertQueuesPage />} />
       <Route path="/alert-queues/:id" element={<AlertQueueDetailPage />} />
+      <Route path="/musicthon-queues" element={<MusicthonQueuesPage />} />
+      <Route
+        path="/musicthon-queues/:id"
+        element={<MusicthonQueueDetailPage />}
+      />
     </CustomRoutes>
     <Resource
       options={{ label: "Users" }}
