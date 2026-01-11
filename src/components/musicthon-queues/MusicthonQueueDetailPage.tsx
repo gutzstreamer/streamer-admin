@@ -123,42 +123,123 @@ const providerLabel = (provider?: string | null) => {
   return provider;
 };
 
-const statusColor = (status: string) => {
+const getStatusStyle = (status: string) => {
   switch (status) {
     case "PLAYING":
-      return "success";
+      return {
+        bgcolor: "rgba(34, 197, 94, 0.15)",
+        color: "#22c55e",
+        border: "1px solid rgba(34, 197, 94, 0.3)",
+        icon: <GraphicEqIcon sx={{ fontSize: 14 }} />,
+        label: "Tocando",
+      };
     case "QUEUED":
-      return "info";
+      return {
+        bgcolor: "rgba(59, 130, 246, 0.15)",
+        color: "#3b82f6",
+        border: "1px solid rgba(59, 130, 246, 0.3)",
+        icon: <QueueMusicIcon sx={{ fontSize: 14 }} />,
+        label: "Na Fila",
+      };
     case "PLAYED":
-      return "default";
+      return {
+        bgcolor: "rgba(16, 185, 129, 0.15)",
+        color: "#10b981",
+        border: "1px solid rgba(16, 185, 129, 0.3)",
+        icon: <CheckCircleOutlineIcon sx={{ fontSize: 14 }} />,
+        label: "Tocada",
+      };
     case "FAILED":
-      return "error";
+      return {
+        bgcolor: "rgba(239, 68, 68, 0.15)",
+        color: "#ef4444",
+        border: "1px solid rgba(239, 68, 68, 0.3)",
+        icon: <ErrorOutlineIcon sx={{ fontSize: 14 }} />,
+        label: "Falhou",
+      };
     case "SKIPPED":
-      return "warning";
+      return {
+        bgcolor: "rgba(251, 146, 60, 0.15)",
+        color: "#fb923c",
+        border: "1px solid rgba(251, 146, 60, 0.3)",
+        icon: <SkipNextIcon sx={{ fontSize: 14 }} />,
+        label: "Pulada",
+      };
     case "CANCELED":
-      return "default";
+      return {
+        bgcolor: "rgba(156, 163, 175, 0.15)",
+        color: "#9ca3af",
+        border: "1px solid rgba(156, 163, 175, 0.3)",
+        icon: <CancelIcon sx={{ fontSize: 14 }} />,
+        label: "Cancelada",
+      };
     default:
-      return "default";
+      return {
+        bgcolor: "rgba(156, 163, 175, 0.15)",
+        color: "#9ca3af",
+        border: "1px solid rgba(156, 163, 175, 0.3)",
+        icon: null,
+        label: status,
+      };
   }
 };
 
-const statusIcon = (status: string) => {
-  switch (status) {
-    case "PLAYING":
-      return <GraphicEqIcon fontSize="small" />;
-    case "QUEUED":
-      return <QueueMusicIcon fontSize="small" />;
-    case "PLAYED":
-      return <CheckCircleOutlineIcon fontSize="small" />;
-    case "FAILED":
-      return <ErrorOutlineIcon fontSize="small" />;
-    case "SKIPPED":
-      return <SkipNextIcon fontSize="small" />;
-    case "CANCELED":
-      return <CancelIcon fontSize="small" />;
-    default:
-      return null;
+const getProviderStyle = (provider: string) => {
+  if (provider === "YTMUSIC") {
+    return {
+      bgcolor: "rgba(255, 0, 0, 0.15)",
+      color: "#ff0000",
+      border: "1px solid rgba(255, 0, 0, 0.3)",
+      label: "YouTube Music",
+    };
   }
+  if (provider === "SPOTIFY") {
+    return {
+      bgcolor: "rgba(30, 215, 96, 0.15)",
+      color: "#1ed760",
+      border: "1px solid rgba(30, 215, 96, 0.3)",
+      label: "Spotify",
+    };
+  }
+  return {
+    bgcolor: "rgba(156, 39, 176, 0.15)",
+    color: "#9c27b0",
+    border: "1px solid rgba(156, 39, 176, 0.3)",
+    label: provider,
+  };
+};
+
+const getPriorityStyle = (priority: number) => {
+  if (priority >= 90) {
+    return {
+      bgcolor: "rgba(239, 68, 68, 0.15)",
+      color: "#ef4444",
+      border: "1px solid rgba(239, 68, 68, 0.3)",
+      label: "Urgente",
+    };
+  }
+  if (priority >= 70) {
+    return {
+      bgcolor: "rgba(251, 146, 60, 0.15)",
+      color: "#fb923c",
+      border: "1px solid rgba(251, 146, 60, 0.3)",
+      label: "Alta",
+    };
+  }
+  if (priority >= 50) {
+    return {
+      bgcolor: "rgba(234, 179, 8, 0.15)",
+      color: "#eab308",
+      border: "1px solid rgba(234, 179, 8, 0.3)",
+      label: "Média",
+    };
+  }
+  return {
+    bgcolor: "rgba(59, 130, 246, 0.15)",
+    color: "#3b82f6",
+    border: "1px solid rgba(59, 130, 246, 0.3)",
+    label: "Normal",
+  };
 };
 
 const EntryCard = ({
@@ -168,118 +249,312 @@ const EntryCard = ({
   entry: MusicthonEntry;
   onRetry?: (id: string) => void;
 }) => {
+  const statusStyle = getStatusStyle(entry.status);
+  const providerStyle = getProviderStyle(entry.provider);
+  const priorityStyle = getPriorityStyle(entry.priority);
+
   return (
     <Paper
       elevation={1}
       sx={{
-        p: { xs: 0.75, sm: 1 },
+        p: { xs: 1, sm: 1.25 },
         bgcolor: "#0d0d0d",
         border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 1.5,
         transition: "all 0.2s",
+        position: "relative",
+        overflow: "hidden",
         "&:hover": {
           bgcolor: "#1a1a1a",
           borderColor: "rgba(255,255,255,0.15)",
+          transform: "translateY(-2px)",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        },
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "3px",
+          background: statusStyle.color,
+          opacity: 0.6,
         },
       }}
     >
-      <Stack spacing={0.5}>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Chip
-            label={providerLabel(entry.provider)}
-            size="small"
-            color="primary"
-            sx={{ height: 18, fontSize: "0.65rem", px: 0.5 }}
-          />
-          <Chip
-            label={entry.status.toLowerCase()}
-            size="small"
-            color={statusColor(entry.status)}
-            icon={statusIcon(entry.status) || undefined}
-            sx={{ height: 18, fontSize: "0.65rem", px: 0.5 }}
-          />
+      <Stack spacing={0.75}>
+        {/* Header com Provider e Status */}
+        <Stack direction="row" justifyContent="space-between" alignItems="center" gap={1}>
+          <Box
+            sx={{
+              px: 1,
+              py: 0.5,
+              borderRadius: 1,
+              bgcolor: providerStyle.bgcolor,
+              border: providerStyle.border,
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+            }}
+          >
+            <MusicNoteIcon sx={{ fontSize: 12, color: providerStyle.color }} />
+            <Typography
+              variant="caption"
+              fontWeight={600}
+              fontSize="0.65rem"
+              sx={{ color: providerStyle.color }}
+            >
+              {providerStyle.label}
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              px: 1,
+              py: 0.5,
+              borderRadius: 1,
+              bgcolor: statusStyle.bgcolor,
+              border: statusStyle.border,
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+            }}
+          >
+            {statusStyle.icon}
+            <Typography
+              variant="caption"
+              fontWeight={700}
+              fontSize="0.65rem"
+              sx={{ color: statusStyle.color }}
+            >
+              {statusStyle.label}
+            </Typography>
+          </Box>
         </Stack>
 
+        {/* ID e Prioridade */}
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Box>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontSize="0.6rem"
+              display="inline"
+              mr={0.5}
+            >
+              ID:
+            </Typography>
+            <Typography
+              variant="caption"
+              fontFamily="monospace"
+              fontSize="0.65rem"
+              display="inline"
+              sx={{ color: "rgba(255,255,255,0.7)" }}
+            >
+              {entry.id.slice(0, 12)}...
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              px: 0.75,
+              py: 0.25,
+              borderRadius: 0.75,
+              bgcolor: priorityStyle.bgcolor,
+              border: priorityStyle.border,
+            }}
+          >
+            <Typography
+              variant="caption"
+              fontWeight={600}
+              fontSize="0.6rem"
+              sx={{ color: priorityStyle.color }}
+            >
+              {priorityStyle.label} ({entry.priority})
+            </Typography>
+          </Box>
+        </Stack>
+
+        {/* Título e Artista */}
         <Box>
           <Typography
-            variant="caption"
-            color="text.secondary"
-            fontSize="0.6rem"
-            display="inline"
-            mr={0.5}
+            fontWeight={700}
+            fontSize="0.9rem"
+            sx={{
+              color: "#fff",
+              lineHeight: 1.3,
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
           >
-            ID:
+            {entry.trackTitle}
           </Typography>
-          <Typography
-            variant="caption"
-            fontFamily="monospace"
-            fontSize="0.65rem"
-            display="inline"
-          >
-            {entry.id.slice(0, 12)}...
-          </Typography>
+          {(entry.trackArtist || entry.trackAlbum) && (
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontSize="0.7rem"
+              sx={{
+                display: "block",
+                mt: 0.25,
+                lineHeight: 1.2,
+              }}
+            >
+              {entry.trackArtist && entry.trackAlbum
+                ? `${entry.trackArtist} • ${entry.trackAlbum}`
+                : entry.trackArtist || entry.trackAlbum}
+            </Typography>
+          )}
         </Box>
 
-        <Typography fontWeight={600} fontSize="0.85rem">
-          {entry.trackTitle}
-        </Typography>
-        <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
-          {entry.trackArtist || entry.trackAlbum || entry.trackId}
-        </Typography>
-
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
-            {entry.donorName || "Anônimo"}
-          </Typography>
-          <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
-            {formatCurrency(entry.amount)}
-          </Typography>
-          {entry.attempts !== undefined && entry.attempts > 1 && (
-            <Chip
-              size="small"
-              label={`tentativas: ${entry.attempts}`}
-              variant="outlined"
-              color="warning"
-              sx={{ height: 16, fontSize: "0.6rem", px: 0.5 }}
-            />
-          )}
+        {/* Donor e Valor */}
+        <Stack
+          direction="row"
+          spacing={1.5}
+          alignItems="center"
+          sx={{
+            p: 0.75,
+            borderRadius: 1,
+            bgcolor: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(255,255,255,0.05)",
+          }}
+        >
+          <Box flex={1}>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontSize="0.6rem"
+              display="block"
+            >
+              Doador
+            </Typography>
+            <Typography
+              variant="caption"
+              fontWeight={600}
+              fontSize="0.75rem"
+              sx={{ color: "rgba(255,255,255,0.9)" }}
+            >
+              {entry.donorName || "Anônimo"}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              px: 1,
+              py: 0.5,
+              borderRadius: 1,
+              bgcolor: "rgba(34, 197, 94, 0.15)",
+              border: "1px solid rgba(34, 197, 94, 0.3)",
+            }}
+          >
+            <Typography
+              variant="caption"
+              fontWeight={700}
+              fontSize="0.75rem"
+              sx={{ color: "#22c55e" }}
+            >
+              {formatCurrency(entry.amount)}
+            </Typography>
+          </Box>
         </Stack>
 
-        {entry.failureReason && (
-          <Typography
-            variant="caption"
-            color="error.main"
-            fontSize="0.65rem"
-            fontWeight={600}
+        {/* Tentativas (se houver) */}
+        {entry.attempts !== undefined && entry.attempts > 1 && (
+          <Box
+            sx={{
+              px: 1,
+              py: 0.5,
+              borderRadius: 1,
+              bgcolor: "rgba(251, 146, 60, 0.15)",
+              border: "1px solid rgba(251, 146, 60, 0.3)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 0.5,
+              alignSelf: "flex-start",
+            }}
           >
-            ⚠ {entry.failureReason}
-          </Typography>
+            <RestartAltIcon sx={{ fontSize: 12, color: "#fb923c" }} />
+            <Typography
+              variant="caption"
+              fontWeight={600}
+              fontSize="0.65rem"
+              sx={{ color: "#fb923c" }}
+            >
+              {entry.attempts} tentativas
+            </Typography>
+          </Box>
         )}
 
+        {/* Lock info */}
+        {entry.lockedAt && (
+          <Box
+            sx={{
+              px: 1,
+              py: 0.5,
+              borderRadius: 1,
+              bgcolor: "rgba(251, 146, 60, 0.15)",
+              border: "1px solid rgba(251, 146, 60, 0.3)",
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+            }}
+          >
+            <LockIcon sx={{ fontSize: 12, color: "#fb923c" }} />
+            <Typography variant="caption" fontSize="0.65rem" sx={{ color: "#fb923c" }}>
+              {entry.lockedBy || "unknown"} • {formatDateTime(entry.lockedAt)}
+            </Typography>
+          </Box>
+        )}
+
+        {/* Failure Reason */}
+        {entry.failureReason && (
+          <Box
+            sx={{
+              p: 1,
+              borderRadius: 1,
+              bgcolor: "rgba(239, 68, 68, 0.1)",
+              border: "1px solid rgba(239, 68, 68, 0.3)",
+            }}
+          >
+            <Stack direction="row" spacing={0.5} alignItems="flex-start">
+              <ErrorOutlineIcon sx={{ fontSize: 14, color: "#ef4444", mt: 0.125 }} />
+              <Typography
+                variant="caption"
+                fontSize="0.7rem"
+                fontWeight={600}
+                sx={{ color: "#ef4444", lineHeight: 1.4 }}
+              >
+                {entry.failureReason}
+              </Typography>
+            </Stack>
+          </Box>
+        )}
+
+        {/* Retry Button */}
         {onRetry && entry.status === "FAILED" && (
           <Button
             fullWidth
             variant="contained"
-            color="warning"
             size="small"
-            startIcon={<RestartAltIcon sx={{ fontSize: 14 }} />}
+            startIcon={<RestartAltIcon sx={{ fontSize: 16 }} />}
             onClick={() => onRetry(entry.id)}
             sx={{
-              py: 0.25,
-              fontSize: "0.65rem",
+              py: 0.75,
+              fontSize: "0.7rem",
+              fontWeight: 700,
               textTransform: "none",
+              background: "linear-gradient(135deg, #fb923c 0%, #f97316 100%)",
+              boxShadow: "0 2px 8px rgba(251, 146, 60, 0.3)",
+              "&:hover": {
+                background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
+                boxShadow: "0 4px 12px rgba(251, 146, 60, 0.4)",
+                transform: "translateY(-1px)",
+              },
             }}
           >
-            Reprocessar
+            Reprocessar Música
           </Button>
-        )}
-
-        {entry.lockedAt && (
-          <Stack direction="row" spacing={1} alignItems="center">
-            <LockIcon fontSize="small" />
-            <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
-              {entry.lockedBy || "unknown"} • {formatDateTime(entry.lockedAt)}
-            </Typography>
-          </Stack>
         )}
       </Stack>
     </Paper>
