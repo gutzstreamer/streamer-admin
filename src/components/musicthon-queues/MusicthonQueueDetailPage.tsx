@@ -10,6 +10,7 @@ import {
   Grid,
   IconButton,
   Paper,
+  Button,
   Stack,
   Tooltip,
   Typography,
@@ -23,6 +24,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import CancelIcon from "@mui/icons-material/Cancel";
 import LockIcon from "@mui/icons-material/Lock";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchUtils, useNotify } from "react-admin";
@@ -41,6 +43,7 @@ type MusicthonStats = {
 type MusicthonConfig = {
   streamerId: string;
   enabled: boolean;
+  paused?: boolean;
   provider: string | null;
   minAmount: number;
   highestDonationWins: boolean;
@@ -61,6 +64,7 @@ type MusicthonEntry = {
   donorMessage?: string | null;
   status: string;
   priority: number;
+  attempts?: number | null;
   failureReason?: string | null;
   lockedAt?: string | null;
   lockedBy?: string | null;
@@ -131,43 +135,141 @@ const statusColor = (status: string) => {
   }
 };
 
-const EntryCard = ({ entry }: { entry: MusicthonEntry }) => {
+const statusIcon = (status: string) => {
+  switch (status) {
+    case "PLAYING":
+      return <GraphicEqIcon fontSize="small" />;
+    case "QUEUED":
+      return <QueueMusicIcon fontSize="small" />;
+    case "PLAYED":
+      return <CheckCircleOutlineIcon fontSize="small" />;
+    case "FAILED":
+      return <ErrorOutlineIcon fontSize="small" />;
+    case "SKIPPED":
+      return <SkipNextIcon fontSize="small" />;
+    case "CANCELED":
+      return <CancelIcon fontSize="small" />;
+    default:
+      return null;
+  }
+};
+
+const EntryCard = ({
+  entry,
+  onRetry,
+}: {
+  entry: MusicthonEntry;
+  onRetry?: (id: string) => void;
+}) => {
   return (
     <Paper
-      elevation={2}
+      elevation={1}
       sx={{
-        p: 2,
+        p: { xs: 0.75, sm: 1 },
         bgcolor: "#0d0d0d",
         border: "1px solid rgba(255,255,255,0.08)",
+        transition: "all 0.2s",
+        "&:hover": {
+          bgcolor: "#1a1a1a",
+          borderColor: "rgba(255,255,255,0.15)",
+        },
       }}
     >
-      <Stack spacing={1}>
+      <Stack spacing={0.5}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Chip
+            label={providerLabel(entry.provider)}
             size="small"
-            label={entry.status.toLowerCase()}
-            color={statusColor(entry.status)}
+            color="primary"
+            sx={{ height: 18, fontSize: "0.65rem", px: 0.5 }}
           />
-          <Typography variant="caption" color="text.secondary">
-            {formatCurrency(entry.amount)}
-          </Typography>
+          <Chip
+            label={entry.status.toLowerCase()}
+            size="small"
+            color={statusColor(entry.status)}
+            icon={statusIcon(entry.status) || undefined}
+            sx={{ height: 18, fontSize: "0.65rem", px: 0.5 }}
+          />
         </Stack>
-        <Typography fontWeight={600}>{entry.trackTitle}</Typography>
-        <Typography variant="body2" color="text.secondary">
+
+        <Box>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            fontSize="0.6rem"
+            display="inline"
+            mr={0.5}
+          >
+            ID:
+          </Typography>
+          <Typography
+            variant="caption"
+            fontFamily="monospace"
+            fontSize="0.65rem"
+            display="inline"
+          >
+            {entry.id.slice(0, 12)}...
+          </Typography>
+        </Box>
+
+        <Typography fontWeight={600} fontSize="0.85rem">
+          {entry.trackTitle}
+        </Typography>
+        <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
           {entry.trackArtist || entry.trackAlbum || entry.trackId}
         </Typography>
-        <Typography variant="caption" color="text.secondary">
-          {entry.donorName || "Anônimo"}
-        </Typography>
+
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+            {entry.donorName || "Anônimo"}
+          </Typography>
+          <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+            {formatCurrency(entry.amount)}
+          </Typography>
+          {entry.attempts !== undefined && entry.attempts > 1 && (
+            <Chip
+              size="small"
+              label={`tentativas: ${entry.attempts}`}
+              variant="outlined"
+              color="warning"
+              sx={{ height: 16, fontSize: "0.6rem", px: 0.5 }}
+            />
+          )}
+        </Stack>
+
         {entry.failureReason && (
-          <Typography variant="caption" color="error">
-            {entry.failureReason}
+          <Typography
+            variant="caption"
+            color="error.main"
+            fontSize="0.65rem"
+            fontWeight={600}
+          >
+            ⚠ {entry.failureReason}
           </Typography>
         )}
+
+        {onRetry && entry.status === "FAILED" && (
+          <Button
+            fullWidth
+            variant="contained"
+            color="warning"
+            size="small"
+            startIcon={<RestartAltIcon sx={{ fontSize: 14 }} />}
+            onClick={() => onRetry(entry.id)}
+            sx={{
+              py: 0.25,
+              fontSize: "0.65rem",
+              textTransform: "none",
+            }}
+          >
+            Reprocessar
+          </Button>
+        )}
+
         {entry.lockedAt && (
           <Stack direction="row" spacing={1} alignItems="center">
             <LockIcon fontSize="small" />
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
               {entry.lockedBy || "unknown"} • {formatDateTime(entry.lockedAt)}
             </Typography>
           </Stack>
@@ -183,6 +285,24 @@ const MusicthonQueueDetailPage = () => {
   const notify = useNotify();
   const [detail, setDetail] = useState<DetailResponse | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const retryEntry = async (entryId: string) => {
+    try {
+      const url = `${adminApi}/retry-entry`;
+      await fetchUtils.fetchJson(url, {
+        method: "POST",
+        body: JSON.stringify({ entryId }),
+        headers: buildHeaders(),
+      });
+      notify("Música reprocessada com sucesso", { type: "success" });
+      await loadDetail();
+    } catch (error: any) {
+      notify(
+        `Falha ao reprocessar música: ${error?.message || "erro desconhecido"}`,
+        { type: "error" },
+      );
+    }
+  };
 
   const loadDetail = async () => {
     if (!id) return;
@@ -345,7 +465,11 @@ const MusicthonQueueDetailPage = () => {
                 Status
               </Typography>
               <Typography fontWeight={600}>
-                {detail.config?.enabled ? "Ativo" : "Desligado"}
+                {!detail.config?.enabled
+                  ? "Desligado"
+                  : detail.config?.paused
+                    ? "Pausado"
+                    : "Ativo"}
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
@@ -401,7 +525,7 @@ const MusicthonQueueDetailPage = () => {
             <Divider />
             <CardContent>
               {detail.current ? (
-                <EntryCard entry={detail.current} />
+                <EntryCard entry={detail.current} onRetry={retryEntry} />
               ) : (
                 <Typography color="text.secondary">
                   Nenhuma música tocando.
@@ -429,7 +553,7 @@ const MusicthonQueueDetailPage = () => {
                   </Typography>
                 )}
                 {detail.queued.map((entry) => (
-                  <EntryCard key={entry.id} entry={entry} />
+                  <EntryCard key={entry.id} entry={entry} onRetry={retryEntry} />
                 ))}
               </Stack>
             </CardContent>
@@ -454,7 +578,7 @@ const MusicthonQueueDetailPage = () => {
                   </Typography>
                 )}
                 {detail.recent.map((entry) => (
-                  <EntryCard key={entry.id} entry={entry} />
+                  <EntryCard key={entry.id} entry={entry} onRetry={retryEntry} />
                 ))}
               </Stack>
             </CardContent>
@@ -476,7 +600,7 @@ const MusicthonQueueDetailPage = () => {
           <CardContent>
             <Stack spacing={1.5}>
               {detail.playing.map((entry) => (
-                <EntryCard key={entry.id} entry={entry} />
+                <EntryCard key={entry.id} entry={entry} onRetry={retryEntry} />
               ))}
             </Stack>
           </CardContent>

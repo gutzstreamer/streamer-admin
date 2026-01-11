@@ -12,11 +12,6 @@ import {
   IconButton,
   Paper,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   TextField,
   Tooltip,
   Typography,
@@ -29,6 +24,8 @@ import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
+import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import LockIcon from "@mui/icons-material/Lock";
 import { useEffect, useMemo, useState } from "react";
 import { fetchUtils, useNotify } from "react-admin";
@@ -48,6 +45,7 @@ type MusicthonStats = {
 type MusicthonConfig = {
   streamerId: string;
   enabled: boolean;
+  paused?: boolean;
   provider: string | null;
   minAmount: number;
   highestDonationWins: boolean;
@@ -302,138 +300,301 @@ const MusicthonQueuesPage = () => {
               <CircularProgress />
             </Stack>
           ) : (
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Streamer</TableCell>
-                  <TableCell>Musicthon</TableCell>
-                  <TableCell>Provider</TableCell>
-                  <TableCell>Min. valor</TableCell>
-                  <TableCell>Prioridade</TableCell>
-                  <TableCell>Resumo</TableCell>
-                  <TableCell>Lock</TableCell>
-                  <TableCell>Atualizado</TableCell>
-                  <TableCell align="right">Detalhes</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {overview.map((item) => (
-                  <TableRow key={item.streamerId} hover>
-                    <TableCell>
-                      <Stack spacing={0.5}>
-                        <Typography fontWeight={600}>
-                          {item.streamerName}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {item.streamerId}
-                        </Typography>
-                      </Stack>
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        size="small"
-                        color={item.config?.enabled ? "success" : "default"}
-                        label={item.config?.enabled ? "ativo" : "desligado"}
-                      />
-                    </TableCell>
-                    <TableCell>{providerLabel(item.config?.provider)}</TableCell>
-                    <TableCell>
-                      {formatCurrency(item.config?.minAmount)}
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        size="small"
-                        color={
-                          item.config?.highestDonationWins ? "warning" : "info"
-                        }
-                        label={
-                          item.config?.highestDonationWins
-                            ? "maior doação"
-                            : "fila padrão"
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Stack direction="row" spacing={1} alignItems="center">
-                        <Chip
-                          size="small"
-                          icon={<QueueMusicIcon fontSize="small" />}
-                          label={item.stats.queued}
-                        />
-                        <Chip
-                          size="small"
-                          icon={<GraphicEqIcon fontSize="small" />}
-                          color="success"
-                          label={item.stats.playing}
-                        />
-                        {item.stats.failed > 0 ? (
+            <Grid container spacing={{ xs: 1, sm: 1.5 }}>
+              {overview.map((item) => {
+                const isEnabled = !!item.config?.enabled;
+                const isPaused = !!item.config?.paused;
+                const hasQueue = item.stats.queued > 0;
+                const hasErrors = item.stats.failed > 0;
+                const failureTooltip = formatFailureTooltip(item.lastFailed);
+
+                return (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    key={item.streamerId}
+                  >
+                    <Card
+                      elevation={2}
+                      sx={{
+                        position: "relative",
+                        transition: "all 0.2s ease",
+                        bgcolor: "#1a1a1a",
+                        border: !isEnabled
+                          ? "1px solid #616161"
+                          : isPaused
+                            ? "1px solid #ff9800"
+                            : hasErrors
+                              ? "1px solid #f44336"
+                              : "1px solid rgba(255,255,255,0.12)",
+                        "&:hover": {
+                          transform: "translateY(-2px)",
+                          boxShadow: 4,
+                          borderColor: "primary.main",
+                        },
+                      }}
+                    >
+                      <CardContent
+                        sx={{ p: { xs: 1, sm: 1.25 }, pb: "8px !important" }}
+                      >
+                        <Stack direction="row" spacing={1} alignItems="center" mb={1}>
+                          <Avatar
+                            sx={{
+                              bgcolor: isEnabled ? "success.main" : "grey.600",
+                              width: { xs: 28, sm: 32 },
+                              height: { xs: 28, sm: 32 },
+                              fontSize: { xs: "0.85rem", sm: "0.95rem" },
+                            }}
+                          >
+                            {item.streamerName.charAt(0).toUpperCase()}
+                          </Avatar>
+                          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                            <Typography
+                              variant="subtitle2"
+                              fontWeight="600"
+                              noWrap
+                              sx={{
+                                fontSize: { xs: "0.8rem", sm: "0.875rem" },
+                                lineHeight: 1.2,
+                              }}
+                            >
+                              {item.streamerName}
+                            </Typography>
+                            <Chip
+                              icon={
+                                isPaused ? (
+                                  <PauseCircleFilledIcon sx={{ fontSize: 10 }} />
+                                ) : isEnabled ? (
+                                  <PlayCircleFilledWhiteIcon sx={{ fontSize: 10 }} />
+                                ) : undefined
+                              }
+                              label={
+                                !isEnabled
+                                  ? "Off"
+                                  : isPaused
+                                    ? "Pausado"
+                                    : "Ativo"
+                              }
+                              color={
+                                !isEnabled
+                                  ? "default"
+                                  : isPaused
+                                    ? "warning"
+                                    : "success"
+                              }
+                              size="small"
+                              sx={{
+                                height: 14,
+                                fontSize: "0.6rem",
+                                mt: 0.25,
+                                "& .MuiChip-label": { px: 0.5 },
+                              }}
+                            />
+                          </Box>
+                        </Stack>
+
+                        <Grid container spacing={0.5} mb={1}>
+                          <Grid item xs={4}>
+                            <Box
+                              sx={{
+                                p: { xs: 0.5, sm: 0.625 },
+                                textAlign: "center",
+                                bgcolor: hasQueue
+                                  ? "rgba(255, 152, 0, 0.1)"
+                                  : "rgba(255,255,255,0.03)",
+                                borderRadius: 0.75,
+                                border: hasQueue
+                                  ? "1px solid rgba(255, 152, 0, 0.3)"
+                                  : "1px solid rgba(255,255,255,0.08)",
+                              }}
+                            >
+                              <Typography
+                                variant="body1"
+                                fontWeight="700"
+                                color={hasQueue ? "warning.main" : "text.secondary"}
+                                sx={{
+                                  fontSize: { xs: "0.95rem", sm: "1.05rem" },
+                                  lineHeight: 1,
+                                }}
+                              >
+                                {item.stats.queued}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" } }}
+                              >
+                                Fila
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Box
+                              sx={{
+                                p: { xs: 0.5, sm: 0.625 },
+                                textAlign: "center",
+                                bgcolor:
+                                  item.stats.playing > 0
+                                    ? "rgba(76, 175, 80, 0.1)"
+                                    : "rgba(255,255,255,0.03)",
+                                borderRadius: 0.75,
+                                border:
+                                  item.stats.playing > 0
+                                    ? "1px solid rgba(76, 175, 80, 0.3)"
+                                    : "1px solid rgba(255,255,255,0.08)",
+                              }}
+                            >
+                              <Typography
+                                variant="body1"
+                                fontWeight="700"
+                                color={
+                                  item.stats.playing > 0
+                                    ? "success.main"
+                                    : "text.secondary"
+                                }
+                                sx={{
+                                  fontSize: { xs: "0.95rem", sm: "1.05rem" },
+                                  lineHeight: 1,
+                                }}
+                              >
+                                {item.stats.playing}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" } }}
+                              >
+                                Tocando
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Box
+                              sx={{
+                                p: { xs: 0.5, sm: 0.625 },
+                                textAlign: "center",
+                                bgcolor: hasErrors
+                                  ? "rgba(244, 67, 54, 0.1)"
+                                  : "rgba(255,255,255,0.03)",
+                                borderRadius: 0.75,
+                                border: hasErrors
+                                  ? "1px solid rgba(244, 67, 54, 0.3)"
+                                  : "1px solid rgba(255,255,255,0.08)",
+                              }}
+                            >
+                              <Typography
+                                variant="body1"
+                                fontWeight="700"
+                                color={hasErrors ? "error.main" : "text.secondary"}
+                                sx={{
+                                  fontSize: { xs: "0.95rem", sm: "1.05rem" },
+                                  lineHeight: 1,
+                                }}
+                              >
+                                {item.stats.failed}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" } }}
+                              >
+                                Falhas
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        </Grid>
+
+                        <Stack spacing={0.5} mb={1}>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" } }}
+                          >
+                            {providerLabel(item.config?.provider)} • mínimo{" "}
+                            {formatCurrency(item.config?.minAmount)}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ fontSize: { xs: "0.6rem", sm: "0.65rem" } }}
+                          >
+                            {item.config?.highestDonationWins
+                              ? "Maior doação"
+                              : "Fila padrão"}
+                          </Typography>
+                        </Stack>
+
+                        {item.currentEntry?.lockedAt ? (
                           <Tooltip
                             title={
-                              formatFailureTooltip(item.lastFailed) ||
-                              "Falhas recentes"
+                              <Stack spacing={0.5}>
+                                <Typography variant="caption">
+                                  {item.currentEntry.lockedBy || "unknown"}
+                                </Typography>
+                                <Typography variant="caption">
+                                  {formatDateTime(item.currentEntry.lockedAt)}
+                                </Typography>
+                              </Stack>
                             }
                           >
                             <Chip
                               size="small"
-                              icon={<ErrorOutlineIcon fontSize="small" />}
-                              color="error"
-                              label={item.stats.failed}
+                              icon={<LockIcon fontSize="small" />}
+                              label={formatLockLabel(item.currentEntry)}
+                              color="warning"
+                              sx={{ height: 16, fontSize: "0.6rem" }}
                             />
                           </Tooltip>
-                        ) : (
-                          <Chip
-                            size="small"
-                            icon={<ErrorOutlineIcon fontSize="small" />}
-                            color="default"
-                            label={item.stats.failed}
-                          />
+                        ) : null}
+
+                        {failureTooltip && (
+                          <Tooltip title={failureTooltip}>
+                            <Chip
+                              size="small"
+                              icon={<ErrorOutlineIcon fontSize="small" />}
+                              label="Falha recente"
+                              color="error"
+                              sx={{ height: 16, fontSize: "0.6rem" }}
+                            />
+                          </Tooltip>
                         )}
-                      </Stack>
-                    </TableCell>
-                    <TableCell>
-                      {item.currentEntry?.lockedAt ? (
-                        <Tooltip
-                          title={
-                            <Stack spacing={0.5}>
-                              <Typography variant="caption">
-                                {item.currentEntry.lockedBy || "unknown"}
-                              </Typography>
-                              <Typography variant="caption">
-                                {formatDateTime(item.currentEntry.lockedAt)}
-                              </Typography>
-                            </Stack>
-                          }
-                        >
-                          <Chip
-                            size="small"
-                            icon={<LockIcon fontSize="small" />}
-                            label={formatLockLabel(item.currentEntry)}
-                            color="warning"
-                          />
-                        </Tooltip>
-                      ) : (
-                        <Typography variant="body2" color="text.secondary">
-                          —
-                        </Typography>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {formatDateTime(item.config?.updatedAt)}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Tooltip title="Ver detalhes">
+
                         <IconButton
                           component={RouterLink}
                           to={`/musicthon-queues/${item.streamerId}`}
+                          size="small"
+                          sx={{
+                            width: "100%",
+                            py: { xs: 0.375, sm: 0.5 },
+                            borderRadius: 0.75,
+                            bgcolor: "rgba(255,255,255,0.05)",
+                            border: "1px solid rgba(255,255,255,0.1)",
+                            color: "primary.main",
+                            "&:hover": {
+                              bgcolor: "primary.main",
+                              color: "white",
+                              borderColor: "primary.main",
+                            },
+                          }}
                         >
-                          <VisibilityIcon />
+                          <VisibilityIcon sx={{ fontSize: { xs: 14, sm: 16 }, mr: 0.5 }} />
+                          <Typography
+                            variant="caption"
+                            fontWeight="600"
+                            sx={{ fontSize: { xs: "0.65rem", sm: "0.7rem" } }}
+                          >
+                            Detalhes
+                          </Typography>
                         </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                );
+              })}
+            </Grid>
           )}
         </CardContent>
       </Card>
