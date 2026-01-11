@@ -16,6 +16,7 @@ import {
   FormControlLabel,
   Tooltip,
   Typography,
+  LinearProgress,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -27,6 +28,9 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 import CancelIcon from "@mui/icons-material/Cancel";
 import LockIcon from "@mui/icons-material/Lock";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
+import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchUtils, useNotify } from "react-admin";
@@ -289,6 +293,9 @@ const MusicthonQueueDetailPage = () => {
   const [detail, setDetail] = useState<DetailResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [configSaving, setConfigSaving] = useState(false);
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [refreshInterval] = useState(30000); // 30 segundos
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   const retryEntry = async (entryId: string) => {
     try {
@@ -307,6 +314,7 @@ const MusicthonQueueDetailPage = () => {
       );
     }
   };
+
 
   const updateConfig = async (payload: {
     featureEnabled?: boolean;
@@ -341,6 +349,7 @@ const MusicthonQueueDetailPage = () => {
       const url = `${adminApi}/streamers/${id}`;
       const { json } = await fetchJson(url);
       setDetail(json as DetailResponse);
+      setLastUpdate(new Date());
     } catch (error: any) {
       notify(
         `Falha ao carregar musicthon: ${error?.message || "erro desconhecido"}`,
@@ -356,140 +365,283 @@ const MusicthonQueueDetailPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+  // Polling automático
+  useEffect(() => {
+    if (!autoRefresh || !id) return;
+
+    const interval = setInterval(() => {
+      loadDetail();
+    }, refreshInterval);
+
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoRefresh, id, refreshInterval]);
+
   const stats = useMemo(() => detail?.stats, [detail]);
+
+  // Particiona músicas por status para exibir em 3 colunas
+  const { queuedEntries, playingEntries, recentEntries } = useMemo(() => {
+    if (!detail) {
+      return {
+        queuedEntries: [] as MusicthonEntry[],
+        playingEntries: [] as MusicthonEntry[],
+        recentEntries: [] as MusicthonEntry[],
+      };
+    }
+
+    const queuedEntries = (detail.queued || []).filter(
+      (e) => e.status === "QUEUED",
+    );
+
+    const playingEntries: MusicthonEntry[] = [];
+    
+    // Adiciona o current se estiver tocando
+    if (detail.current && detail.current.status === "PLAYING") {
+      playingEntries.push(detail.current);
+    }
+
+    // Adiciona demais tocando retornados pelo backend
+    (detail.playing || []).forEach((e) => {
+      if (!playingEntries.some((p) => p.id === e.id)) {
+        playingEntries.push(e);
+      }
+    });
+
+    const recentEntries = (detail.recent || []).filter((e) =>
+      ["PLAYED", "FAILED", "SKIPPED", "CANCELED"].includes(e.status),
+    );
+
+    return { queuedEntries, playingEntries, recentEntries };
+  }, [detail]);
+
+  if (!id) return null;
+
+  const online = detail?.config?.enabled && !detail?.config?.paused;
+  const isPaused = detail?.config?.paused;
+  const totalEntries = (detail?.stats.queued || 0) + (detail?.stats.playing || 0) + (detail?.stats.failed || 0);
+  const progressPercent = totalEntries > 0 ? ((detail?.stats.played || 0) / ((detail?.stats.played || 0) + totalEntries)) * 100 : 0;
 
   if (loading && !detail) {
     return (
-      <Stack alignItems="center" py={6}>
-        <CircularProgress />
-      </Stack>
+      <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: { xs: 1.5, sm: 2 } }}>
+        <Stack alignItems="center" py={6}>
+          <CircularProgress />
+        </Stack>
+      </Box>
     );
   }
 
   if (!detail?.success) {
     return (
-      <Paper sx={{ p: 4, textAlign: "center" }}>
-        <Typography color="text.secondary">
-          Nenhum detalhe encontrado.
-        </Typography>
-      </Paper>
+      <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: { xs: 1.5, sm: 2 } }}>
+        <Paper elevation={1} sx={{ p: 4, textAlign: "center", bgcolor: "#1a1a1a" }}>
+          <Typography color="text.secondary">
+            Nenhum detalhe encontrado.
+          </Typography>
+        </Paper>
+      </Box>
     );
   }
 
   return (
-    <Stack spacing={3}>
-      <Stack
-        direction={{ xs: "column", md: "row" }}
-        alignItems={{ xs: "flex-start", md: "center" }}
-        justifyContent="space-between"
-        spacing={2}
-      >
-        <Stack direction="row" spacing={2} alignItems="center">
-          <IconButton onClick={() => navigate("/musicthon-queues")}>
-            <ArrowBackIcon />
+    <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: { xs: 1.5, sm: 2 } }}>
+      {/* Header */}
+      <Stack direction="row" alignItems="center" spacing={{ xs: 0.75, sm: 1 }} mb={2}>
+        <IconButton
+          onClick={() => navigate("/musicthon-queues")}
+          size="small"
+          sx={{
+            bgcolor: "#1e1e1e",
+            "&:hover": { bgcolor: "#2a2a2a" },
+          }}
+        >
+          <ArrowBackIcon fontSize="small" />
+        </IconButton>
+        <MusicNoteIcon sx={{ fontSize: { xs: 20, sm: 24 }, color: "#9c27b0" }} />
+        <Typography variant="h6" fontWeight="bold" fontSize={{ xs: "1rem", sm: "1.15rem" }}>
+          Musicthon • {detail.streamer.name}
+        </Typography>
+        {loading && <CircularProgress size={16} />}
+        <Box sx={{ flexGrow: 1 }} />
+        
+        {/* Última atualização */}
+        {lastUpdate && (
+          <Paper
+            elevation={1}
+            sx={{
+              display: { xs: "none", md: "block" },
+              px: 1.5,
+              py: 0.5,
+              bgcolor: "#1a1a1a",
+            }}
+          >
+            <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+              Atualizado: {lastUpdate.toLocaleTimeString()}
+            </Typography>
+          </Paper>
+        )}
+        
+        {/* Toggle de Auto-Refresh */}
+        <FormControlLabel
+          control={
+            <Switch
+              checked={autoRefresh}
+              onChange={(e) => setAutoRefresh(e.target.checked)}
+              color="success"
+              size="small"
+            />
+          }
+          label={
+            <Typography variant="body2" fontSize="0.75rem">
+              Auto
+            </Typography>
+          }
+          sx={{ m: 0, display: { xs: "none", sm: "flex" } }}
+        />
+
+        <Tooltip title="Recarregar">
+          <IconButton
+            onClick={loadDetail}
+            color="primary"
+            size="small"
+            sx={{
+              bgcolor: "#1e1e1e",
+              "&:hover": { bgcolor: "#2a2a2a" },
+            }}
+          >
+            <RefreshIcon />
           </IconButton>
-          <Box>
-            <Typography variant="h5" fontWeight={700}>
-              {detail.streamer.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {detail.streamer.id}
-            </Typography>
-          </Box>
-        </Stack>
-        <Stack direction="row" spacing={1}>
-          <Tooltip title="Atualizar">
-            <IconButton color="primary" onClick={loadDetail}>
-              <RefreshIcon />
-            </IconButton>
-          </Tooltip>
-        </Stack>
+        </Tooltip>
       </Stack>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={3}>
-          <Card>
-            <CardContent>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Avatar sx={{ bgcolor: "#3b82f6" }}>
-                  <QueueMusicIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Em fila
-                  </Typography>
-                  <Typography variant="h6" fontWeight={700}>
-                    {stats?.queued ?? 0}
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Card>
-            <CardContent>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Avatar sx={{ bgcolor: "#22c55e" }}>
-                  <GraphicEqIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Tocando
-                  </Typography>
-                  <Typography variant="h6" fontWeight={700}>
-                    {stats?.playing ?? 0}
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Card>
-            <CardContent>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Avatar sx={{ bgcolor: "#10b981" }}>
-                  <CheckCircleOutlineIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Tocadas
-                  </Typography>
-                  <Typography variant="h6" fontWeight={700}>
-                    {stats?.played ?? 0}
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={3}>
-          <Card>
-            <CardContent>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Avatar sx={{ bgcolor: "#ef4444" }}>
-                  <ErrorOutlineIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Falhas
-                  </Typography>
-                  <Typography variant="h6" fontWeight={700}>
-                    {stats?.failed ?? 0}
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      {/* Card do Streamer */}
+      <Card elevation={1} sx={{ mb: 1.5, bgcolor: "#1a1a1a" }}>
+        <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
+          <Stack direction="row" spacing={{ xs: 1.5, sm: 2 }} alignItems="center" mb={1.5}>
+            <Avatar
+              sx={{
+                bgcolor: online ? "#9c27b0" : isPaused ? "#ff9800" : "grey.600",
+                width: { xs: 40, sm: 48 },
+                height: { xs: 40, sm: 48 },
+              }}
+            >
+              {isPaused ? (
+                <PauseCircleFilledIcon />
+              ) : online ? (
+                <PlayCircleFilledWhiteIcon />
+              ) : (
+                <MusicNoteIcon />
+              )}
+            </Avatar>
+            <Box flex={1}>
+              <Typography variant="h6" fontWeight="bold" fontSize={{ xs: "1rem", sm: "1.1rem" }}>
+                {detail.streamer.name}
+              </Typography>
+              <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+                ID: {detail.streamer.id}
+              </Typography>
+            </Box>
+            <Stack direction="row" spacing={0.5} alignItems="center">
+              {!detail.config?.featureEnabled ? (
+                <Chip
+                  label="Bloqueado"
+                  color="default"
+                  size="small"
+                  sx={{ fontSize: "0.7rem" }}
+                />
+              ) : !detail.config?.enabled ? (
+                <Chip
+                  label="Desligado"
+                  color="default"
+                  size="small"
+                  sx={{ fontSize: "0.7rem" }}
+                />
+              ) : isPaused ? (
+                <Chip
+                  icon={<PauseCircleFilledIcon fontSize="small" />}
+                  label="Pausado"
+                  color="warning"
+                  size="small"
+                  sx={{ fontSize: "0.7rem" }}
+                />
+              ) : (
+                <Chip
+                  icon={<PlayCircleFilledWhiteIcon fontSize="small" />}
+                  label="Ativo"
+                  color="success"
+                  size="small"
+                  sx={{ fontSize: "0.7rem" }}
+                />
+              )}
+            </Stack>
+          </Stack>
 
-      <Card>
-        <CardHeader title="Configuração atual" />
-        <Divider />
-        <CardContent>
-          <Stack spacing={1} mb={2}>
+          {/* Barra de progresso */}
+          {totalEntries > 0 && (
+            <Box mb={1.5}>
+              <Stack direction="row" justifyContent="space-between" mb={0.5}>
+                <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+                  Progresso geral
+                </Typography>
+                <Typography variant="caption" fontWeight="bold" fontSize="0.7rem">
+                  {progressPercent.toFixed(1)}%
+                </Typography>
+              </Stack>
+              <LinearProgress
+                variant="determinate"
+                value={progressPercent}
+                sx={{
+                  height: 6,
+                  borderRadius: 1,
+                  bgcolor: "rgba(255,255,255,0.05)",
+                  "& .MuiLinearProgress-bar": {
+                    bgcolor: "#9c27b0",
+                    borderRadius: 1,
+                  },
+                }}
+              />
+            </Box>
+          )}
+
+          {/* Configurações em Grid */}
+          <Grid container spacing={1}>
+            <Grid item xs={6} sm={3}>
+              <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
+                Provider
+              </Typography>
+              <Typography variant="body2" fontWeight={600} fontSize="0.8rem">
+                {providerLabel(detail.config?.provider)}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
+                Mínimo
+              </Typography>
+              <Typography variant="body2" fontWeight={600} fontSize="0.8rem">
+                {formatCurrency(detail.config?.minAmount)}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
+                Prioridade
+              </Typography>
+              <Typography variant="body2" fontWeight={600} fontSize="0.8rem">
+                {detail.config?.highestDonationWins ? "Maior doação" : "Fila padrão"}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={3}>
+              <Typography variant="caption" color="text.secondary" fontSize="0.65rem">
+                Atualizado
+              </Typography>
+              <Typography variant="body2" fontWeight={600} fontSize="0.8rem" noWrap>
+                {formatDateTime(detail.config?.updatedAt)}
+              </Typography>
+            </Grid>
+          </Grid>
+
+          {/* Switches de configuração */}
+          <Divider sx={{ my: 1.5 }} />
+          <Stack direction="row" spacing={2} flexWrap="wrap">
             <FormControlLabel
               control={
                 <Switch
@@ -499,12 +651,13 @@ const MusicthonQueueDetailPage = () => {
                     updateConfig({ featureEnabled: event.target.checked })
                   }
                   disabled={configSaving}
+                  size="small"
                 />
               }
               label={
-                detail.config?.featureEnabled
-                  ? "Feature liberada"
-                  : "Feature bloqueada"
+                <Typography variant="body2" fontSize="0.75rem">
+                  {detail.config?.featureEnabled ? "Feature liberada" : "Feature bloqueada"}
+                </Typography>
               }
             />
             <FormControlLabel
@@ -516,136 +669,258 @@ const MusicthonQueueDetailPage = () => {
                     updateConfig({ enabled: event.target.checked })
                   }
                   disabled={configSaving || !detail.config?.featureEnabled}
+                  size="small"
                 />
               }
               label={
-                detail.config?.enabled
-                  ? "Musicthon ativo"
-                  : "Musicthon desativado"
+                <Typography variant="body2" fontSize="0.75rem">
+                  {detail.config?.enabled ? "Musicthon ativo" : "Musicthon desativado"}
+                </Typography>
               }
             />
           </Stack>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={4}>
-              <Typography variant="caption" color="text.secondary">
-                Status
-              </Typography>
-              <Typography fontWeight={600}>
-                {!detail.config?.featureEnabled
-                  ? "Bloqueado"
-                  : !detail.config?.enabled
-                    ? "Desligado"
-                  : detail.config?.paused
-                    ? "Pausado"
-                    : "Ativo"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="caption" color="text.secondary">
-                Provider
-              </Typography>
-              <Typography fontWeight={600}>
-                {providerLabel(detail.config?.provider)}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="caption" color="text.secondary">
-                Mínimo
-              </Typography>
-              <Typography fontWeight={600}>
-                {formatCurrency(detail.config?.minAmount)}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="caption" color="text.secondary">
-                Prioridade
-              </Typography>
-              <Typography fontWeight={600}>
-                {detail.config?.highestDonationWins
-                  ? "Maior doação"
-                  : "Fila padrão"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="caption" color="text.secondary">
-                Atualizado
-              </Typography>
-              <Typography fontWeight={600}>
-                {formatDateTime(detail.config?.updatedAt)}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <Typography variant="caption" color="text.secondary">
-                Current Entry ID
-              </Typography>
-              <Typography fontWeight={600}>
-                {detail.config?.currentEntryId || "—"}
-              </Typography>
-            </Grid>
-          </Grid>
         </CardContent>
       </Card>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardHeader title="Tocando agora" />
-            <Divider />
-            <CardContent>
-              {detail.current ? (
-                <EntryCard entry={detail.current} onRetry={retryEntry} />
-              ) : (
-                <Typography color="text.secondary">
-                  Nenhuma música tocando.
+      {/* Estatísticas com gradientes */}
+      <Grid container spacing={1} mb={1.5}>
+        <Grid item xs={6} sm={3}>
+          <Paper
+            elevation={1}
+            sx={{
+              p: 1.5,
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              color: "white",
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Box>
+                <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5, fontSize: "0.7rem" }}>
+                  Na Fila
                 </Typography>
-              )}
-            </CardContent>
-          </Card>
+                <Typography variant="h5" fontWeight="bold">
+                  {stats?.queued ?? 0}
+                </Typography>
+              </Box>
+              <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 32, height: 32 }}>
+                <QueueMusicIcon fontSize="small" />
+              </Avatar>
+            </Stack>
+          </Paper>
         </Grid>
+
+        <Grid item xs={6} sm={3}>
+          <Paper
+            elevation={1}
+            sx={{
+              p: 1.5,
+              background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+              color: "white",
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Box>
+                <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5, fontSize: "0.7rem" }}>
+                  Tocando
+                </Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {stats?.playing ?? 0}
+                </Typography>
+              </Box>
+              <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 32, height: 32 }}>
+                <GraphicEqIcon fontSize="small" />
+              </Avatar>
+            </Stack>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={6} sm={3}>
+          <Paper
+            elevation={1}
+            sx={{
+              p: 1.5,
+              background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+              color: "white",
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Box>
+                <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5, fontSize: "0.7rem" }}>
+                  Tocadas
+                </Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {stats?.played ?? 0}
+                </Typography>
+              </Box>
+              <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 32, height: 32 }}>
+                <CheckCircleOutlineIcon fontSize="small" />
+              </Avatar>
+            </Stack>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={6} sm={3}>
+          <Paper
+            elevation={1}
+            sx={{
+              p: 1.5,
+              background: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+              color: "white",
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Box>
+                <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5, fontSize: "0.7rem" }}>
+                  Falhas
+                </Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {stats?.failed ?? 0}
+                </Typography>
+              </Box>
+              <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 32, height: 32 }}>
+                <ErrorOutlineIcon fontSize="small" />
+              </Avatar>
+            </Stack>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* Visualização em 3 Colunas */}
+      <Grid container spacing={1}>
+        {/* Coluna 1: Fila */}
         <Grid item xs={12} md={4}>
-          <Card>
+          <Card elevation={1} sx={{ bgcolor: "#1a1a1a", height: "100%" }}>
             <CardHeader
               title={
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <QueueMusicIcon fontSize="small" />
-                  <Typography>Fila</Typography>
+                  <QueueMusicIcon sx={{ fontSize: 18, color: "#667eea" }} />
+                  <Typography variant="subtitle2" fontWeight="bold" fontSize="0.85rem">
+                    Fila
+                  </Typography>
+                  <Chip
+                    label={queuedEntries.length}
+                    size="small"
+                    color="primary"
+                    sx={{ height: 18, fontSize: "0.65rem", ml: 0.5 }}
+                  />
                 </Stack>
               }
+              sx={{ py: 1, px: 1.5 }}
             />
             <Divider />
-            <CardContent>
-              <Stack spacing={1.5}>
-                {detail.queued.length === 0 && (
-                  <Typography color="text.secondary">
-                    Fila vazia.
-                  </Typography>
+            <CardContent sx={{ p: { xs: 1, sm: 1.25 }, maxHeight: 600, overflowY: "auto" }}>
+              <Stack spacing={1}>
+                {queuedEntries.length === 0 && (
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 3,
+                      textAlign: "center",
+                      bgcolor: "#0d0d0d",
+                      border: "1px dashed rgba(255,255,255,0.1)",
+                    }}
+                  >
+                    <QueueMusicIcon sx={{ fontSize: 32, color: "grey.600", mb: 1 }} />
+                    <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+                      Nenhuma música na fila
+                    </Typography>
+                  </Paper>
                 )}
-                {detail.queued.map((entry) => (
+                {queuedEntries.map((entry) => (
                   <EntryCard key={entry.id} entry={entry} onRetry={retryEntry} />
                 ))}
               </Stack>
             </CardContent>
           </Card>
         </Grid>
+
+        {/* Coluna 2: Tocando */}
         <Grid item xs={12} md={4}>
-          <Card>
+          <Card elevation={1} sx={{ bgcolor: "#1a1a1a", height: "100%" }}>
             <CardHeader
               title={
                 <Stack direction="row" spacing={1} alignItems="center">
-                  <CheckCircleOutlineIcon fontSize="small" />
-                  <Typography>Histórico recente</Typography>
+                  <GraphicEqIcon sx={{ fontSize: 18, color: "#f093fb" }} />
+                  <Typography variant="subtitle2" fontWeight="bold" fontSize="0.85rem">
+                    Tocando
+                  </Typography>
+                  <Chip
+                    label={playingEntries.length}
+                    size="small"
+                    color="secondary"
+                    sx={{ height: 18, fontSize: "0.65rem", ml: 0.5 }}
+                  />
                 </Stack>
               }
+              sx={{ py: 1, px: 1.5 }}
             />
             <Divider />
-            <CardContent>
-              <Stack spacing={1.5}>
-                {detail.recent.length === 0 && (
-                  <Typography color="text.secondary">
-                    Sem histórico.
-                  </Typography>
+            <CardContent sx={{ p: { xs: 1, sm: 1.25 }, maxHeight: 600, overflowY: "auto" }}>
+              <Stack spacing={1}>
+                {playingEntries.length === 0 && (
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 3,
+                      textAlign: "center",
+                      bgcolor: "#0d0d0d",
+                      border: "1px dashed rgba(255,255,255,0.1)",
+                    }}
+                  >
+                    <GraphicEqIcon sx={{ fontSize: 32, color: "grey.600", mb: 1 }} />
+                    <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+                      Nenhuma música tocando
+                    </Typography>
+                  </Paper>
                 )}
-                {detail.recent.map((entry) => (
+                {playingEntries.map((entry) => (
+                  <EntryCard key={entry.id} entry={entry} onRetry={retryEntry} />
+                ))}
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Coluna 3: Histórico */}
+        <Grid item xs={12} md={4}>
+          <Card elevation={1} sx={{ bgcolor: "#1a1a1a", height: "100%" }}>
+            <CardHeader
+              title={
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <CheckCircleOutlineIcon sx={{ fontSize: 18, color: "#4facfe" }} />
+                  <Typography variant="subtitle2" fontWeight="bold" fontSize="0.85rem">
+                    Histórico
+                  </Typography>
+                  <Chip
+                    label={recentEntries.length}
+                    size="small"
+                    color="info"
+                    sx={{ height: 18, fontSize: "0.65rem", ml: 0.5 }}
+                  />
+                </Stack>
+              }
+              sx={{ py: 1, px: 1.5 }}
+            />
+            <Divider />
+            <CardContent sx={{ p: { xs: 1, sm: 1.25 }, maxHeight: 600, overflowY: "auto" }}>
+              <Stack spacing={1}>
+                {recentEntries.length === 0 && (
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 3,
+                      textAlign: "center",
+                      bgcolor: "#0d0d0d",
+                      border: "1px dashed rgba(255,255,255,0.1)",
+                    }}
+                  >
+                    <CheckCircleOutlineIcon sx={{ fontSize: 32, color: "grey.600", mb: 1 }} />
+                    <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
+                      Sem histórico recente
+                    </Typography>
+                  </Paper>
+                )}
+                {recentEntries.map((entry) => (
                   <EntryCard key={entry.id} entry={entry} onRetry={retryEntry} />
                 ))}
               </Stack>
@@ -654,46 +929,39 @@ const MusicthonQueueDetailPage = () => {
         </Grid>
       </Grid>
 
-      {detail.playing?.length > 0 && (
-        <Card>
+      {/* Card de Outros Status (se houver) */}
+      {(detail.stats?.skipped > 0 || detail.stats?.canceled > 0) && (
+        <Card elevation={1} sx={{ mt: 1.5, bgcolor: "#1a1a1a" }}>
           <CardHeader
             title={
-              <Stack direction="row" spacing={1} alignItems="center">
-                <GraphicEqIcon fontSize="small" />
-                <Typography>Em execução</Typography>
-              </Stack>
+              <Typography variant="subtitle2" fontWeight="bold" fontSize="0.85rem">
+                Outros Status
+              </Typography>
             }
+            sx={{ py: 1, px: 1.5 }}
           />
           <Divider />
-          <CardContent>
-            <Stack spacing={1.5}>
-              {detail.playing.map((entry) => (
-                <EntryCard key={entry.id} entry={entry} onRetry={retryEntry} />
-              ))}
-            </Stack>
-          </CardContent>
-        </Card>
-      )}
-
-      {detail.stats?.skipped > 0 || detail.stats?.canceled > 0 ? (
-        <Card>
-          <CardHeader title="Outros status" />
-          <Divider />
-          <CardContent>
-            <Stack direction="row" spacing={1}>
+          <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
+            <Stack direction="row" spacing={1} flexWrap="wrap">
               <Chip
                 icon={<SkipNextIcon fontSize="small" />}
                 label={`Puladas: ${detail.stats?.skipped ?? 0}`}
+                size="small"
+                color="warning"
+                sx={{ fontSize: "0.7rem" }}
               />
               <Chip
                 icon={<CancelIcon fontSize="small" />}
                 label={`Canceladas: ${detail.stats?.canceled ?? 0}`}
+                size="small"
+                color="default"
+                sx={{ fontSize: "0.7rem" }}
               />
             </Stack>
           </CardContent>
         </Card>
-      ) : null}
-    </Stack>
+      )}
+    </Box>
   );
 };
 
