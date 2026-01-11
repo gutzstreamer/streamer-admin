@@ -12,6 +12,8 @@ import {
   Paper,
   Button,
   Stack,
+  Switch,
+  FormControlLabel,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -285,6 +287,7 @@ const MusicthonQueueDetailPage = () => {
   const notify = useNotify();
   const [detail, setDetail] = useState<DetailResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [configSaving, setConfigSaving] = useState(false);
 
   const retryEntry = async (entryId: string) => {
     try {
@@ -301,6 +304,31 @@ const MusicthonQueueDetailPage = () => {
         `Falha ao reprocessar música: ${error?.message || "erro desconhecido"}`,
         { type: "error" },
       );
+    }
+  };
+
+  const updateConfig = async (payload: {
+    enabled?: boolean;
+    paused?: boolean;
+  }) => {
+    if (!id) return;
+    try {
+      setConfigSaving(true);
+      const url = `${adminApi}/streamers/${id}/config`;
+      await fetchUtils.fetchJson(url, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: buildHeaders(),
+      });
+      notify("Configuração atualizada", { type: "success" });
+      await loadDetail();
+    } catch (error: any) {
+      notify(
+        `Falha ao atualizar config: ${error?.message || "erro desconhecido"}`,
+        { type: "error" },
+      );
+    } finally {
+      setConfigSaving(false);
     }
   };
 
@@ -459,6 +487,24 @@ const MusicthonQueueDetailPage = () => {
         <CardHeader title="Configuração atual" />
         <Divider />
         <CardContent>
+          <FormControlLabel
+            control={
+              <Switch
+                color="primary"
+                checked={detail.config?.enabled ?? false}
+                onChange={(event) =>
+                  updateConfig({ enabled: event.target.checked })
+                }
+                disabled={configSaving}
+              />
+            }
+            label={
+              detail.config?.enabled
+                ? "Musicthon ativo"
+                : "Musicthon desativado"
+            }
+            sx={{ mb: 2 }}
+          />
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
               <Typography variant="caption" color="text.secondary">
