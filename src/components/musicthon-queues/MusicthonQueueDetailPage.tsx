@@ -44,6 +44,7 @@ type MusicthonStats = {
 
 type MusicthonConfig = {
   streamerId: string;
+  featureEnabled?: boolean;
   enabled: boolean;
   paused?: boolean;
   provider: string | null;
@@ -308,6 +309,7 @@ const MusicthonQueueDetailPage = () => {
   };
 
   const updateConfig = async (payload: {
+    featureEnabled?: boolean;
     enabled?: boolean;
     paused?: boolean;
   }) => {
@@ -487,32 +489,52 @@ const MusicthonQueueDetailPage = () => {
         <CardHeader title="Configuração atual" />
         <Divider />
         <CardContent>
-          <FormControlLabel
-            control={
-              <Switch
-                color="primary"
-                checked={detail.config?.enabled ?? false}
-                onChange={(event) =>
-                  updateConfig({ enabled: event.target.checked })
-                }
-                disabled={configSaving}
-              />
-            }
-            label={
-              detail.config?.enabled
-                ? "Musicthon ativo"
-                : "Musicthon desativado"
-            }
-            sx={{ mb: 2 }}
-          />
+          <Stack spacing={1} mb={2}>
+            <FormControlLabel
+              control={
+                <Switch
+                  color="primary"
+                  checked={detail.config?.featureEnabled ?? false}
+                  onChange={(event) =>
+                    updateConfig({ featureEnabled: event.target.checked })
+                  }
+                  disabled={configSaving}
+                />
+              }
+              label={
+                detail.config?.featureEnabled
+                  ? "Feature liberada"
+                  : "Feature bloqueada"
+              }
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  color="primary"
+                  checked={detail.config?.enabled ?? false}
+                  onChange={(event) =>
+                    updateConfig({ enabled: event.target.checked })
+                  }
+                  disabled={configSaving || !detail.config?.featureEnabled}
+                />
+              }
+              label={
+                detail.config?.enabled
+                  ? "Musicthon ativo"
+                  : "Musicthon desativado"
+              }
+            />
+          </Stack>
           <Grid container spacing={2}>
             <Grid item xs={12} md={4}>
               <Typography variant="caption" color="text.secondary">
                 Status
               </Typography>
               <Typography fontWeight={600}>
-                {!detail.config?.enabled
-                  ? "Desligado"
+                {!detail.config?.featureEnabled
+                  ? "Bloqueado"
+                  : !detail.config?.enabled
+                    ? "Desligado"
                   : detail.config?.paused
                     ? "Pausado"
                     : "Ativo"}

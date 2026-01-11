@@ -44,6 +44,7 @@ type MusicthonStats = {
 
 type MusicthonConfig = {
   streamerId: string;
+  featureEnabled?: boolean;
   enabled: boolean;
   paused?: boolean;
   provider: string | null;
