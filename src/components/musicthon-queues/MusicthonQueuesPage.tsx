@@ -1,13 +1,10 @@
 import {
   Avatar,
-  Badge,
   Box,
   Card,
   CardContent,
-  CardHeader,
   Chip,
   CircularProgress,
-  Divider,
   Grid,
   IconButton,
   Paper,
@@ -19,6 +16,7 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Pagination,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SearchIcon from "@mui/icons-material/Search";
@@ -136,17 +134,24 @@ const MusicthonQueuesPage = () => {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortBy, setSortBy] = useState("queued");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(100);
+  const [total, setTotal] = useState(0);
   const notify = useNotify();
 
   const loadOverview = async () => {
     try {
       setLoading(true);
-      const params = new URLSearchParams({ page: "1", pageSize: "50" });
+      const params = new URLSearchParams({ 
+        page: String(page), 
+        pageSize: String(pageSize) 
+      });
       if (search) params.set("search", search);
       const url = `${adminApi}/overview?${params.toString()}`;
       const { json } = await fetchJson(url);
-      const data = (json as OverviewResponse).items || [];
-      setOverview(data);
+      const response = json as OverviewResponse;
+      setOverview(response.items || []);
+      setTotal(response.total || 0);
     } catch (error: any) {
       notify(
         `Falha ao carregar musicthon: ${error?.message || "erro desconhecido"}`,
@@ -160,7 +165,7 @@ const MusicthonQueuesPage = () => {
   useEffect(() => {
     loadOverview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [page, pageSize, search]);
 
   const totals = useMemo(() => {
     return overview.reduce(
@@ -351,11 +356,9 @@ const MusicthonQueuesPage = () => {
               size="small"
               placeholder="Buscar streamer por nome ou ID..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  loadOverview();
-                }
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
               }}
               InputProps={{
                 startAdornment: <SearchIcon sx={{ mr: 1, color: "action.active" }} />,
@@ -705,6 +708,45 @@ const MusicthonQueuesPage = () => {
                   Nenhum streamer encontrado.
                 </Typography>
               </Paper>
+            )}
+
+            {/* Paginação */}
+            {total > pageSize && (
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+                <Stack spacing={2} alignItems="center">
+                  <Pagination
+                    count={Math.ceil(total / pageSize)}
+                    page={page}
+                    onChange={(_, newPage) => setPage(newPage)}
+                    color="primary"
+                    size="large"
+                    showFirstButton
+                    showLastButton
+                  />
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography variant="body2" color="text.secondary">
+                      Itens por página:
+                    </Typography>
+                    <Select
+                      value={pageSize}
+                      onChange={(e) => {
+                        setPageSize(Number(e.target.value));
+                        setPage(1);
+                      }}
+                      size="small"
+                      sx={{ minWidth: 80 }}
+                    >
+                      <MenuItem value={10}>10</MenuItem>
+                      <MenuItem value={25}>25</MenuItem>
+                      <MenuItem value={50}>50</MenuItem>
+                      <MenuItem value={100}>100</MenuItem>
+                    </Select>
+                    <Typography variant="body2" color="text.secondary">
+                      Total: {total}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Box>
             )}
           </Box>
   );
