@@ -12,6 +12,7 @@ import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 
 export const CustomMenu = () => {
   const [open] = useSidebarState();
@@ -122,6 +123,11 @@ export const CustomMenu = () => {
         to="/alert-queues"
         primaryText="Filas de Alertas"
         leftIcon={<NotificationsActiveIcon />}
+      />
+      <MenuItemLink
+        to="/musicthon-queues"
+        primaryText="Filas do Musicthon"
+        leftIcon={<QueueMusicIcon />}
       />
 
       <Divider />
