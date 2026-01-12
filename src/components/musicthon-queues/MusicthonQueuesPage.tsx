@@ -698,18 +698,15 @@ const MusicthonQueuesPage = () => {
                 );
               })}
             </Grid>
-          )}
 
-          {!loading && filteredOverview.length === 0 && (
-            <Paper sx={{ p: 4, textAlign: "center", bgcolor: "#1a1a1a" }}>
-              <Typography color="text.secondary">
-                Nenhum streamer encontrado.
-              </Typography>
-            </Paper>
-          )}
-        </CardContent>
-      </Card>
-    </Box>
+            {!loading && filteredOverview.length === 0 && (
+              <Paper sx={{ p: 4, textAlign: "center", bgcolor: "#1a1a1a", mt: 2 }}>
+                <Typography color="text.secondary">
+                  Nenhum streamer encontrado.
+                </Typography>
+              </Paper>
+            )}
+          </Box>
   );
 };
 
