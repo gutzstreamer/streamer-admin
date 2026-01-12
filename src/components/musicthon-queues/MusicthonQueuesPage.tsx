@@ -15,6 +15,10 @@ import {
   TextField,
   Tooltip,
   Typography,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SearchIcon from "@mui/icons-material/Search";
@@ -27,6 +31,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import LockIcon from "@mui/icons-material/Lock";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import { useEffect, useMemo, useState } from "react";
 import { fetchUtils, useNotify } from "react-admin";
 import { Link as RouterLink } from "react-router-dom";
@@ -129,6 +134,8 @@ const MusicthonQueuesPage = () => {
   const [overview, setOverview] = useState<OverviewItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [sortBy, setSortBy] = useState("queued");
   const notify = useNotify();
 
   const loadOverview = async () => {
@@ -168,141 +175,235 @@ const MusicthonQueuesPage = () => {
     );
   }, [overview]);
 
+  const filteredOverview = useMemo(() => {
+    let filtered = [...overview];
+
+    // Aplicar filtros
+    if (filterStatus === "enabled") {
+      filtered = filtered.filter((item) => item.config?.enabled);
+    } else if (filterStatus === "disabled") {
+      filtered = filtered.filter((item) => !item.config?.enabled);
+    } else if (filterStatus === "paused") {
+      filtered = filtered.filter((item) => item.config?.paused);
+    } else if (filterStatus === "withQueue") {
+      filtered = filtered.filter((item) => item.stats.queued > 0);
+    } else if (filterStatus === "withErrors") {
+      filtered = filtered.filter((item) => item.stats.failed > 0);
+    }
+
+    // Aplicar ordenação
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "queued":
+          return b.stats.queued - a.stats.queued;
+        case "failed":
+          return b.stats.failed - a.stats.failed;
+        case "playing":
+          return b.stats.playing - a.stats.playing;
+        case "name":
+          return a.streamerName.localeCompare(b.streamerName);
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  }, [overview, filterStatus, sortBy]);
+
   return (
-    <Stack spacing={3}>
-      <Stack
-        direction={{ xs: "column", md: "row" }}
-        spacing={2}
-        alignItems={{ xs: "stretch", md: "center" }}
-        justifyContent="space-between"
-      >
-        <Stack>
-          <Typography variant="h5" fontWeight={700}>
-            Musicthon • Filas por streamer
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Acompanhe o que está tocando, em fila e histórico.
-          </Typography>
-        </Stack>
-        <Stack direction="row" spacing={1}>
-          <TextField
-            size="small"
-            placeholder="Buscar streamer..."
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            InputProps={{
-              startAdornment: <SearchIcon fontSize="small" />,
+    <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: 3 }}>
+      {/* Header */}
+      <Stack direction="row" alignItems="center" spacing={2} mb={3}>
+        <MusicNoteIcon sx={{ fontSize: 32, color: "primary.main" }} />
+        <Typography variant="h4" fontWeight="bold">
+          Filas de Musicthon
+        </Typography>
+        <Chip
+          label={`${filteredOverview.length} streamers`}
+          color="primary"
+          variant="outlined"
+        />
+        {loading && <CircularProgress size={24} />}
+        <Box sx={{ flexGrow: 1 }} />
+        <Tooltip title="Recarregar">
+          <IconButton
+            onClick={loadOverview}
+            color="primary"
+            sx={{
+              bgcolor: "#1e1e1e",
+              "&:hover": { bgcolor: "#2a2a2a" },
             }}
-          />
-          <Tooltip title="Atualizar lista">
-            <IconButton color="primary" onClick={loadOverview}>
-              <RefreshIcon />
-            </IconButton>
-          </Tooltip>
-        </Stack>
+          >
+            <RefreshIcon />
+          </IconButton>
+        </Tooltip>
       </Stack>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={3}>
-          <Card>
-            <CardContent>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Avatar sx={{ bgcolor: "#3b82f6" }}>
-                  <QueueMusicIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Em fila
-                  </Typography>
-                  <Typography variant="h6" fontWeight={700}>
-                    {totals.queued}
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
+      {/* Dashboard de Métricas */}
+      <Grid container spacing={2} mb={3}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper
+            elevation={2}
+            sx={{
+              p: 2.5,
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              color: "white",
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Box>
+                <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5 }}>
+                  Total na Fila
+                </Typography>
+                <Typography variant="h3" fontWeight="bold">
+                  {totals.queued}
+                </Typography>
+              </Box>
+              <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)" }}>
+                <QueueMusicIcon />
+              </Avatar>
+            </Stack>
+          </Paper>
         </Grid>
-        <Grid item xs={12} md={3}>
-          <Card>
-            <CardContent>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Avatar sx={{ bgcolor: "#22c55e" }}>
-                  <GraphicEqIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Tocando
-                  </Typography>
-                  <Typography variant="h6" fontWeight={700}>
-                    {totals.playing}
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper
+            elevation={2}
+            sx={{
+              p: 2.5,
+              background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+              color: "white",
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Box>
+                <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5 }}>
+                  Tocando Agora
+                </Typography>
+                <Typography variant="h3" fontWeight="bold">
+                  {totals.playing}
+                </Typography>
+              </Box>
+              <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)" }}>
+                <GraphicEqIcon />
+              </Avatar>
+            </Stack>
+          </Paper>
         </Grid>
-        <Grid item xs={12} md={3}>
-          <Card>
-            <CardContent>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Avatar sx={{ bgcolor: "#10b981" }}>
-                  <CheckCircleOutlineIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Tocadas
-                  </Typography>
-                  <Typography variant="h6" fontWeight={700}>
-                    {totals.played}
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper
+            elevation={2}
+            sx={{
+              p: 2.5,
+              background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+              color: "white",
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Box>
+                <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5 }}>
+                  Tocadas
+                </Typography>
+                <Typography variant="h3" fontWeight="bold">
+                  {totals.played}
+                </Typography>
+              </Box>
+              <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)" }}>
+                <CheckCircleOutlineIcon />
+              </Avatar>
+            </Stack>
+          </Paper>
         </Grid>
-        <Grid item xs={12} md={3}>
-          <Card>
-            <CardContent>
-              <Stack direction="row" spacing={1} alignItems="center">
-                <Avatar sx={{ bgcolor: "#ef4444" }}>
-                  <ErrorOutlineIcon />
-                </Avatar>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Falhas
-                  </Typography>
-                  <Typography variant="h6" fontWeight={700}>
-                    {totals.failed}
-                  </Typography>
-                </Box>
-              </Stack>
-            </CardContent>
-          </Card>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <Paper
+            elevation={2}
+            sx={{
+              p: 2.5,
+              background: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+              color: "white",
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Box>
+                <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5 }}>
+                  Com Falhas
+                </Typography>
+                <Typography variant="h3" fontWeight="bold">
+                  {totals.failed}
+                </Typography>
+              </Box>
+              <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)" }}>
+                <ErrorOutlineIcon />
+              </Avatar>
+            </Stack>
+          </Paper>
         </Grid>
       </Grid>
 
-      <Card>
-        <CardHeader
-          title="Streamers"
-          action={
-            loading ? (
-              <CircularProgress size={20} />
-            ) : (
-              <Badge badgeContent={overview.length} color="primary">
-                <MusicNoteIcon />
-              </Badge>
-            )
-          }
-        />
-        <Divider />
-        <CardContent>
-          {loading ? (
-            <Stack alignItems="center" py={4}>
-              <CircularProgress />
-            </Stack>
-          ) : (
-            <Grid container spacing={{ xs: 1, sm: 1.5 }}>
-              {overview.map((item) => {
+      {/* Filtros e Busca */}
+      <Paper elevation={3} sx={{ p: 2, mb: 3, bgcolor: "#1a1a1a" }}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} md={5}>
+            <TextField
+              fullWidth
+              size="small"
+              placeholder="Buscar streamer por nome ou ID..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  loadOverview();
+                }
+              }}
+              InputProps={{
+                startAdornment: <SearchIcon sx={{ mr: 1, color: "action.active" }} />,
+              }}
+              sx={{ bgcolor: "#0d0d0d" }}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={filterStatus}
+                label="Status"
+                onChange={(e) => setFilterStatus(e.target.value)}
+                startAdornment={<FilterListIcon sx={{ ml: 1, mr: -0.5, color: "action.active" }} />}
+              >
+                <MenuItem value="all">Todos</MenuItem>
+                <MenuItem value="enabled">Habilitados</MenuItem>
+                <MenuItem value="disabled">Desabilitados</MenuItem>
+                <MenuItem value="paused">Pausados</MenuItem>
+                <MenuItem value="withQueue">Com Fila</MenuItem>
+                <MenuItem value="withErrors">Com Erros</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={4}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Ordenar por</InputLabel>
+              <Select
+                value={sortBy}
+                label="Ordenar por"
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <MenuItem value="queued">Maior Fila</MenuItem>
+                <MenuItem value="failed">Mais Falhas</MenuItem>
+                <MenuItem value="playing">Tocando</MenuItem>
+                <MenuItem value="name">Nome (A-Z)</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Paper>
+
+      {/* Lista de Streamers em Cards */}
+      <Grid container spacing={{ xs: 1, sm: 1.5 }}>
+        {filteredOverview.map((item) => {
                 const isEnabled = !!item.config?.enabled;
                 const isPaused = !!item.config?.paused;
                 const hasQueue = item.stats.queued > 0;
@@ -316,6 +417,7 @@ const MusicthonQueuesPage = () => {
                     sm={6}
                     md={4}
                     lg={3}
+                    xl={2.4}
                     key={item.streamerId}
                   >
                     <Card
@@ -596,18 +698,15 @@ const MusicthonQueuesPage = () => {
                 );
               })}
             </Grid>
-          )}
-        </CardContent>
-      </Card>
 
-      {!loading && overview.length === 0 && (
-        <Paper sx={{ p: 4, textAlign: "center" }}>
-          <Typography color="text.secondary">
-            Nenhum streamer encontrado.
-          </Typography>
-        </Paper>
-      )}
-    </Stack>
+            {!loading && filteredOverview.length === 0 && (
+              <Paper sx={{ p: 4, textAlign: "center", bgcolor: "#1a1a1a", mt: 2 }}>
+                <Typography color="text.secondary">
+                  Nenhum streamer encontrado.
+                </Typography>
+              </Paper>
+            )}
+          </Box>
   );
 };
 
