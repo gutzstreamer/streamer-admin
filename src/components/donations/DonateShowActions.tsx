@@ -15,6 +15,7 @@ import {
   Box,
   Alert,
   CircularProgress,
+  TextField,
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import streamerDataProvider from "../../dataProvider";
@@ -25,6 +26,7 @@ const CancelDonationButton: React.FC = () => {
   const refresh = useRefresh();
   const [loading, setLoading] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [cancelReason, setCancelReason] = useState('');
 
   // Só exibe o botão se a doação estiver paga
   if (!record?.paid) {
@@ -34,10 +36,16 @@ const CancelDonationButton: React.FC = () => {
   const handleCancelDonation = async () => {
     if (!record?.id) return;
 
+    if (!cancelReason.trim()) {
+      notify("Por favor, informe o motivo do cancelamento", { type: "error" });
+      return;
+    }
+
     try {
       setLoading(true);
       const response = await streamerDataProvider.cancelDonation(
         String(record.id),
+        cancelReason.trim()
       );
 
       notify("Doação cancelada com sucesso!", { type: "success" });
@@ -56,6 +64,7 @@ const CancelDonationButton: React.FC = () => {
 
   const closeConfirmDialog = () => {
     setShowConfirmDialog(false);
+    setCancelReason('');
   };
 
   return (
@@ -85,6 +94,18 @@ const CancelDonationButton: React.FC = () => {
         </DialogTitle>
 
         <DialogContent>
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            label="Motivo do cancelamento *"
+            value={cancelReason}
+            onChange={(e) => setCancelReason(e.target.value)}
+            placeholder="Descreva o motivo do cancelamento da doação..."
+            sx={{ mb: 2 }}
+            required
+          />
+          
           <Alert severity="warning">
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               ⚠️ Atenção - Doação Paga
@@ -122,7 +143,7 @@ const CancelDonationButton: React.FC = () => {
           </Button>
           <Button
             onClick={handleCancelDonation}
-            disabled={loading}
+            disabled={loading || !cancelReason.trim()}
             color="error"
             variant="contained"
             startIcon={loading ? <CircularProgress size={16} /> : <CancelIcon />}

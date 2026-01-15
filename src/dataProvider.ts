@@ -22,6 +22,7 @@ export interface DataProviderWithCustomMethods extends DataProvider {
 
   cancelDonation: (
     donationId: string,
+    reason: string,
   ) => Promise<any>;
 }
 
@@ -124,9 +125,10 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     });
   },
 
-  cancelDonation(donationId: string) {
+  cancelDonation(donationId: string, reason: string) {
     return httpClient(`${apiUrl}/donations/cancel/${donationId}`, {
-      method: "DELETE",
+      method: "POST",
+      body: JSON.stringify({ reason }),
     });
   },
 };
