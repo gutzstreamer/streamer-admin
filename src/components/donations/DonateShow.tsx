@@ -43,8 +43,10 @@ const CancelDonationButton: React.FC = () => {
 
     try {
       setLoading(true);
-      const response = await streamerDataProvider.cancelDonation(String(record.id));
-      
+      const response = await streamerDataProvider.cancelDonation(
+        String(record.id),
+      );
+
       notify("Doação cancelada com sucesso!", { type: "success" });
       setShowConfirmDialog(false);
       refresh();
@@ -90,12 +92,13 @@ const CancelDonationButton: React.FC = () => {
         </DialogTitle>
 
         <DialogContent>
-          <Alert severity="warning" sx={{ mb: 2 }}>
+          <Alert severity="warning">
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               ⚠️ Atenção - Doação Paga
             </Typography>
             <Typography variant="body2" gutterBottom>
-              Esta doação já foi paga e processada. Ao prosseguir com o cancelamento:
+              Esta doação já foi paga e processada. Ao prosseguir com o
+              cancelamento:
             </Typography>
             <Box component="ul" sx={{ pl: 2, mb: 1 }}>
               <li>
@@ -115,37 +118,11 @@ const CancelDonationButton: React.FC = () => {
               </li>
             </Box>
           </Alert>
-
-          {record && (
-            <Box>
-              <Typography variant="subtitle2" color="primary" gutterBottom>
-                📋 Detalhes da Doação
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>ID:</strong> {record.id}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Valor:</strong> {new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL'
-                }).format(record.amount)}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Username:</strong> {record.username}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Status:</strong> {record.paid ? 'Paga' : 'Pendente'}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Mensagem:</strong> {record.message || 'Sem mensagem'}
-              </Typography>
-            </Box>
-          )}
         </DialogContent>
 
         <DialogActions>
-          <Button 
-            onClick={closeConfirmDialog} 
+          <Button
+            onClick={closeConfirmDialog}
             disabled={loading}
             color="inherit"
           >
@@ -156,9 +133,11 @@ const CancelDonationButton: React.FC = () => {
             disabled={loading}
             color="error"
             variant="contained"
-            startIcon={loading ? <CircularProgress size={16} /> : <CancelIcon />}
+            startIcon={
+              loading ? <CircularProgress size={16} /> : <CancelIcon />
+            }
           >
-            {loading ? 'Cancelando...' : 'Confirmar Cancelamento'}
+            {loading ? "Cancelando..." : "Confirmar Cancelamento"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -193,7 +172,11 @@ const DonateShow: React.FC = (props) => (
       <TextField source="message" />
       <TextField source="username" />
       <BooleanField source="paid" label="Paga" />
-      <ReferenceField source="transactionId" reference="wallet-transactions" label="Status da Transação">
+      <ReferenceField
+        source="transactionId"
+        reference="wallet-transactions"
+        label="Status da Transação"
+      >
         <TextField source="status" />
       </ReferenceField>
       <TextField source="paymentCode" />
