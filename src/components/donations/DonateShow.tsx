@@ -12,9 +12,9 @@ import {
 import { Box, Typography } from "@mui/material";
 import DonateShowActions from "./DonateShowActions";
 
-const QRCodeField: React.FC<{ source: string; label?: string }> = ({ 
-  source, 
-  label = "QR Code" 
+const QRCodeField: React.FC<{ source: string; label?: string }> = ({
+  source,
+  label = "QR Code",
 }) => {
   const record = useRecordContext();
   const imageUrl = record?.[source];
@@ -48,32 +48,28 @@ const QRCodeField: React.FC<{ source: string; label?: string }> = ({
         sx={{
           width: 80,
           height: 80,
-          objectFit: 'cover',
-          border: '1px solid #ddd',
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-          display: 'block',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease-in-out',
-          '&:hover': {
+          objectFit: "cover",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          display: "block",
+          cursor: "pointer",
+          transition: "all 0.3s ease-in-out",
+          "&:hover": {
             width: 200,
             height: 200,
             zIndex: 1000,
-            position: 'relative',
-            boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
-          }
+            position: "relative",
+            boxShadow: "0 8px 16px rgba(0,0,0,0.3)",
+          },
         }}
         onError={(e) => {
           const target = e.target as HTMLImageElement;
-          target.style.display = 'none';
-          target.nextElementSibling?.setAttribute('style', 'display: block');
+          target.style.display = "none";
+          target.nextElementSibling?.setAttribute("style", "display: block");
         }}
       />
-      <Typography 
-        variant="body2" 
-        color="error" 
-        sx={{ display: 'none', mt: 1 }}
-      >
+      <Typography variant="body2" color="error" sx={{ display: "none", mt: 1 }}>
         Failed to load QR Code
       </Typography>
     </Box>
@@ -101,6 +97,8 @@ const DonateShow: React.FC = (props) => (
       <TextField source="message" />
       <TextField source="username" />
       <BooleanField source="paid" label="Paga" />
+      <BooleanField source="skipAlert" label="Ignorar Alerta" />
+      <TextField source="status" />
       <ReferenceField
         source="transactionId"
         reference="wallet-transactions"
