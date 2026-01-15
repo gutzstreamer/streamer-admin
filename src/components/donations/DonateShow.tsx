@@ -17,26 +17,44 @@ const QRCodeField: React.FC<{ source: string; label?: string }> = ({
   label = "QR Code" 
 }) => {
   const record = useRecordContext();
-  const value = record?.[source];
+  const imageUrl = record?.[source];
 
-  if (!value) return null;
+  if (!imageUrl) {
+    return (
+      <Box sx={{ mb: 2 }}>
+        {label && (
+          <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+            {label}
+          </Typography>
+        )}
+        <Typography variant="body2" color="textSecondary">
+          No QR Code available
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
-    <Box sx={{ mb: 1 }}>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-        {label}
-      </Typography>
+    <Box sx={{ mb: 2 }}>
+      {label && (
+        <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+          {label}
+        </Typography>
+      )}
       <Box
         component="img"
-        src={`data:image/png;base64,${value}`}
+        src={imageUrl}
         alt="QR Code"
         sx={{
           width: 80,
           height: 80,
-          border: '1px solid #e0e0e0',
-          borderRadius: 1,
-          transition: 'all 0.3s ease-in-out',
+          objectFit: 'cover',
+          border: '1px solid #ddd',
+          borderRadius: '8px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          display: 'block',
           cursor: 'pointer',
+          transition: 'all 0.3s ease-in-out',
           '&:hover': {
             width: 200,
             height: 200,
@@ -45,7 +63,19 @@ const QRCodeField: React.FC<{ source: string; label?: string }> = ({
             boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
           }
         }}
+        onError={(e) => {
+          const target = e.target as HTMLImageElement;
+          target.style.display = 'none';
+          target.nextElementSibling?.setAttribute('style', 'display: block');
+        }}
       />
+      <Typography 
+        variant="body2" 
+        color="error" 
+        sx={{ display: 'none', mt: 1 }}
+      >
+        Failed to load QR Code
+      </Typography>
     </Box>
   );
 };
