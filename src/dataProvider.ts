@@ -19,6 +19,11 @@ export interface DataProviderWithCustomMethods extends DataProvider {
     },
     type?: "invoice" | "factory",
   ) => Promise<any>;
+
+  cancelDonation: (
+    donationId: string,
+    reason: string,
+  ) => Promise<any>;
 }
 
 const getToken = () => {
@@ -117,6 +122,13 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
   ) {
     return httpClient(`${apiUrl}/${resource}/${params.id}/retry/${type}`, {
       method: "POST",
+    });
+  },
+
+  cancelDonation(donationId: string, reason: string) {
+    return httpClient(`${apiUrl}/donations/cancel/${donationId}`, {
+      method: "POST",
+      body: JSON.stringify({ reason }),
     });
   },
 };

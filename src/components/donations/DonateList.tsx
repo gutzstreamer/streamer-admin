@@ -10,6 +10,7 @@ import {
   TextInput,
   useDataProvider,
   useNotify,
+  BooleanField,
 } from "react-admin";
 import { ListProps } from "react-admin";
 
@@ -24,7 +25,7 @@ const donationsExporter = async (
   donations: any[],
   fetchRelatedRecords: any,
   dataProvider: any,
-  notify: any
+  notify: any,
 ) => {
   try {
     notify("Buscando todas as doações...", { type: "info" });
@@ -43,10 +44,9 @@ const donationsExporter = async (
 
       allDonations = [...allDonations, ...data];
 
-      notify(
-        `Carregadas ${allDonations.length} de ${total} doações...`,
-        { type: "info" }
-      );
+      notify(`Carregadas ${allDonations.length} de ${total} doações...`, {
+        type: "info",
+      });
 
       hasMore = allDonations.length < total;
       page++;
@@ -135,7 +135,9 @@ const DonateList = (props: ListProps) => {
           options={{ style: "currency", currency: "BRL" }}
           locales="pt-BR"
         />
-        <TextField source="message" />
+        <BooleanField source="paid" />
+        <BooleanField source="skipAlert" />
+        <TextField source="status" />
         <TextField source="username" />
         <DateField source="createdAt" label="Created At" showTime />
       </Datagrid>
