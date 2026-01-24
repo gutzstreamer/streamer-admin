@@ -144,6 +144,14 @@ import TierConfigEdit from "./components/tier-config/TierConfigEdit";
 import TierConfigShow from "./components/tier-config/TierConfigShow";
 import FanPlanList from "./components/fan-plans/FanPlanList";
 import FanPlanShow from "./components/fan-plans/FanPlanShow";
+import Chat from "@mui/icons-material/Chat";
+import ChatMentionList from "./components/chat-mentions/ChatMentionList";
+import { CustomRoutes } from "react-admin";
+import { Route } from "react-router-dom";
+import AlertQueuesPage from "./components/alert-queues/AlertQueuesPage";
+import AlertQueueDetailPage from "./components/alert-queues/AlertQueueDetailPage";
+import MusicthonQueuesPage from "./components/musicthon-queues/MusicthonQueuesPage";
+import MusicthonQueueDetailPage from "./components/musicthon-queues/MusicthonQueueDetailPage";
 
 export const App = () => (
   <Admin
@@ -166,6 +174,15 @@ export const App = () => (
       create={MonthlyServiceInvoiceCreate}
       options={{ label: "Service Invoices Monthly" }}
     />
+    <CustomRoutes>
+      <Route path="/alert-queues" element={<AlertQueuesPage />} />
+      <Route path="/alert-queues/:id" element={<AlertQueueDetailPage />} />
+      <Route path="/musicthon-queues" element={<MusicthonQueuesPage />} />
+      <Route
+        path="/musicthon-queues/:id"
+        element={<MusicthonQueueDetailPage />}
+      />
+    </CustomRoutes>
     <Resource
       options={{ label: "Users" }}
       name="users"
@@ -417,6 +434,12 @@ export const App = () => (
       icon={Webhook}
       list={PlatformWebhookList}
       show={PlatformWebhookShow}
+    />
+    <Resource
+      options={{ label: "Chat Mentions" }}
+      name="chat-mentions"
+      icon={Chat}
+      list={ChatMentionList}
     />
     <Resource
       options={{ label: "Calculation Fees" }}

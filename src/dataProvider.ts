@@ -21,6 +21,11 @@ export interface DataProviderWithCustomMethods extends DataProvider {
     },
     type?: "invoice" | "factory",
   ) => Promise<any>;
+
+  cancelDonation: (
+    donationId: string,
+    reason: string,
+  ) => Promise<any>;
 }
 
 const getToken = () => {
@@ -73,6 +78,10 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     // 🦏 Alguns recursos não têm endpoint /all, sempre usam o endpoint raiz
     const noAllEndpoint = ['refer', 'platform-benefits'];
     const useAllEndpoint = !noAllEndpoint.includes(resource) && !hasFilter;
+    
+    // 🦏 Refer não tem endpoint /all, sempre usa o endpoint raiz
+    const useAllEndpoint =
+      resource !== "refer" && resource !== "chat-mentions" && !hasFilter;
     const url = `${apiUrl}/${resource}${useAllEndpoint ? "/all" : ""}?${queryString}`;
 
     return httpClient(url).then(({ json }) => {
@@ -128,9 +137,10 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     });
   },
 
-  renewYouTubeWebhooks() {
-    return httpClient(`${apiUrl}/platform-webhooks/renew/youtube`, {
+  cancelDonation(donationId: string, reason: string) {
+    return httpClient(`${apiUrl}/donations/cancel/${donationId}`, {
       method: "POST",
+      body: JSON.stringify({ reason }),
     });
   },
 };

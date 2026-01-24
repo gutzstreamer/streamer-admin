@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
   Typography,
   Grid,
   Box,
-  Button,
   Divider,
   Chip,
   LinearProgress,
@@ -55,9 +54,41 @@ interface WithdrawalMetricsProps {
   };
 }
 
-export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) => {
-  const [period, setPeriod] = useState<'total' | 'last30Days'>('total');
+interface WithdrawalMetricsProps {
+  data: {
+    total: {
+      completed: {
+        totalAmount: number;
+        totalFee: number;
+        finalAmount: number;
+        count: number;
+      };
+      pending: {
+        totalAmount: number;
+        totalFee: number;
+        finalAmount: number;
+        count: number;
+      };
+    };
+    last30Days: {
+      completed: {
+        totalAmount: number;
+        totalFee: number;
+        finalAmount: number;
+        count: number;
+      };
+      pending: {
+        totalAmount: number;
+        totalFee: number;
+        finalAmount: number;
+        count: number;
+      };
+    };
+  };
+  useTotal?: boolean;
+}
 
+export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data, useTotal = false }) => {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -65,7 +96,7 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
     }).format(value);
   };
 
-  const currentData = data[period];
+  const currentData = useTotal ? data.total : data.last30Days;
   
   // Calcular percentuais e estatísticas
   const totalSaques = currentData.completed.count + currentData.pending.count;
@@ -103,94 +134,59 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
       />
       
       <CardContent sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Header com Toggle */}
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={4}>
-          <Box display="flex" alignItems="center" gap={2}>
-            <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 48, height: 48 }}>
-              <MonetizationOn sx={{ fontSize: 28 }} />
-            </Avatar>
-            <Box>
-              <Typography variant="h5" fontWeight="bold">
-                💸 Métricas de Saques
-              </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                Análise completa de transações
-              </Typography>
-            </Box>
+        {/* Header */}
+        <Box display="flex" alignItems="center" gap={2} mb={4}>
+          <Avatar sx={{ bgcolor: 'rgba(255,255,255,0.2)', width: 48, height: 48 }}>
+            <MonetizationOn sx={{ fontSize: 28 }} />
+          </Avatar>
+          <Box>
+            <Typography variant="h5" fontWeight="bold">
+              💸 Métricas de Saques
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              Análise completa de transações
+            </Typography>
           </Box>
-          
-          <Stack direction="row" spacing={1}>
-            <Button
-              variant={period === 'total' ? 'contained' : 'outlined'}
-              size="small"
-              onClick={() => setPeriod('total')}
-              sx={{ 
-                color: period === 'total' ? 'primary.main' : 'white',
-                borderColor: 'rgba(255,255,255,0.3)',
-                bgcolor: period === 'total' ? 'white' : 'transparent',
-                '&:hover': {
-                  bgcolor: period === 'total' ? 'grey.100' : 'rgba(255,255,255,0.1)',
-                }
-              }}
-            >
-              Total
-            </Button>
-            <Button
-              variant={period === 'last30Days' ? 'contained' : 'outlined'}
-              size="small"
-              onClick={() => setPeriod('last30Days')}
-              sx={{ 
-                color: period === 'last30Days' ? 'primary.main' : 'white',
-                borderColor: 'rgba(255,255,255,0.3)',
-                bgcolor: period === 'last30Days' ? 'white' : 'transparent',
-                '&:hover': {
-                  bgcolor: period === 'last30Days' ? 'grey.100' : 'rgba(255,255,255,0.1)',
-                }
-              }}
-            >
-              30 dias
-            </Button>
-          </Stack>
         </Box>
 
         {/* Estatísticas Rápidas */}
         <Grid container spacing={3} mb={4}>
           <Grid item xs={3}>
             <Box textAlign="center">
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                 {totalSaques}
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                 Total Saques
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={3}>
             <Box textAlign="center">
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                 {formatCurrency(averageWithdrawal)}
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                 Ticket Médio
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={3}>
             <Box textAlign="center">
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                 {feePercentage.toFixed(1)}%
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                 Taxa Média
               </Typography>
             </Box>
           </Grid>
           <Grid item xs={3}>
             <Box textAlign="center">
-              <Typography variant="h4" fontWeight="bold">
+              <Typography variant="h5" fontWeight="bold" sx={{ fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }, wordBreak: 'break-word' }}>
                 {completedPercentage.toFixed(0)}%
               </Typography>
-              <Typography variant="caption" sx={{ opacity: 0.8 }}>
+              <Typography variant="caption" sx={{ opacity: 0.8, fontSize: '0.7rem' }}>
                 Concluídos
               </Typography>
             </Box>
@@ -253,11 +249,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <Receipt sx={{ fontSize: 18, color: '#4caf50' }} />
-                      <Typography variant="body2" sx={{ color: '#4caf50' }}>
+                      <Typography variant="body2" sx={{ color: '#4caf50', fontSize: '0.75rem' }}>
                         Valor Solicitado
                       </Typography>
                     </Box>
-                    <Typography variant="h6" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.completed.totalAmount)}
                     </Typography>
                   </Box>
@@ -265,11 +261,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <TrendingDown sx={{ fontSize: 18, color: '#ff5722' }} />
-                      <Typography variant="body2" sx={{ color: '#ff5722' }}>
+                      <Typography variant="body2" sx={{ color: '#ff5722', fontSize: '0.75rem' }}>
                         Taxas Cobradas
                       </Typography>
                     </Box>
-                    <Typography variant="h6" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.completed.totalFee)}
                     </Typography>
                   </Box>
@@ -279,11 +275,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <Paid sx={{ fontSize: 18, color: '#4caf50' }} />
-                      <Typography variant="body2" sx={{ color: '#4caf50' }}>
+                      <Typography variant="body2" sx={{ color: '#4caf50', fontSize: '0.75rem' }}>
                         Valor Final Pago
                       </Typography>
                     </Box>
-                    <Typography variant="h5" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.4rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.completed.finalAmount)}
                     </Typography>
                   </Box>
@@ -347,11 +343,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <Receipt sx={{ fontSize: 18, color: '#ff9800' }} />
-                      <Typography variant="body2" sx={{ color: '#ff9800' }}>
+                      <Typography variant="body2" sx={{ color: '#ff9800', fontSize: '0.75rem' }}>
                         Valor Solicitado
                       </Typography>
                     </Box>
-                    <Typography variant="h6" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.pending.totalAmount)}
                     </Typography>
                   </Box>
@@ -359,11 +355,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <TrendingDown sx={{ fontSize: 18, color: '#ff5722' }} />
-                      <Typography variant="body2" sx={{ color: '#ff5722' }}>
+                      <Typography variant="body2" sx={{ color: '#ff5722', fontSize: '0.75rem' }}>
                         Taxas a Cobrar
                       </Typography>
                     </Box>
-                    <Typography variant="h6" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.pending.totalFee)}
                     </Typography>
                   </Box>
@@ -373,11 +369,11 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
                   <Box>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <AttachMoney sx={{ fontSize: 18, color: '#ff9800' }} />
-                      <Typography variant="body2" sx={{ color: '#ff9800' }}>
+                      <Typography variant="body2" sx={{ color: '#ff9800', fontSize: '0.75rem' }}>
                         Valor Final a Pagar
                       </Typography>
                     </Box>
-                    <Typography variant="h5" fontWeight="bold" color="white">
+                    <Typography variant="h6" fontWeight="bold" color="white" sx={{ fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.4rem' }, wordBreak: 'break-word' }}>
                       {formatCurrency(currentData.pending.finalAmount)}
                     </Typography>
                   </Box>
@@ -392,7 +388,7 @@ export const WithdrawalMetrics: React.FC<WithdrawalMetricsProps> = ({ data }) =>
         {/* Resumo Financeiro Detalhado */}
         <Box>
           <Typography variant="h6" fontWeight="bold" mb={3} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            📊 Resumo Financeiro ({period === 'total' ? 'Total Histórico' : 'Últimos 30 dias'})
+            📊 Resumo Financeiro
           </Typography>
           
           {/* Cards de Resumo */}

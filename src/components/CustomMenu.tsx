@@ -13,6 +13,8 @@ import LayersIcon from "@mui/icons-material/Layers";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 
 export const CustomMenu = () => {
   const [open] = useSidebarState();
@@ -108,6 +110,26 @@ export const CustomMenu = () => {
         to="/platform-webhooks"
         primaryText="Webhooks"
         leftIcon={<StorefrontIcon />}
+      />
+
+      <Divider />
+
+      {/* Monitoramento */}
+      <ListSubheader inset>Monitoramento</ListSubheader>
+      <MenuItemLink
+        to="/chat-mentions"
+        primaryText="Menções no Chat"
+        leftIcon={<ChatBubbleIcon />}
+      />
+      <MenuItemLink
+        to="/alert-queues"
+        primaryText="Filas de Alertas"
+        leftIcon={<NotificationsActiveIcon />}
+      />
+      <MenuItemLink
+        to="/musicthon-queues"
+        primaryText="Filas do Musicthon"
+        leftIcon={<QueueMusicIcon />}
       />
 
       <Divider />

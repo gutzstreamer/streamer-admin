@@ -1,11 +1,9 @@
-import React, { memo, useState } from 'react';
+import React, { memo } from 'react';
 import {
   Card,
   CardContent,
   Typography,
   Box,
-  ToggleButton,
-  ToggleButtonGroup,
   Paper,
   List,
   ListItem,
@@ -38,18 +36,7 @@ interface TopProductsUsageProps {
 }
 
 export const TopProductsUsage: React.FC<TopProductsUsageProps> = memo(({ data }) => {
-  const [period, setPeriod] = useState<'total' | 'last30Days'>('last30Days');
-
-  const currentData = data[period];
-
-  const handlePeriodChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    newPeriod: 'total' | 'last30Days' | null,
-  ) => {
-    if (newPeriod !== null) {
-      setPeriod(newPeriod);
-    }
-  };
+  const currentData = data.last30Days;
 
   const getPositionColor = (index: number) => {
     if (index === 0) return 'success'; // 1º lugar
@@ -68,25 +55,9 @@ export const TopProductsUsage: React.FC<TopProductsUsageProps> = memo(({ data })
   return (
     <Card>
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <TrendingUp color="primary" />
-            <Typography variant="h6">📊 Top 10 Produtos Mais Utilizados</Typography>
-          </Box>
-          
-          <ToggleButtonGroup
-            value={period}
-            exclusive
-            onChange={handlePeriodChange}
-            size="small"
-          >
-            <ToggleButton value="last30Days">
-              Últimos 30 dias
-            </ToggleButton>
-            <ToggleButton value="total">
-              Total Geral
-            </ToggleButton>
-          </ToggleButtonGroup>
+        <Box display="flex" alignItems="center" gap={1} mb={2}>
+          <TrendingUp color="primary" />
+          <Typography variant="h6">📊 Top 10 Produtos Mais Utilizados</Typography>
         </Box>
 
         <Paper elevation={1} sx={{ p: 2 }}>

@@ -10,6 +10,7 @@ const StreamerEdit: React.FC = (props) => (
       <TextInput source="bio" />
       <StreamerImageInput source="image" label="Streamer Profile Image" />
       <BooleanInput source="public" />
+      <BooleanInput source="isFeatured" label="Featured Creator" />
     </SimpleForm>
   </Edit>
 );

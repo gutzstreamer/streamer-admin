@@ -84,6 +84,7 @@ export interface DashboardMetrics {
       totalAmount: number; // Valor total arrecadado
       averageDonation: number; // Média por doação
       highestDonation: number; // Maior doação
+      totalFees: number; // Total em taxas
       topStreamers: Array<{ name: string; amount: number }>;
     };
     last30Days: {
@@ -91,6 +92,7 @@ export interface DashboardMetrics {
       totalAmount: number;
       averageDonation: number;
       highestDonation: number;
+      totalFees: number; // Total em taxas dos últimos 30 dias
       topStreamers: Array<{ name: string; amount: number }>;
     };
   };
@@ -251,7 +253,7 @@ export interface DashboardMetrics {
   };
 }
 
-export const useDashboardData = () => {
+export const useDashboardData = (customStartDate?: Date, customEndDate?: Date) => {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -265,6 +267,10 @@ export const useDashboardData = () => {
       // Data atual para filtros
       const now = new Date();
       const now30DaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      
+      // Usar datas customizadas se fornecidas, senão usar padrão de 30 dias
+      const filterStartDate = customStartDate || now30DaysAgo;
+      const filterEndDate = customEndDate || now;
 
       // Buscar dados em paralelo
       const [
@@ -282,67 +288,67 @@ export const useDashboardData = () => {
       ] = await Promise.all([
         // Usuários
         dataProvider.getList("users", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "id", order: "ASC" },
           filter: {},
         }),
         // Streamers
         dataProvider.getList("streamers", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "id", order: "ASC" },
           filter: {},
         }),
         // Doações
         dataProvider.getList("donations", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "createdAt", order: "DESC" },
           filter: {},
         }),
         // Pedidos
         dataProvider.getList("orders", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "createdAt", order: "DESC" },
           filter: {},
         }),
         // Produtos
         dataProvider.getList("products", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "id", order: "ASC" },
           filter: {},
         }),
         // Produtos dos streamers
         dataProvider.getList("product-streamer", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "id", order: "ASC" },
           filter: {},
         }),
         // Comissões
         dataProvider.getList("commission-streamer", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "createdAt", order: "DESC" },
           filter: {},
         }),
         // Saques
         dataProvider.getList("withdrawal-requests", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "createdAt", order: "DESC" },
           filter: {},
         }),
         // Carteiras (para saldo disponível)
         dataProvider.getList("wallets", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "id", order: "ASC" },
           filter: {},
         }),
         // Solicitações de streamers
         dataProvider.getList("streamer-requests", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "createdAt", order: "DESC" },
           filter: {},
         }),
         // Cancelamentos de pedidos
         dataProvider.getList("order-cancel", {
-          pagination: { page: 1, perPage: 1000 },
+          pagination: { page: 1, perPage: 999999 },
           sort: { field: "createdAt", order: "DESC" },
           filter: {},
         }),
@@ -350,7 +356,10 @@ export const useDashboardData = () => {
 
       // Processar dados de usuários
       const newUsers30d = usersData.data.filter(
-        (user: any) => new Date(user.createdAt) > now30DaysAgo,
+        (user: any) => {
+          const createdAt = new Date(user.createdAt);
+          return createdAt >= filterStartDate && createdAt <= filterEndDate;
+        },
       ).length;
 
       // Calcular usuários por status (true/false para active e blocked)
@@ -369,7 +378,10 @@ export const useDashboardData = () => {
 
       // Calcular usuários dos últimos 30 dias por status
       const users30d = usersData.data.filter(
-        (user: any) => new Date(user.createdAt) > now30DaysAgo,
+        (user: any) => {
+          const createdAt = new Date(user.createdAt);
+          return createdAt >= filterStartDate && createdAt <= filterEndDate;
+        },
       );
       const usersActive30d = users30d.filter(
         (user: any) => user.active === true,
@@ -576,7 +588,10 @@ export const useDashboardData = () => {
 
       // Métricas dos últimos 30 dias da loja (apenas status válidos)
       const ordersLast30Days = paidOrders.filter(
-        (order: any) => new Date(order.createdAt) > now30DaysAgo,
+        (order: any) => {
+          const createdAt = new Date(order.createdAt);
+          return createdAt >= filterStartDate && createdAt <= filterEndDate;
+        },
       );
 
       const totalRevenue30d = ordersLast30Days.reduce(
@@ -591,7 +606,10 @@ export const useDashboardData = () => {
 
       // Calcular comissões dos últimos 30 dias da tabela commission-streamer
       const commissions30d = commissionsData.data.filter(
-        (commission: any) => new Date(commission.createdAt) > now30DaysAgo,
+        (commission: any) => {
+          const createdAt = new Date(commission.createdAt);
+          return createdAt >= filterStartDate && createdAt <= filterEndDate;
+        },
       );
 
       const commissionsPaid30d = commissions30d.reduce(
@@ -641,7 +659,10 @@ export const useDashboardData = () => {
 
       // Doações dos últimos 30 dias
       const donationsLast30Days = donationsData.data.filter(
-        (donation: any) => new Date(donation.createdAt) > now30DaysAgo,
+        (donation: any) => {
+          const createdAt = new Date(donation.createdAt);
+          return createdAt >= filterStartDate && createdAt <= filterEndDate;
+        },
       );
 
       const donations30dAmount = donationsLast30Days.reduce(
@@ -653,6 +674,16 @@ export const useDashboardData = () => {
         donations30dCount > 0 ? donations30dAmount / donations30dCount : 0;
       const donations30dHighest = Math.max(
         ...donationsLast30Days.map((d: any) => d.amount || 0),
+        0,
+      );
+      const donations30dTotalFees = donationsLast30Days.reduce(
+        (sum: number, donation: any) => sum + (donation.totalFee || 0),
+        0,
+      );
+
+      // Total de taxas para todas as doações
+      const allDonationsTotalFees = donationsData.data.reduce(
+        (sum: number, donation: any) => sum + (donation.totalFee || 0),
         0,
       );
 
@@ -717,7 +748,10 @@ export const useDashboardData = () => {
 
       // Calcular status dos pedidos dos últimos 30 dias
       const orders30DaysAll = ordersData.data.filter(
-        (order: any) => new Date(order.createdAt) > now30DaysAgo,
+        (order: any) => {
+          const createdAt = new Date(order.createdAt);
+          return createdAt >= filterStartDate && createdAt <= filterEndDate;
+        },
       );
 
       const ordersByStatus30d = orders30DaysAll.reduce(
@@ -1151,14 +1185,10 @@ export const useDashboardData = () => {
       );
 
       // Calcular para últimos 30 dias
-      const now30DaysAgoWithdrawals = new Date(
-        Date.now() - 30 * 24 * 60 * 60 * 1000,
-      );
-
       const completed30Days = completedWithdrawals.filter((w: any) => {
         try {
           const createdDate = new Date(w.createdAt);
-          return createdDate >= now30DaysAgoWithdrawals;
+          return createdDate >= filterStartDate && createdDate <= filterEndDate;
         } catch {
           return false;
         }
@@ -1167,7 +1197,7 @@ export const useDashboardData = () => {
       const pending30Days = pendingWithdrawals.filter((w: any) => {
         try {
           const createdDate = new Date(w.createdAt);
-          return createdDate >= now30DaysAgoWithdrawals;
+          return createdDate >= filterStartDate && createdDate <= filterEndDate;
         } catch {
           return false;
         }
@@ -1250,6 +1280,7 @@ export const useDashboardData = () => {
             totalAmount: allDonationsAmount,
             averageDonation: allDonationsAverage,
             highestDonation: allDonationsHighest,
+            totalFees: allDonationsTotalFees,
             topStreamers: topStreamersTotal,
           },
           last30Days: {
@@ -1257,6 +1288,7 @@ export const useDashboardData = () => {
             totalAmount: donations30dAmount,
             averageDonation: donations30dAverage,
             highestDonation: donations30dHighest,
+            totalFees: donations30dTotalFees,
             topStreamers: topStreamers30d,
           },
         },
@@ -1383,7 +1415,7 @@ export const useDashboardData = () => {
 
   useEffect(() => {
     fetchDashboardData();
-  }, [dataProvider]);
+  }, [dataProvider, customStartDate, customEndDate]);
 
   return {
     metrics,

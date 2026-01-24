@@ -97,10 +97,10 @@ export const SimpleUserMetrics: React.FC<UserMetricsProps> = memo(({ data }) => 
             <Avatar sx={{ bgcolor: 'rgba(33, 150, 243, 0.8)', mx: 'auto', mb: 2, width: 56, height: 56 }}>
               <People sx={{ fontSize: 32 }} />
             </Avatar>
-            <Typography variant="h3" fontWeight="bold" color="white" mb={1}>
+            <Typography variant="h4" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' } }}>
               {currentData.totalUsers.toLocaleString()}
             </Typography>
-            <Typography variant="h6" sx={{ opacity: 0.9, fontWeight: 500 }}>
+            <Typography variant="h6" sx={{ opacity: 0.9, fontWeight: 500, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
               Total de Usuários Criados
             </Typography>
           </Box>
@@ -128,10 +128,10 @@ export const SimpleUserMetrics: React.FC<UserMetricsProps> = memo(({ data }) => 
                 <Avatar sx={{ bgcolor: 'rgba(76, 175, 80, 0.8)', mx: 'auto', mb: 2 }}>
                   <CheckCircle />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {currentData.usersActive.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Usuários Ativos
                 </Typography>
               </Box>
@@ -152,10 +152,10 @@ export const SimpleUserMetrics: React.FC<UserMetricsProps> = memo(({ data }) => 
                 <Avatar sx={{ bgcolor: 'rgba(158, 158, 158, 0.8)', mx: 'auto', mb: 2 }}>
                   <PersonOff />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {currentData.usersInactive.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Usuários Inativos
                 </Typography>
               </Box>
@@ -176,10 +176,10 @@ export const SimpleUserMetrics: React.FC<UserMetricsProps> = memo(({ data }) => 
                 <Avatar sx={{ bgcolor: 'rgba(244, 67, 54, 0.8)', mx: 'auto', mb: 2 }}>
                   <Block />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {currentData.usersBlocked.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Usuários Bloqueados
                 </Typography>
               </Box>
@@ -200,10 +200,10 @@ export const SimpleUserMetrics: React.FC<UserMetricsProps> = memo(({ data }) => 
                 <Avatar sx={{ bgcolor: 'rgba(33, 150, 243, 0.8)', mx: 'auto', mb: 2 }}>
                   <CheckCircle />
                 </Avatar>
-                <Typography variant="h4" fontWeight="bold" color="white" mb={1}>
+                <Typography variant="h5" fontWeight="bold" color="white" mb={1} sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
                   {currentData.usersUnblocked.toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: '0.75rem' }}>
                   Usuários Desbloqueados
                 </Typography>
               </Box>
