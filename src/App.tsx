@@ -29,6 +29,10 @@ import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionP
 import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
 import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
 import SubscriptionPlanListCopy from "./components/subscription-plan/SubscriptionPlanListCopy";
+import SubscriptionPlanTierCommissionList from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionList";
+import SubscriptionPlanTierCommissionCreate from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionCreate";
+import SubscriptionPlanTierCommissionEdit from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionEdit";
+import SubscriptionPlanTierCommissionShow from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionShow";
 import FeatureToggleList from "./components/feature-toggles/FeatureToggleList";
 import FeatureToggleCreate from "./components/feature-toggles/FeatureToggleCreate";
 import FeatureToggleShow from "./components/feature-toggles/FeatureToggleShow";
@@ -377,6 +381,15 @@ export const App = () => (
       create={TierConfigCreate}
       edit={TierConfigEdit}
       show={TierConfigShow}
+    />
+    <Resource
+      options={{ label: "Comissão por Tier (Plano)" }}
+      name="subscription-plan-tier-commission"
+      icon={ToggleOn}
+      list={SubscriptionPlanTierCommissionList}
+      create={SubscriptionPlanTierCommissionCreate}
+      edit={SubscriptionPlanTierCommissionEdit}
+      show={SubscriptionPlanTierCommissionShow}
     />
     <Resource
       options={{ label: "Fan Plans" }}

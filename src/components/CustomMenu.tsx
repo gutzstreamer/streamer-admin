@@ -11,10 +11,12 @@ import MicIcon from "@mui/icons-material/Mic";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import LayersIcon from "@mui/icons-material/Layers";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import Divider from "@mui/material/Divider";
 import ListSubheader from "@mui/material/ListSubheader";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 
 export const CustomMenu = () => {
   const [open] = useSidebarState();
@@ -207,17 +209,17 @@ export const CustomMenu = () => {
       />
       <Divider />
 
-      {/* Sistema */}
-      <ListSubheader inset>Configurações</ListSubheader>
+      {/* Planos */}
+      <ListSubheader inset>Planos</ListSubheader>
       <MenuItemLink
         to="/subscription-plan"
         primaryText="Planos de Assinatura"
         leftIcon={<SettingsIcon />}
       />
       <MenuItemLink
-        to="/platform-benefits"
-        primaryText="Benefícios da Plataforma"
-        leftIcon={<EmojiEventsIcon />}
+        to="/subscription-plan-tier-commission"
+        primaryText="Comissão por Tier (Plano)"
+        leftIcon={<LocalAtmIcon />}
       />
       <MenuItemLink
         to="/tier-config"
@@ -228,6 +230,15 @@ export const CustomMenu = () => {
         to="/fan-plans"
         primaryText="Planos de Fãs"
         leftIcon={<DashboardCustomizeIcon />}
+      />
+      <Divider />
+
+      {/* Sistema */}
+      <ListSubheader inset>Configurações</ListSubheader>
+      <MenuItemLink
+        to="/platform-benefits"
+        primaryText="Benefícios da Plataforma"
+        leftIcon={<EmojiEventsIcon />}
       />
       <MenuItemLink
         to="/feature-toggles"

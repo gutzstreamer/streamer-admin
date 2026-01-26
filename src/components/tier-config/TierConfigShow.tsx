@@ -1,5 +1,11 @@
 import React from "react";
-import { BooleanField, NumberField, Show, SimpleShowLayout, TextField } from "react-admin";
+import {
+  BooleanField,
+  NumberField,
+  Show,
+  SimpleShowLayout,
+  TextField,
+} from "react-admin";
 
 const TierConfigShow: React.FC = (props) => (
   <Show {...props}>

@@ -76,12 +76,9 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     const hasFilter = Object.keys(cleanFilter).length > 0;
 
     // 🦏 Alguns recursos não têm endpoint /all, sempre usam o endpoint raiz
-    const noAllEndpoint = ['refer', 'platform-benefits'];
+    const noAllEndpoint = ['refer', 'platform-benefits', 'chat-mentions'];
     const useAllEndpoint = !noAllEndpoint.includes(resource) && !hasFilter;
     
-    // 🦏 Refer não tem endpoint /all, sempre usa o endpoint raiz
-    const useAllEndpoint =
-      resource !== "refer" && resource !== "chat-mentions" && !hasFilter;
     const url = `${apiUrl}/${resource}${useAllEndpoint ? "/all" : ""}?${queryString}`;
 
     return httpClient(url).then(({ json }) => {
