@@ -12,6 +12,8 @@ export interface DataProviderWithCustomMethods extends DataProvider {
     type?: "invoice" | "factory",
   ) => Promise<any>;
 
+  renewYouTubeWebhooks: () => Promise<any>;
+
   checks: (
     resource: string,
     params: {
@@ -55,7 +57,7 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     );
 
     // Lógica padrão para todos os resources
-    const query = {
+    const query: Record<string, any> = {
       ...cleanFilter,
       page: pagination?.page ?? 1,
       pageSize: pagination?.perPage ?? 10,
@@ -63,13 +65,20 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
       sortOrder: sort?.order,
     };
 
+    // Conversão de reais -> centavos para tier-config
+    if (resource === "tier-config" && query.minPriceReais) {
+      query.minPriceCents = Math.round(Number(query.minPriceReais) * 100);
+      delete query.minPriceReais;
+    }
+
     const queryString = new URLSearchParams(query as any).toString();
 
     const hasFilter = Object.keys(cleanFilter).length > 0;
+
+    // 🦏 Alguns recursos não têm endpoint /all, sempre usam o endpoint raiz
+    const noAllEndpoint = ['refer', 'platform-benefits', 'chat-mentions'];
+    const useAllEndpoint = !noAllEndpoint.includes(resource) && !hasFilter;
     
-    // 🦏 Refer não tem endpoint /all, sempre usa o endpoint raiz
-    const useAllEndpoint =
-      resource !== "refer" && resource !== "chat-mentions" && !hasFilter;
     const url = `${apiUrl}/${resource}${useAllEndpoint ? "/all" : ""}?${queryString}`;
 
     return httpClient(url).then(({ json }) => {

@@ -29,6 +29,10 @@ import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionP
 import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
 import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
 import SubscriptionPlanListCopy from "./components/subscription-plan/SubscriptionPlanListCopy";
+import SubscriptionPlanTierCommissionList from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionList";
+import SubscriptionPlanTierCommissionCreate from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionCreate";
+import SubscriptionPlanTierCommissionEdit from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionEdit";
+import SubscriptionPlanTierCommissionShow from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionShow";
 import FeatureToggleList from "./components/feature-toggles/FeatureToggleList";
 import FeatureToggleCreate from "./components/feature-toggles/FeatureToggleCreate";
 import FeatureToggleShow from "./components/feature-toggles/FeatureToggleShow";
@@ -94,6 +98,7 @@ import {
   Mic,
   Repeat,
   Payment,
+  EmojiEvents,
 } from "@mui/icons-material";
 import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
@@ -133,6 +138,16 @@ import {
   RecurringPaymentTransactionList,
   RecurringPaymentTransactionShow,
 } from "./components/recurring-payment-transaction";
+import PlatformBenefitList from "./components/platform-benefits/PlatformBenefitList";
+import PlatformBenefitCreate from "./components/platform-benefits/PlatformBenefitCreate";
+import PlatformBenefitEdit from "./components/platform-benefits/PlatformBenefitEdit";
+import PlatformBenefitShow from "./components/platform-benefits/PlatformBenefitShow";
+import TierConfigList from "./components/tier-config/TierConfigList";
+import TierConfigCreate from "./components/tier-config/TierConfigCreate";
+import TierConfigEdit from "./components/tier-config/TierConfigEdit";
+import TierConfigShow from "./components/tier-config/TierConfigShow";
+import FanPlanList from "./components/fan-plans/FanPlanList";
+import FanPlanShow from "./components/fan-plans/FanPlanShow";
 import Chat from "@mui/icons-material/Chat";
 import ChatMentionList from "./components/chat-mentions/ChatMentionList";
 import { CustomRoutes } from "react-admin";
@@ -348,6 +363,40 @@ export const App = () => (
       create={FeatureToggleCreate}
       edit={FeatureToggleEdit}
       show={FeatureToggleShow}
+    />
+    <Resource
+      options={{ label: "Platform Benefits" }}
+      name="platform-benefits"
+      icon={EmojiEvents}
+      list={PlatformBenefitList}
+      create={PlatformBenefitCreate}
+      edit={PlatformBenefitEdit}
+      show={PlatformBenefitShow}
+    />
+    <Resource
+      options={{ label: "Tier Config" }}
+      name="tier-config"
+      icon={ToggleOn}
+      list={TierConfigList}
+      create={TierConfigCreate}
+      edit={TierConfigEdit}
+      show={TierConfigShow}
+    />
+    <Resource
+      options={{ label: "Comissão por Tier (Plano)" }}
+      name="subscription-plan-tier-commission"
+      icon={ToggleOn}
+      list={SubscriptionPlanTierCommissionList}
+      create={SubscriptionPlanTierCommissionCreate}
+      edit={SubscriptionPlanTierCommissionEdit}
+      show={SubscriptionPlanTierCommissionShow}
+    />
+    <Resource
+      options={{ label: "Fan Plans" }}
+      name="fan-plans"
+      icon={Subscriptions}
+      list={FanPlanList}
+      show={FanPlanShow}
     />
     <Resource
       name="orders"
