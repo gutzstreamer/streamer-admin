@@ -18,8 +18,8 @@ const MonthlyServiceInvoiceShow: React.FC = (props) => {
     <Show {...props} title="Detalhes da Nota Fiscal Mensal">
       <SimpleShowLayout>
         <TextField source="id" label="ID" />
-        <NumberField source="year" label="Ano" />
-        <NumberField source="month" label="Mês" />
+        <TextField source="year" label="Ano" />
+        <TextField source="month" label="Mês" />
         
         <ReferenceField source="streamerId" reference="streamers" label="Streamer">
           <TextField source="name" />
@@ -30,11 +30,33 @@ const MonthlyServiceInvoiceShow: React.FC = (props) => {
           label="Valor Total dos Saques" 
           options={{ style: 'currency', currency: 'BRL' }} 
         />
-        <NumberField 
-          source="totalFee" 
-          label="Total de Taxas" 
-          options={{ style: 'currency', currency: 'BRL' }} 
-        />
+        
+        <Box sx={{ 
+          p: 2, 
+          my: 2, 
+          bgcolor: 'primary.light', 
+          borderRadius: 1,
+          border: 2,
+          borderColor: 'primary.main'
+        }}>
+          <Typography variant="subtitle2" color="primary.dark" gutterBottom>
+            🧾 TOTAL DA NOTA FISCAL DE SERVIÇO
+          </Typography>
+          <NumberField 
+            source="totalFee" 
+            label="" 
+            options={{ style: 'currency', currency: 'BRL' }} 
+            sx={{ 
+              fontSize: '1.5rem', 
+              fontWeight: 'bold',
+              color: 'primary.dark'
+            }}
+          />
+          <Typography variant="caption" color="text.secondary" display="block" mt={0.5}>
+            Este é o valor que será cobrado na Nota Fiscal (total das taxas)
+          </Typography>
+        </Box>
+        
         <NumberField 
           source="netAmount" 
           label="Valor Líquido" 
