@@ -26,6 +26,18 @@ export interface DataProviderWithCustomMethods extends DataProvider {
     donationId: string,
     reason: string,
   ) => Promise<any>;
+
+  simulateMonthlyInvoice: (
+    year: number,
+    month: number,
+    streamerId: string,
+  ) => Promise<any>;
+
+  createMonthlyInvoice: (
+    year: number,
+    month: number,
+    streamerId: string,
+  ) => Promise<any>;
 }
 
 const getToken = () => {
@@ -139,6 +151,24 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
       method: "POST",
       body: JSON.stringify({ reason }),
     });
+  },
+
+  simulateMonthlyInvoice(year: number, month: number, streamerId: string) {
+    return httpClient(`${apiUrl}/monthly-service-invoices/simulate`, {
+      method: "POST",
+      body: JSON.stringify({ year, month, streamerId }),
+    }).then(({ json }) => ({
+      data: json.data || json,
+    }));
+  },
+
+  createMonthlyInvoice(year: number, month: number, streamerId: string) {
+    return httpClient(`${apiUrl}/monthly-service-invoices`, {
+      method: "POST",
+      body: JSON.stringify({ year, month, streamerId }),
+    }).then(({ json }) => ({
+      data: json.data || json,
+    }));
   },
 };
 
