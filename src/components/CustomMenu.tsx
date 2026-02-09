@@ -17,6 +17,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import ViewListIcon from "@mui/icons-material/ViewList";
 
 export const CustomMenu = () => {
   const [open] = useSidebarState();
@@ -122,6 +123,11 @@ export const CustomMenu = () => {
         to="/chat-mentions"
         primaryText="Menções no Chat"
         leftIcon={<ChatBubbleIcon />}
+      />
+      <MenuItemLink
+        to="/queue-control-center"
+        primaryText="Queue Control Center"
+        leftIcon={<ViewListIcon />}
       />
       <MenuItemLink
         to="/alert-queues"

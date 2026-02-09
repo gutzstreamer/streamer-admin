@@ -99,6 +99,7 @@ import {
   Repeat,
   Payment,
   EmojiEvents,
+  ViewList,
 } from "@mui/icons-material";
 import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
@@ -156,6 +157,7 @@ import AlertQueuesPage from "./components/alert-queues/AlertQueuesPage";
 import AlertQueueDetailPage from "./components/alert-queues/AlertQueueDetailPage";
 import MusicthonQueuesPage from "./components/musicthon-queues/MusicthonQueuesPage";
 import MusicthonQueueDetailPage from "./components/musicthon-queues/MusicthonQueueDetailPage";
+import QueueControlCenterPage from "./components/queue-control/QueueControlCenterPage";
 
 export const App = () => (
   <Admin
@@ -170,6 +172,12 @@ export const App = () => (
       list={Dashboard}
       icon={DashboardIcon}
       options={{ label: "Dashboard" }}
+    />
+    <Resource
+      name="queue-control-center"
+      list={QueueControlCenterPage}
+      icon={ViewList}
+      options={{ label: "Queue Control Center" }}
     />
     <Resource
       name="monthly-service-invoices"

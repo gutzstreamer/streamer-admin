@@ -94,6 +94,35 @@ type DetailResponse = {
 
 const apiUrl = import.meta.env.VITE_SIMPLE_REST_URL;
 const adminApi = `${apiUrl}/admin/musicthon`;
+const FONT_FAMILY =
+  '"Space Grotesk", "Manrope", "Avenir Next", "Segoe UI", sans-serif';
+const PAGE_SX = {
+  minHeight: "100vh",
+  p: { xs: 1.5, sm: 2 },
+  fontFamily: FONT_FAMILY,
+  background:
+    "radial-gradient(1100px circle at 0% 0%, rgba(51,137,255,0.22), transparent 38%), radial-gradient(900px circle at 100% 0%, rgba(16,185,129,0.14), transparent 34%), linear-gradient(180deg, #05070d 0%, #070b13 100%)",
+};
+const PANEL_SX = {
+  bgcolor: "rgba(11, 16, 28, 0.78)",
+  border: "1px solid rgba(118, 153, 220, 0.28)",
+  borderRadius: 2.5,
+  boxShadow:
+    "0 18px 40px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.05)",
+  backdropFilter: "blur(10px)",
+};
+const SURFACE_SX = {
+  bgcolor: "rgba(8, 13, 24, 0.82)",
+  border: "1px solid rgba(128, 159, 221, 0.24)",
+  borderRadius: 1.5,
+  boxShadow:
+    "0 10px 24px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,255,255,0.03)",
+};
+const ICON_BUTTON_SX = {
+  bgcolor: "rgba(13, 20, 34, 0.92)",
+  border: "1px solid rgba(96, 165, 250, 0.3)",
+  "&:hover": { bgcolor: "rgba(22, 34, 58, 0.95)" },
+};
 
 const fetchJson = (url: string) =>
   fetchUtils.fetchJson(url, {
@@ -258,15 +287,14 @@ const EntryCard = ({
       elevation={1}
       sx={{
         p: { xs: 1, sm: 1.25 },
-        bgcolor: "#0d0d0d",
-        border: "1px solid rgba(255,255,255,0.08)",
+        ...SURFACE_SX,
         borderRadius: 1.5,
         transition: "all 0.2s",
         position: "relative",
         overflow: "hidden",
         "&:hover": {
-          bgcolor: "#1a1a1a",
-          borderColor: "rgba(255,255,255,0.15)",
+          bgcolor: "rgba(13, 19, 34, 0.92)",
+          borderColor: "rgba(159, 187, 245, 0.42)",
           transform: "translateY(-2px)",
           boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
         },
@@ -698,7 +726,7 @@ const MusicthonQueueDetailPage = () => {
 
   if (loading && !detail) {
     return (
-      <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: { xs: 1.5, sm: 2 } }}>
+      <Box sx={PAGE_SX}>
         <Stack alignItems="center" py={6}>
           <CircularProgress />
         </Stack>
@@ -708,8 +736,8 @@ const MusicthonQueueDetailPage = () => {
 
   if (!detail?.success) {
     return (
-      <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: { xs: 1.5, sm: 2 } }}>
-        <Paper elevation={1} sx={{ p: 4, textAlign: "center", bgcolor: "#1a1a1a" }}>
+      <Box sx={PAGE_SX}>
+        <Paper elevation={1} sx={{ ...PANEL_SX, p: 4, textAlign: "center" }}>
           <Typography color="text.secondary">
             Nenhum detalhe encontrado.
           </Typography>
@@ -719,16 +747,13 @@ const MusicthonQueueDetailPage = () => {
   }
 
   return (
-    <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: { xs: 1.5, sm: 2 } }}>
+    <Box sx={PAGE_SX}>
       {/* Header */}
       <Stack direction="row" alignItems="center" spacing={{ xs: 0.75, sm: 1 }} mb={2}>
         <IconButton
           onClick={() => navigate("/musicthon-queues")}
           size="small"
-          sx={{
-            bgcolor: "#1e1e1e",
-            "&:hover": { bgcolor: "#2a2a2a" },
-          }}
+          sx={ICON_BUTTON_SX}
         >
           <ArrowBackIcon fontSize="small" />
         </IconButton>
@@ -747,7 +772,7 @@ const MusicthonQueueDetailPage = () => {
               display: { xs: "none", md: "block" },
               px: 1.5,
               py: 0.5,
-              bgcolor: "#1a1a1a",
+              ...SURFACE_SX,
             }}
           >
             <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
@@ -779,10 +804,7 @@ const MusicthonQueueDetailPage = () => {
             onClick={loadDetail}
             color="primary"
             size="small"
-            sx={{
-              bgcolor: "#1e1e1e",
-              "&:hover": { bgcolor: "#2a2a2a" },
-            }}
+            sx={ICON_BUTTON_SX}
           >
             <RefreshIcon />
           </IconButton>
@@ -790,7 +812,7 @@ const MusicthonQueueDetailPage = () => {
       </Stack>
 
       {/* Card do Streamer */}
-      <Card elevation={1} sx={{ mb: 1.5, bgcolor: "#1a1a1a" }}>
+      <Card elevation={1} sx={{ ...PANEL_SX, mb: 1.5 }}>
         <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
           <Stack direction="row" spacing={{ xs: 1.5, sm: 2 }} alignItems="center" mb={1.5}>
             <Avatar
@@ -868,7 +890,7 @@ const MusicthonQueueDetailPage = () => {
                 sx={{
                   height: 6,
                   borderRadius: 1,
-                  bgcolor: "rgba(255,255,255,0.05)",
+                  bgcolor: "rgba(8, 13, 24, 0.82)",
                   "& .MuiLinearProgress-bar": {
                     bgcolor: "#9c27b0",
                     borderRadius: 1,
@@ -1064,7 +1086,7 @@ const MusicthonQueueDetailPage = () => {
       <Grid container spacing={1}>
         {/* Coluna 1: Fila */}
         <Grid item xs={12} md={4}>
-          <Card elevation={1} sx={{ bgcolor: "#1a1a1a", height: "100%" }}>
+          <Card elevation={1} sx={{ ...PANEL_SX, height: "100%" }}>
             <CardHeader
               title={
                 <Stack direction="row" spacing={1} alignItems="center">
@@ -1089,9 +1111,9 @@ const MusicthonQueueDetailPage = () => {
                   <Paper
                     elevation={0}
                     sx={{
+                      ...SURFACE_SX,
                       p: 3,
                       textAlign: "center",
-                      bgcolor: "#0d0d0d",
                       border: "1px dashed rgba(255,255,255,0.1)",
                     }}
                   >
@@ -1111,7 +1133,7 @@ const MusicthonQueueDetailPage = () => {
 
         {/* Coluna 2: Tocando */}
         <Grid item xs={12} md={4}>
-          <Card elevation={1} sx={{ bgcolor: "#1a1a1a", height: "100%" }}>
+          <Card elevation={1} sx={{ ...PANEL_SX, height: "100%" }}>
             <CardHeader
               title={
                 <Stack direction="row" spacing={1} alignItems="center">
@@ -1136,9 +1158,9 @@ const MusicthonQueueDetailPage = () => {
                   <Paper
                     elevation={0}
                     sx={{
+                      ...SURFACE_SX,
                       p: 3,
                       textAlign: "center",
-                      bgcolor: "#0d0d0d",
                       border: "1px dashed rgba(255,255,255,0.1)",
                     }}
                   >
@@ -1158,7 +1180,7 @@ const MusicthonQueueDetailPage = () => {
 
         {/* Coluna 3: Histórico */}
         <Grid item xs={12} md={4}>
-          <Card elevation={1} sx={{ bgcolor: "#1a1a1a", height: "100%" }}>
+          <Card elevation={1} sx={{ ...PANEL_SX, height: "100%" }}>
             <CardHeader
               title={
                 <Stack direction="row" spacing={1} alignItems="center">
@@ -1183,9 +1205,9 @@ const MusicthonQueueDetailPage = () => {
                   <Paper
                     elevation={0}
                     sx={{
+                      ...SURFACE_SX,
                       p: 3,
                       textAlign: "center",
-                      bgcolor: "#0d0d0d",
                       border: "1px dashed rgba(255,255,255,0.1)",
                     }}
                   >
@@ -1206,7 +1228,7 @@ const MusicthonQueueDetailPage = () => {
 
       {/* Card de Outros Status (se houver) */}
       {(detail.stats?.skipped > 0 || detail.stats?.canceled > 0) && (
-        <Card elevation={1} sx={{ mt: 1.5, bgcolor: "#1a1a1a" }}>
+        <Card elevation={1} sx={{ ...PANEL_SX, mt: 1.5 }}>
           <CardHeader
             title={
               <Typography variant="subtitle2" fontWeight="bold" fontSize="0.85rem">
