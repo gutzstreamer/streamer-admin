@@ -1,12 +1,14 @@
 import React from "react";
 import {
 	BooleanField,
+	Labeled,
 	ReferenceField,
 	Show,
 	SimpleShowLayout,
 	TextField,
 	useRecordContext,
 } from "react-admin";
+import { Box } from "@mui/material";
 import ImageField from "../../common/ImageField";
 import { WidgetTemplatePreview } from "../previews";
 
@@ -50,45 +52,77 @@ const TemplateSpecificFields = () => {
 
 	if (type === "donation") {
 		return (
-			<>
-				<ImageField source="imageUrl" label="Image" width={200} height={200} />
-				<TextField source="titleColor" label="Title color" />
-				<TextField source="messageColor" label="Message color" />
-				<TextField source="backgroundColor" label="Background color" />
-				<TextField source="borderColor" label="Border color" />
-			</>
+			<Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+				<Labeled label="Image">
+					<ImageField source="imageUrl" width={200} height={200} />
+				</Labeled>
+				<Labeled label="Title color">
+					<TextField source="titleColor" />
+				</Labeled>
+				<Labeled label="Message color">
+					<TextField source="messageColor" />
+				</Labeled>
+				<Labeled label="Background color">
+					<TextField source="backgroundColor" />
+				</Labeled>
+				<Labeled label="Border color">
+					<TextField source="borderColor" />
+				</Labeled>
+			</Box>
 		);
 	}
 
 	if (type === "store") {
 		return (
-			<>
-				<ImageField source="imageUrl" label="Image" width={200} height={200} />
-				<TextField source="titleColor" label="Title color" />
-				<TextField source="backgroundColor" label="Background color" />
-				<TextField source="borderColor" label="Border color" />
-			</>
+			<Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+				<Labeled label="Image">
+					<ImageField source="imageUrl" width={200} height={200} />
+				</Labeled>
+				<Labeled label="Title color">
+					<TextField source="titleColor" />
+				</Labeled>
+				<Labeled label="Background color">
+					<TextField source="backgroundColor" />
+				</Labeled>
+				<Labeled label="Border color">
+					<TextField source="borderColor" />
+				</Labeled>
+			</Box>
 		);
 	}
 
 	if (type === "goal") {
 		return (
-			<>
-				<TextField source="progressColor" label="Progress color" />
-				<TextField source="barColor" label="Bar color" />
-				<TextField source="textColor" label="Text color" />
-				<TextField source="valueColor" label="Value color" />
-				<TextField source="backgroundColor" label="Background color" />
-			</>
+			<Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+				<Labeled label="Progress color">
+					<TextField source="progressColor" />
+				</Labeled>
+				<Labeled label="Bar color">
+					<TextField source="barColor" />
+				</Labeled>
+				<Labeled label="Text color">
+					<TextField source="textColor" />
+				</Labeled>
+				<Labeled label="Value color">
+					<TextField source="valueColor" />
+				</Labeled>
+				<Labeled label="Background color">
+					<TextField source="backgroundColor" />
+				</Labeled>
+			</Box>
 		);
 	}
 
 	if (type === "musicthon" || type === "rhynothon" || type === "qrcode") {
 		return (
-			<>
-				<TextField source="backgroundColor" label="Background color" />
-				<TextField source="textColor" label="Text color" />
-			</>
+			<Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+				<Labeled label="Background color">
+					<TextField source="backgroundColor" />
+				</Labeled>
+				<Labeled label="Text color">
+					<TextField source="textColor" />
+				</Labeled>
+			</Box>
 		);
 	}
 
