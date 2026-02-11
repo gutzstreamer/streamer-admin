@@ -12,8 +12,6 @@ export interface DataProviderWithCustomMethods extends DataProvider {
     type?: "invoice" | "factory",
   ) => Promise<any>;
 
-  renewYouTubeWebhooks: () => Promise<any>;
-
   checks: (
     resource: string,
     params: {
@@ -57,11 +55,92 @@ const httpClient = (url: string, options: fetchUtils.Options = {}) => {
 
 export const dataProvider = simpleRestProvider(apiUrl, httpClient);
 
+const widgetTemplateTypes = new Set([
+  "donation",
+  "goal",
+  "rhynothon",
+  "musicthon",
+  "qrcode",
+  "store",
+]);
+
+const parseWidgetTemplateId = (
+  value?: string,
+): { type?: string; templateId?: string } => {
+  if (!value) return {};
+  const parts = value.split(":");
+  if (parts.length === 2) {
+    return { type: parts[0], templateId: parts[1] };
+  }
+  return { templateId: value };
+};
+
+const normalizeBooleanFilter = (value: unknown): boolean | undefined => {
+  if (value === undefined || value === null || value === "") return undefined;
+  if (typeof value === "boolean") return value;
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return undefined;
+};
+
 const streamerDataProvider: DataProviderWithCustomMethods = {
   ...dataProvider,
 
   getList: (resource, params) => {
     const { filter, pagination, sort } = params;
+
+    if (resource === "widget-templates") {
+      const type = (filter?.type as string | undefined) ?? "donation";
+      if (!widgetTemplateTypes.has(type)) {
+        console.warn("[widget-templates] Missing or invalid type filter", {
+          type,
+          filter,
+          pagination,
+        });
+        return Promise.resolve({ data: [], total: 0 });
+      }
+
+      const query: Record<string, any> = {
+        page: pagination?.page ?? 1,
+        pageSize: pagination?.perPage ?? 10,
+        default: normalizeBooleanFilter(filter?.default),
+        subscriptionPlanId: filter?.subscriptionPlanId,
+        streamerId: filter?.streamerId,
+        enabled: normalizeBooleanFilter(filter?.enabled),
+      };
+
+      const cleanQuery = Object.fromEntries(
+        Object.entries(query).filter(([_, v]) => v !== undefined && v !== ""),
+      );
+
+      const queryString = new URLSearchParams(cleanQuery as any).toString();
+      const url = `${apiUrl}/admin/widgets/${type}/templates?${queryString}`;
+
+      console.debug("[widget-templates] getList", {
+        url,
+        type,
+        query: cleanQuery,
+      });
+
+      return httpClient(url).then(({ json }) => {
+        const data = json.data ? json.data : json;
+        const total =
+          json.pagination?.total ??
+          json.total ??
+          (Array.isArray(data) ? data.length : 0);
+
+        const mapped = Array.isArray(data)
+          ? data.map((item: any) => ({
+              ...item,
+              id: `${type}:${item.id}`,
+              templateId: item.id,
+              type,
+            }))
+          : [];
+
+        return { data: mapped, total };
+      });
+    }
 
     // 🔥 Limpa filtros vazios ou nulos
     const cleanFilter = Object.fromEntries(
@@ -105,6 +184,35 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
   },
 
   update: (resource, params) => {
+    if (resource === "widget-templates") {
+      const { type: idType, templateId } = parseWidgetTemplateId(params.id as string);
+      const dataType = (params.data as any)?.type as string | undefined;
+      const type = dataType || idType;
+
+      if (!type || !widgetTemplateTypes.has(type)) {
+        return Promise.reject(new Error("Template type is required"));
+      }
+
+      const cleaned = { ...params.data } as any;
+      delete cleaned.type;
+      delete cleaned.templateId;
+      delete cleaned.id;
+
+      const id = templateId || (params.data as any)?.templateId || params.id;
+      const url = `${apiUrl}/admin/widgets/${type}/templates/${id}`;
+      return httpClient(url, {
+        method: "PUT",
+        body: JSON.stringify(cleaned),
+      }).then(({ json }) => ({
+        data: {
+          ...json,
+          id: `${type}:${json.id}`,
+          templateId: json.id,
+          type,
+        },
+      }));
+    }
+
     if (resource === "product-streamer") {
       return httpClient(`${apiUrl}/${resource}/${params.id}/status`, {
         method: "PATCH",
@@ -124,6 +232,79 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
         return { data: json };
       });
     }
+  },
+
+  create: (resource, params) => {
+    if (resource === "widget-templates") {
+      const type = (params.data as any)?.type as string | undefined;
+      if (!type || !widgetTemplateTypes.has(type)) {
+        return Promise.reject(new Error("Template type is required"));
+      }
+
+      const cleaned = { ...params.data } as any;
+      delete cleaned.type;
+
+      const url = `${apiUrl}/admin/widgets/${type}/templates`;
+      return httpClient(url, {
+        method: "POST",
+        body: JSON.stringify(cleaned),
+      }).then(({ json }) => ({
+        data: {
+          ...json,
+          id: `${type}:${json.id}`,
+          templateId: json.id,
+          type,
+        },
+      }));
+    }
+
+    return dataProvider.create(resource, params);
+  },
+
+  getOne: (resource, params) => {
+    if (resource === "widget-templates") {
+      const { type: idType, templateId } = parseWidgetTemplateId(params.id as string);
+      const type = (params.meta as any)?.type || idType;
+      if (!type || !widgetTemplateTypes.has(type)) {
+        return Promise.reject(new Error("Template type is required"));
+      }
+
+      const id = templateId || params.id;
+      const url = `${apiUrl}/admin/widgets/${type}/templates/${id}`;
+      return httpClient(url).then(({ json }) => ({
+        data: {
+          ...json,
+          id: `${type}:${json.id}`,
+          templateId: json.id,
+          type,
+        },
+      }));
+    }
+
+    return dataProvider.getOne(resource, params);
+  },
+
+  delete: (resource, params) => {
+    if (resource === "widget-templates") {
+      const { type: idType, templateId } = parseWidgetTemplateId(params.id as string);
+      const type = (params.meta as any)?.type || idType;
+      if (!type || !widgetTemplateTypes.has(type)) {
+        return Promise.reject(new Error("Template type is required"));
+      }
+
+      const id = templateId || params.id;
+      const url = `${apiUrl}/admin/widgets/${type}/templates/${id}`;
+      return httpClient(url, { method: "DELETE" }).then(({ json }) => ({
+        data: {
+          ...json,
+          id: `${type}:${json.id}`,
+          templateId: json.id,
+          type,
+        },
+      }));
+    }
+
+    return dataProvider.delete(resource, params);
   },
 
   checks(

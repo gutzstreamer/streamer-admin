@@ -158,6 +158,10 @@ import AlertQueueDetailPage from "./components/alert-queues/AlertQueueDetailPage
 import MusicthonQueuesPage from "./components/musicthon-queues/MusicthonQueuesPage";
 import MusicthonQueueDetailPage from "./components/musicthon-queues/MusicthonQueueDetailPage";
 import QueueControlCenterPage from "./components/queue-control/QueueControlCenterPage";
+import TemplateList from "./components/widgets/templates/ListTemplate";
+import CreateTemplate from "./components/widgets/templates/CreateTemplate";
+import EditTemplate from "./components/widgets/templates/EditTemplate";
+import ShowTemplate from "./components/widgets/templates/ShowTemplate";
 
 export const App = () => (
   <Admin
@@ -186,6 +190,15 @@ export const App = () => (
       create={MonthlyServiceInvoiceCreate}
       options={{ label: "Service Invoices Monthly" }}
     />
+      <Resource
+        options={{ label: "Templates de Widgets" }}
+        name="widget-templates"
+        icon={Tv}
+        list={TemplateList}
+        create={CreateTemplate}
+        edit={EditTemplate}
+        show={ShowTemplate}
+      />
     <CustomRoutes>
       <Route path="/alert-queues" element={<AlertQueuesPage />} />
       <Route path="/alert-queues/:id" element={<AlertQueueDetailPage />} />

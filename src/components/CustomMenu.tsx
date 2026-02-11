@@ -18,6 +18,7 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import ViewListIcon from "@mui/icons-material/ViewList";
+import TvIcon from "@mui/icons-material/Tv";
 
 export const CustomMenu = () => {
   const [open] = useSidebarState();
@@ -231,6 +232,11 @@ export const CustomMenu = () => {
         to="/tier-config"
         primaryText="Configuração de Tiers"
         leftIcon={<LayersIcon />}
+      />
+      <MenuItemLink
+        to="/widget-templates"
+        primaryText="Templates de Widgets"
+        leftIcon={<TvIcon />}
       />
       <MenuItemLink
         to="/fan-plans"
