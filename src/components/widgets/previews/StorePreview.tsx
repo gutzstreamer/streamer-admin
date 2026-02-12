@@ -4,18 +4,18 @@ import { Box, Typography } from "@mui/material";
 interface StorePreviewProps {
   backgroundColor?: string;
   titleColor?: string;
-  borderColor?: string;
   imageUrl?: string;
 }
 
 const StorePreview: React.FC<StorePreviewProps> = ({
   backgroundColor = "#572aae",
   titleColor = "#ffffff",
-  borderColor,
   imageUrl,
 }) => {
   return (
-    <Box sx={{ mt: 2, display: "flex", justifyContent: "center", width: "100%" }}>
+    <Box
+      sx={{ mt: 2, display: "flex", justifyContent: "center", width: "100%" }}
+    >
       <Box sx={{ position: "relative", width: 500, height: 100 }}>
         <Box
           sx={{
@@ -27,7 +27,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({
             height: 100,
             borderRadius: "50%",
             backgroundColor,
-            border: borderColor ? `2px solid ${borderColor}` : undefined,
             overflow: "hidden",
             display: "flex",
             alignItems: "center",
@@ -35,7 +34,12 @@ const StorePreview: React.FC<StorePreviewProps> = ({
           }}
         >
           {imageUrl ? (
-            <Box component="img" src={imageUrl} alt="Avatar" sx={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <Box
+              component="img"
+              src={imageUrl}
+              alt="Avatar"
+              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           ) : (
             <Typography variant="subtitle2" color="#fff">
               IMG
@@ -47,7 +51,6 @@ const StorePreview: React.FC<StorePreviewProps> = ({
             height: 100,
             borderRadius: "18px",
             backgroundColor,
-            border: borderColor ? `2px solid ${borderColor}` : undefined,
             pl: "66px",
             pr: "12px",
             py: "8px",
@@ -63,7 +66,8 @@ const StorePreview: React.FC<StorePreviewProps> = ({
               fontSize: 28,
               fontWeight: 700,
               lineHeight: 1.1,
-              textShadow: "-1px -1px 0 rgba(0,0,0,0.35), 1px -1px 0 rgba(0,0,0,0.35), -1px 1px 0 rgba(0,0,0,0.35), 1px 1px 0 rgba(0,0,0,0.35)",
+              textShadow:
+                "-1px -1px 0 rgba(0,0,0,0.35), 1px -1px 0 rgba(0,0,0,0.35), -1px 1px 0 rgba(0,0,0,0.35), 1px 1px 0 rgba(0,0,0,0.35)",
             }}
           >
             Gutz comprou 2 Moletons Rhyno

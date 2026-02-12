@@ -5,7 +5,6 @@ interface DonationPreviewProps {
   backgroundColor?: string;
   titleColor?: string;
   messageColor?: string;
-  borderColor?: string;
   imageUrl?: string;
 }
 
@@ -13,7 +12,6 @@ const DonationPreview: React.FC<DonationPreviewProps> = ({
   backgroundColor = "#572aae",
   titleColor = "#ffffff",
   messageColor = "#ffffff",
-  borderColor,
   imageUrl,
 }) => {
   return (
@@ -29,7 +27,6 @@ const DonationPreview: React.FC<DonationPreviewProps> = ({
             height: 130,
             borderRadius: "50%",
             backgroundColor,
-            border: borderColor ? `2px solid ${borderColor}` : undefined,
             overflow: "hidden",
             display: "flex",
             alignItems: "center",
@@ -49,7 +46,6 @@ const DonationPreview: React.FC<DonationPreviewProps> = ({
             height: 130,
             borderRadius: "18px",
             backgroundColor,
-            border: borderColor ? `2px solid ${borderColor}` : undefined,
             pl: "85px",
             pr: "12px",
             py: "10px",

@@ -65,9 +65,6 @@ const TemplateSpecificFields = () => {
 				<Labeled label="Background color">
 					<TextField source="backgroundColor" />
 				</Labeled>
-				<Labeled label="Border color">
-					<TextField source="borderColor" />
-				</Labeled>
 			</Box>
 		);
 	}
@@ -83,9 +80,6 @@ const TemplateSpecificFields = () => {
 				</Labeled>
 				<Labeled label="Background color">
 					<TextField source="backgroundColor" />
-				</Labeled>
-				<Labeled label="Border color">
-					<TextField source="borderColor" />
 				</Labeled>
 			</Box>
 		);
@@ -142,7 +136,6 @@ const TemplatePreview = () => {
 				backgroundColor: record.backgroundColor,
 				titleColor: record.titleColor,
 				messageColor: record.messageColor,
-				borderColor: record.borderColor,
 				progressColor: record.progressColor,
 				barColor: record.barColor,
 				textColor: record.textColor,

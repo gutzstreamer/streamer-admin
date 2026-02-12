@@ -16,7 +16,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   onChange,
   onRemove,
   label = "Upload Image",
-  accept = "image/*",
+  accept = "image/*,.gif",
   maxSizeMB = 5
 }) => {
   const [uploading, setUploading] = useState(false);
@@ -27,9 +27,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validar tipo de arquivo
+    // Validar tipo de arquivo (aceita imagens incluindo GIF)
     if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file');
+      setError('Please select a valid image file (PNG, JPG, GIF, etc.)');
       return;
     }
 

@@ -72,19 +72,16 @@ const TemplateSpecificFields = () => {
 				defaults.backgroundColor = "#572aae";
 				defaults.titleColor = "#ffffff";
 				defaults.messageColor = "#ffffff";
-				defaults.borderColor = "#ffffff";
 				break;
 			case "store":
 				defaults.backgroundColor = "#572aae";
 				defaults.titleColor = "#ffffff";
-				defaults.borderColor = "#ffffff";
 				break;
 			case "goal":
 				defaults.progressColor = "#9c27b0";
 				defaults.barColor = "#ffffff";
 				defaults.textColor = "#000000";
 				defaults.valueColor = "#000000";
-				defaults.backgroundColor = "#00000000";
 				break;
 			case "musicthon":
 				defaults.backgroundColor = "#9c27b0";
@@ -123,7 +120,6 @@ const TemplateSpecificFields = () => {
 				<ColorPickerInput source="titleColor" label="Title color" />
 				<ColorPickerInput source="messageColor" label="Message color" />
 				<ColorPickerInput source="backgroundColor" label="Background color" />
-				<ColorPickerInput source="borderColor" label="Border color" />
 			</>
 		);
 	}
@@ -138,7 +134,6 @@ const TemplateSpecificFields = () => {
 				/>
 				<ColorPickerInput source="titleColor" label="Title color" />
 				<ColorPickerInput source="backgroundColor" label="Background color" />
-				<ColorPickerInput source="borderColor" label="Border color" />
 			</>
 		);
 	}
@@ -179,7 +174,6 @@ const TemplatePreview = () => {
 				backgroundColor: formValues.backgroundColor,
 				titleColor: formValues.titleColor,
 				messageColor: formValues.messageColor,
-				borderColor: formValues.borderColor,
 				progressColor: formValues.progressColor,
 				barColor: formValues.barColor,
 				textColor: formValues.textColor,
