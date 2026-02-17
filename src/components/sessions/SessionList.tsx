@@ -27,6 +27,11 @@ const SessionFilter = [
   <DatePresetInput key="datePreset" source="datePreset" label="Período" />, 
   <DateInput key="lastActivity_gte" label="Última atividade após" source="lastActivity_gte" />,
   <DateInput key="lastActivity_lte" label="Última atividade antes" source="lastActivity_lte" />,
+  <DateInput key="createdAt" label="createdAt" source="createdAt" />,
+  <TextInput key="id" label="id" source="id" />,
+  <TextInput key="ipAddress" label="ipAddress" source="ipAddress" />,
+  <TextInput key="name" label="name" source="name" />,
+  <TextInput key="userAgent" label="userAgent" source="userAgent" />,
 ];
 
 const SessionList = (props: any) => (
@@ -52,6 +57,7 @@ const SessionList = (props: any) => (
 );
 
 export default SessionList;
+
 
 
 

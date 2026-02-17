@@ -22,6 +22,10 @@ const StreamerRequestFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="email" source="email" />
+    <TextInput label="name" source="name" />
+    <TextInput label="phone" source="phone" />
+    <TextInput label="userId" source="userId" />
   </Filter>
 );
 
@@ -50,6 +54,7 @@ const StreamerRequestList: React.FC = (props) => (
 );
 
 export default StreamerRequestList;
+
 
 
 

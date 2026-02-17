@@ -41,6 +41,11 @@ const PlatformWebhookListFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="callbackUrl" source="callbackUrl" />
+    <TextInput label="id" source="id" />
+    <DateInput label="lastTriggeredAt" source="lastTriggeredAt" />
+    <TextInput label="platformUsername" source="platformUsername" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
@@ -140,6 +145,7 @@ const PlatformWebhookList: React.FC = (props) => {
 };
 
 export default PlatformWebhookList;
+
 
 
 

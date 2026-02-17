@@ -16,6 +16,8 @@ const AddressFilter: React.FC = (props) => (
     <TextInput label="Apelido" source="nickname" />
     <TextInput label="Cidade" source="city" />
     <TextInput label="CEP" source="zipcode" />
+    <TextInput label="state" source="state" />
+    <TextInput label="street" source="street" />
   </Filter>
 );
 
@@ -45,4 +47,5 @@ export const AddressList: React.FC = (props) => (
     </Datagrid>
   </List>
 );
+
 

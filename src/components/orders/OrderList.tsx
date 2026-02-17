@@ -1,4 +1,4 @@
-ï»¿import { DefaultPagination } from "../common/DefaultPagination";
+import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   Datagrid,
@@ -10,6 +10,7 @@ import {
   Filter,
   SelectInput,
   TextInput,
+  NumberInput,
   DateInput,
 } from "react-admin";
 
@@ -27,9 +28,16 @@ const OrderListFilter: React.FC = (props) => (
       choices={statusOrderChoices}
       alwaysOn
     />
-    <DatePresetInput source="datePreset" label="PerÃ­odo" />
-    <DateInput label="Criado apÃ³s" source="createdAt_gte" />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Criado após" source="createdAt_gte" />
     <DateInput label="Criado antes" source="createdAt_lte" />
+    <TextInput label="currentStatus" source="currentStatus" />
+    <TextInput label="name" source="name" />
+    <TextInput label="shippingSpeed" source="shippingSpeed" />
+    <NumberInput label="totalAmount" source="totalAmount" />
+    <NumberInput label="totalAmountProducts" source="totalAmountProducts" />
+    <NumberInput label="totalAmountShipping" source="totalAmountShipping" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
@@ -76,6 +84,8 @@ const OrderList: React.FC = (props) => {
 };
 
 export default OrderList;
+
+
 
 
 

@@ -9,6 +9,8 @@ const FanPlanFilter: React.FC = (props) => (
     <TextInput label="Tier" source="tier" />
     <TextInput label="Name" source="name" />
     <TextInput label="Status" source="status" />
+    <TextInput label="currency" source="currency" />
+    <TextInput label="interval" source="interval" />
   </Filter>
 );
 
@@ -44,4 +46,5 @@ const FanPlanList: React.FC = (props) => (
 );
 
 export default FanPlanList;
+
 

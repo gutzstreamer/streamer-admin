@@ -21,6 +21,9 @@ const CalculationFeeFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="description" source="description" />
+    <DateInput label="updatedAt" source="updatedAt" />
+    <TextInput label="value" source="value" />
   </Filter>
 );
 
@@ -46,6 +49,7 @@ const CalculationFeeList: React.FC = () => {
 };
 
 export default CalculationFeeList;
+
 
 
 

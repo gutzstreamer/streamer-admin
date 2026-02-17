@@ -21,6 +21,9 @@ const FactoryFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="customerDocument" source="customerDocument" />
+    <TextInput label="customerEmail" source="customerEmail" />
+    <TextInput label="id" source="id" />
   </Filter>
 );
 
@@ -44,6 +47,7 @@ export const FactoryList: React.FC = (props) => (
     </Datagrid>
   </List>
 );
+
 
 
 

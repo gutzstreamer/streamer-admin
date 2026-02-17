@@ -118,6 +118,71 @@ const buildDatePresetRange = (
   };
 };
 
+const numericFilterPatterns = [
+  /amount/i,
+  /price/i,
+  /fee/i,
+  /rate/i,
+  /percent/i,
+  /count/i,
+  /quantity/i,
+  /total/i,
+  /limit/i,
+  /score/i,
+  /cents/i,
+  /days?/i,
+  /months?/i,
+  /years?/i,
+];
+
+const booleanFilterKeys = new Set([
+  "active",
+  "blocked",
+  "default",
+  "enabled",
+  "isActive",
+  "isDefault",
+  "isEnabled",
+  "isPublished",
+  "paid",
+  "public",
+  "skipAlert",
+  "verified",
+]);
+
+const normalizeFilterEntry = (
+  key: string,
+  value: unknown,
+): unknown => {
+  if (value === undefined || value === null || value === "") return undefined;
+
+  if (typeof value === "string") {
+    if (booleanFilterKeys.has(key)) {
+      return normalizeBooleanFilter(value);
+    }
+
+    if (numericFilterPatterns.some((pattern) => pattern.test(key))) {
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? value : parsed;
+    }
+  }
+
+  if (typeof value === "boolean" && booleanFilterKeys.has(key)) {
+    return value;
+  }
+
+  return value;
+};
+
+const normalizeFilterValues = (
+  filter: Record<string, unknown>,
+): Record<string, unknown> =>
+  Object.fromEntries(
+    Object.entries(filter)
+      .map(([key, value]) => [key, normalizeFilterEntry(key, value)])
+      .filter(([_, value]) => value !== undefined),
+  );
+
 const streamerDataProvider: DataProviderWithCustomMethods = {
   ...dataProvider,
 
@@ -188,9 +253,7 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     }
     delete rawFilter.datePreset;
 
-    const cleanFilter = Object.fromEntries(
-      Object.entries(rawFilter).filter(([_, v]) => v !== undefined && v !== ""),
-    );
+    const cleanFilter = normalizeFilterValues(rawFilter);
 
     // LÃ³gica padrÃ£o para todos os resources
     const query: Record<string, any> = {

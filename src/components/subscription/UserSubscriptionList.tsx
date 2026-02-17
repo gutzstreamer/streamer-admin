@@ -33,6 +33,7 @@ const UserSubscriptionFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
@@ -55,6 +56,7 @@ export const UserSubscriptionList = () => (
     </Datagrid>
   </List>
 );
+
 
 
 

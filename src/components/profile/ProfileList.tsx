@@ -14,6 +14,7 @@ const ProfileFilter: React.FC = (props) => (
     <TextInput label="ID do Perfil" source="id" alwaysOn />
     <TextInput label="ID do UsuÃ¡rio" source="userId" />
     <TextInput label="Apelido" source="nickname" />
+    <TextInput label="name" source="name" />
   </Filter>
 );
 
@@ -36,4 +37,5 @@ const ProfileList: React.FC = (props) => (
 );
 
 export default ProfileList;
+
 

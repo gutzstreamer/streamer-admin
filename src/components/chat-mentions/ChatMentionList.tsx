@@ -43,6 +43,10 @@ const filters = [
   <DatePresetInput key="datePreset" source="datePreset" label="Período" />, 
   <DateInput key="capturedAt_gte" source="capturedAt_gte" label="Capturado após" />,
   <DateInput key="capturedAt_lte" source="capturedAt_lte" label="Capturado antes" />,
+  <TextInput key="broadcasterName" label="broadcasterName" source="broadcasterName" />,
+  <TextInput key="displayName" label="displayName" source="displayName" />,
+  <TextInput key="matchedKeyword" label="matchedKeyword" source="matchedKeyword" />,
+  <DateInput key="sentAt" label="sentAt" source="sentAt" />,
 ];
 
 const ListActions = () => {
@@ -83,6 +87,7 @@ const ChatMentionList = (props: ListProps) => (
 );
 
 export default ChatMentionList;
+
 
 
 

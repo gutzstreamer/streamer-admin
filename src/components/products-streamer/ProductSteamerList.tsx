@@ -1,4 +1,4 @@
-﻿import { DefaultPagination } from "../common/DefaultPagination";
+import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   List,
@@ -10,6 +10,7 @@ import {
   DateInput,
   Filter,
   TextInput,
+  NumberInput,
   SelectInput,
 } from "react-admin";
 import { ListProps } from "react-admin";
@@ -22,9 +23,13 @@ const ProductStreamerFilter: React.FC = (props) => (
     <TextInput label="Product ID" source="productId" />
     <TextInput label="Name" source="name" />
     <TextInput label="Status" source="status" />
-    <DatePresetInput source="datePreset" label="Período" />
+    <DatePresetInput source="datePreset" label="Per�odo" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="description" source="description" />
+    <TextInput label="discountPrice" source="discountPrice" />
+    <NumberInput label="price" source="price" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
@@ -64,6 +69,8 @@ const ProductStreamerList = (props: ListProps) => (
 );
 
 export default ProductStreamerList;
+
+
 
 
 

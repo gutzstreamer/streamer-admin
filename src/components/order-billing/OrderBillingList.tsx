@@ -1,4 +1,4 @@
-﻿import { DefaultPagination } from "../common/DefaultPagination";
+import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   List,
@@ -11,6 +11,7 @@ import {
   ChipField,
   Filter,
   TextInput,
+  NumberInput,
   SelectInput,
 } from "react-admin";
 import { DatePresetInput } from "../common/DatePresetInput";
@@ -31,9 +32,10 @@ const OrderBillingFilter: React.FC = (props) => (
       ]}
       emptyText="All"
     />
-    <DatePresetInput source="datePreset" label="Período" />
+    <DatePresetInput source="datePreset" label="Per�odo" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <NumberInput label="amount" source="amount" />
   </Filter>
 );
 
@@ -46,7 +48,7 @@ export const OrderBillingList: React.FC = (props) => (
     sort={{ field: "createdAt", order: "DESC" }}
   >
     <Datagrid rowClick="show">
-      <TextField source="id" label="ID da CobranÃ§a" />
+      <TextField source="id" label="ID da Cobrança" />
       <ReferenceField source="orderId" reference="orders" label="Pedido" link="show">
         <ChipField source="id" />
       </ReferenceField>
@@ -57,6 +59,8 @@ export const OrderBillingList: React.FC = (props) => (
     </Datagrid>
   </List>
 );
+
+
 
 
 

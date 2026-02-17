@@ -29,6 +29,14 @@ const WalletFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Updated After" source="updatedAt_gte" />
     <DateInput label="Updated Before" source="updatedAt_lte" />
+    <TextInput label="balance" source="balance" />
+    <DateInput label="createdAt" source="createdAt" />
+    <TextInput label="currency" source="currency" />
+    <TextInput label="id" source="id" />
+    <TextInput label="name" source="name" />
+    <TextInput label="pendingBalance" source="pendingBalance" />
+    <TextInput label="pixKey" source="pixKey" />
+    <TextInput label="status" source="status" />
   </Filter>
 );
 
@@ -66,6 +74,7 @@ const WalletList = (props: ListProps) => (
 );
 
 export default WalletList;
+
 
 
 

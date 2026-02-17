@@ -24,6 +24,12 @@ const CommissionStreamerFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="commissionValue" source="commissionValue" />
+    <TextInput label="name" source="name" />
+    <TextInput label="percentage" source="percentage" />
+    <TextInput label="productSalePrice" source="productSalePrice" />
+    <TextInput label="productSaleQuantity" source="productSaleQuantity" />
+    <TextInput label="status" source="status" />
   </Filter>
 );
 
@@ -67,6 +73,7 @@ const CommissionStreamerList: React.FC = (props) => (
 );
 
 export default CommissionStreamerList;
+
 
 
 

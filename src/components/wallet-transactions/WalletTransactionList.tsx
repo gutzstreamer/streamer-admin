@@ -1,4 +1,4 @@
-﻿import { DefaultPagination } from "../common/DefaultPagination";
+import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   List,
@@ -9,6 +9,7 @@ import {
   DateInput,
   Filter,
   TextInput,
+  NumberInput,
   SelectInput,
   FunctionField,
   ChipField,
@@ -47,9 +48,13 @@ const WalletTransactionFilter: React.FC = (props) => (
     <TextInput label="EFI Transaction ID" source="txId" />
     <SelectInput label="Status" source="status" choices={statusChoices} />
     <SelectInput label="Type" source="type" choices={typeChoices} />
-    <DatePresetInput source="datePreset" label="Período" />
+    <DatePresetInput source="datePreset" label="Per�odo" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <NumberInput label="amount" source="amount" />
+    <TextInput label="description" source="description" />
+    <TextInput label="id" source="id" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
@@ -99,6 +104,8 @@ const WalletTransactionList = (props: ListProps) => (
 );
 
 export default WalletTransactionList;
+
+
 
 
 

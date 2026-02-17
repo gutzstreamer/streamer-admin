@@ -10,6 +10,7 @@ const ErrorLogFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="stack" source="stack" />
   </Filter>
 );
 
@@ -31,6 +32,7 @@ const ErrorLogList: React.FC = (props) => (
 );
 
 export default ErrorLogList;
+
 
 
 

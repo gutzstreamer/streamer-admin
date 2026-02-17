@@ -34,6 +34,12 @@ const StreamingPlatformIntegrationListFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="id" source="id" />
+    <TextInput label="name" source="name" />
+    <TextInput label="platformUserId" source="platformUserId" />
+    <TextInput label="platformUsername" source="platformUsername" />
+    <DateInput label="tokenExpiry" source="tokenExpiry" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
@@ -90,6 +96,7 @@ const StreamingPlatformIntegrationList: React.FC = (props) => {
 };
 
 export default StreamingPlatformIntegrationList;
+
 
 
 

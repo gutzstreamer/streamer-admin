@@ -1,4 +1,4 @@
-﻿import { DefaultPagination } from "../common/DefaultPagination";
+import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   BooleanField,
@@ -9,6 +9,7 @@ import {
   TextField,
   Filter,
   TextInput,
+  NumberInput,
   SelectInput,
 } from "react-admin";
 
@@ -26,6 +27,8 @@ const SubscriptionPlanTierCommissionFilter: React.FC = (props) => (
       ]}
       emptyText="All"
     />
+    <NumberInput label="commissionPercent" source="commissionPercent" />
+    <TextInput label="name" source="name" />
   </Filter>
 );
 
@@ -47,11 +50,13 @@ const SubscriptionPlanTierCommissionList: React.FC = (props) => (
         <TextField source="name" />
       </ReferenceField>
       <TextField source="tier" />
-      <NumberField source="commissionPercent" label="ComissÃ£o (%)" />
+      <NumberField source="commissionPercent" label="Comissão (%)" />
       <BooleanField source="active" />
     </Datagrid>
   </List>
 );
 
 export default SubscriptionPlanTierCommissionList;
+
+
 

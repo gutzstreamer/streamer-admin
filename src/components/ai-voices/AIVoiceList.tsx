@@ -185,6 +185,9 @@ const AIVoiceFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="donationPreviewUrl" source="donationPreviewUrl" />
+    <TextInput label="salesPreviewUrl" source="salesPreviewUrl" />
+    <TextInput label="thumbnailUrl" source="thumbnailUrl" />
   </Filter>
 );
 
@@ -214,6 +217,7 @@ const AIVoiceList: React.FC = (props) => (
 );
 
 export default AIVoiceList;
+
 
 
 

@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { DefaultPagination } from "../common/DefaultPagination";
 import {
   Datagrid,
@@ -10,6 +10,7 @@ import {
   TextField,
   Filter,
   TextInput,
+  NumberInput,
   SelectInput,
 } from "react-admin";
 import { DatePresetInput } from "../common/DatePresetInput";
@@ -29,9 +30,15 @@ const InvoiceFilter: React.FC = (props) => (
       ]}
       emptyText="All"
     />
-    <DatePresetInput source="datePreset" label="Período" />
+    <DatePresetInput source="datePreset" label="Per�odo" />
     <DateInput label="Issued After" source="issuedOn_gte" />
     <DateInput label="Issued Before" source="issuedOn_lte" />
+    <TextInput label="accessKey" source="accessKey" />
+    <TextInput label="environmentType" source="environmentType" />
+    <TextInput label="id" source="id" />
+    <TextInput label="model" source="model" />
+    <TextInput label="series" source="series" />
+    <NumberInput label="totalAmount" source="totalAmount" />
   </Filter>
 );
 
@@ -54,8 +61,8 @@ const InvoiceList: React.FC = (props) => {
           <TextField source="id" label="ID do Pedido" />
         </ReferenceField>
         <TextField source="status" label="Status" />
-        <TextField source="number" label="NÃºmero" />
-        <TextField source="series" label="SÃ©rie" />
+        <TextField source="number" label="Número" />
+        <TextField source="series" label="Série" />
         <TextField source="model" label="Modelo" />
         <TextField source="environmentType" label="Tipo de Ambiente" />
         <DateField source="issuedOn" label="Emitido em" />
@@ -72,6 +79,8 @@ const InvoiceList: React.FC = (props) => {
 };
 
 export default InvoiceList;
+
+
 
 
 

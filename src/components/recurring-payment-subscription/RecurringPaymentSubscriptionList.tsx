@@ -1,4 +1,4 @@
-﻿import { DefaultPagination } from "../common/DefaultPagination";
+import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
@@ -11,6 +11,7 @@ import {
   FunctionField,
   Filter,
   TextInput,
+  NumberInput,
   SelectInput,
 } from "react-admin";
 import { ListProps } from "react-admin";
@@ -34,9 +35,12 @@ const RecurringPaymentSubscriptionFilter: React.FC = (props) => (
       choices={statusChoices}
       emptyText="Todos"
     />
-    <DatePresetInput source="datePreset" label="Período" />
+    <DatePresetInput source="datePreset" label="Per�odo" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <NumberInput label="amount" source="amount" />
+    <TextInput label="name" source="name" />
+    <DateInput label="nextPaymentDate" source="nextPaymentDate" />
   </Filter>
 );
 
@@ -79,6 +83,8 @@ export const RecurringPaymentSubscriptionList = (props: ListProps) => (
 );
 
 export default RecurringPaymentSubscriptionList;
+
+
 
 
 

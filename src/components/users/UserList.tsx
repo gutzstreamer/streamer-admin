@@ -33,6 +33,7 @@ const UserListFilter = (props: any) => (
       ]}
       emptyText="All"
     />
+    <TextInput label="identityNumber" source="identityNumber" />
   </Filter>
 );
 
@@ -59,4 +60,5 @@ const UserList = (props: ListProps) => {
 };
 
 export default UserList;
+
 

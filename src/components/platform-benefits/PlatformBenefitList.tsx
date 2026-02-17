@@ -32,6 +32,9 @@ const PlatformBenefitFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Created After" source="createdAt_gte" />
     <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="description" source="description" />
+    <TextInput label="expiresAfterDays" source="expiresAfterDays" />
+    <TextInput label="limitPerCycle" source="limitPerCycle" />
   </Filter>
 );
 
@@ -58,6 +61,7 @@ const PlatformBenefitList: React.FC = (props) => (
 );
 
 export default PlatformBenefitList;
+
 
 
 

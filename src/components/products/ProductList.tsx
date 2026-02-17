@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
@@ -7,6 +7,7 @@ import {
   NumberField,
   Filter,
   TextInput,
+  NumberInput,
   SelectInput,
 } from "react-admin";
 
@@ -24,6 +25,9 @@ const ProductFilter: React.FC = (props) => (
       emptyText="All"
     />
     <TextInput label="Gender" source="gender" />
+    <TextInput label="cost" source="cost" />
+    <TextInput label="ncm" source="ncm" />
+    <NumberInput label="price" source="price" />
   </Filter>
 );
 
@@ -56,4 +60,6 @@ const ProductList: React.FC = (props) => (
 );
 
 export default ProductList;
+
+
 

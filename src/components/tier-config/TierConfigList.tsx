@@ -25,6 +25,7 @@ const TierConfigFilter: React.FC = (props) => (
       ]}
       emptyText="All"
     />
+    <TextInput label="minPriceReais" source="minPriceReais" />
   </Filter>
 );
 
@@ -51,4 +52,5 @@ const TierConfigList: React.FC = (props) => (
 );
 
 export default TierConfigList;
+
 

@@ -29,6 +29,8 @@ const FeatureToggleFilter: React.FC = (props) => (
     <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Updated After" source="updatedAt_gte" />
     <DateInput label="Updated Before" source="updatedAt_lte" />
+    <DateInput label="createdAt" source="createdAt" />
+    <TextInput label="description" source="description" />
   </Filter>
 );
 
@@ -52,6 +54,7 @@ const FeatureToggleList: React.FC = (props) => (
 );
 
 export default FeatureToggleList;
+
 
 
 

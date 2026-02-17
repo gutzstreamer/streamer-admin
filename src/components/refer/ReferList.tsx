@@ -7,11 +7,8 @@ import {
   ReferenceField,
   FunctionField,
   useRecordContext,
-  TopToolbar,
-  ExportButton,
-  CreateButton,
+  ListProps,
   BooleanInput,
-  SelectInput,
   ReferenceInput,
   AutocompleteInput,
 } from 'react-admin';
@@ -81,13 +78,6 @@ const RemainingDaysField = () => {
   );
 };
 
-const ListActions = () => (
-  <TopToolbar>
-    <CreateButton />
-    <ExportButton />
-  </TopToolbar>
-);
-
 const referFilters = [
   <ReferenceInput
     key="referrerStreamerId"
@@ -121,12 +111,14 @@ const referFilters = [
   <DatePresetInput key="datePreset" source="datePreset" label="Período" />, 
   <DateInput key="createdAt_gte" source="createdAt_gte" label="Criado após" />,
   <DateInput key="createdAt_lte" source="createdAt_lte" label="Criado antes" />,
+  <DateInput key="expiresAt" label="expiresAt" source="expiresAt" />,
+  <DateInput key="startDate" label="startDate" source="startDate" />,
 ];
 
-export const ReferList = () => {
+export const ReferList = (props: ListProps) => {
   return (
     <List pagination={<DefaultPagination />}
-      actions={<ListActions />}
+      {...props}
       filters={referFilters}
       perPage={25}
       sort={{ field: 'createdAt', order: 'DESC' }}
@@ -217,6 +209,7 @@ export const ReferList = () => {
     </List>
   );
 };
+
 
 
 

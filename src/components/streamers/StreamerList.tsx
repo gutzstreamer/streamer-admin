@@ -8,6 +8,7 @@ import {
   ShowButton,
   BooleanField,
   TextInput,
+  SelectInput,
   Filter,
 } from "react-admin";
 
@@ -17,6 +18,15 @@ const StreamerFilter: React.FC = (props) => (
     <TextInput label="User ID" source="userId" alwaysOn />
     <TextInput label="Name" source="name" alwaysOn />
     <TextInput label="Atname" source="atname" alwaysOn />
+    <SelectInput
+      label="Público"
+      source="public"
+      choices={[
+        { id: true, name: "Sim" },
+        { id: false, name: "Não" },
+      ]}
+      emptyText="Todos"
+    />
   </Filter>
 );
 
@@ -45,5 +55,6 @@ const StreamerList: React.FC = (props) => {
 };
 
 export default StreamerList;
+
 
 
