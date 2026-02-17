@@ -249,6 +249,15 @@ const sortDataClientSide = (
   });
 };
 
+const toFiniteNumber = (value: unknown): number | undefined => {
+  if (value === undefined || value === null || value === "") return undefined;
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : undefined;
+  }
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+};
+
 const streamerDataProvider: DataProviderWithCustomMethods = {
   ...dataProvider,
 
@@ -428,6 +437,47 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
           templateId: json.id,
           type,
         },
+      }));
+    }
+
+    if (resource === "refer") {
+      const currentData = (params.data ?? {}) as Record<string, unknown>;
+      const previousData = (params.previousData ?? {}) as Record<string, unknown>;
+
+      const payloadFromCurrent: Record<string, unknown> = {
+        commissionPercent: toFiniteNumber(currentData.commissionPercent),
+        durationMonths: toFiniteNumber(currentData.durationMonths),
+        isActive:
+          typeof currentData.isActive === "boolean"
+            ? currentData.isActive
+            : normalizeBooleanFilter(currentData.isActive),
+      };
+
+      let payload = sanitizeQueryValues(payloadFromCurrent);
+
+      if (Object.keys(payload).length === 0) {
+        const payloadFromPrevious: Record<string, unknown> = {
+          commissionPercent: toFiniteNumber(previousData.commissionPercent),
+          durationMonths: toFiniteNumber(previousData.durationMonths),
+          isActive:
+            typeof previousData.isActive === "boolean"
+              ? previousData.isActive
+              : normalizeBooleanFilter(previousData.isActive),
+        };
+        payload = sanitizeQueryValues(payloadFromPrevious);
+      }
+
+      if (Object.keys(payload).length === 0) {
+        return Promise.resolve({
+          data: params.previousData ?? { id: params.id },
+        });
+      }
+
+      return httpClient(`${apiUrl}/${resource}/${params.id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      }).then(({ json }) => ({
+        data: json,
       }));
     }
 
