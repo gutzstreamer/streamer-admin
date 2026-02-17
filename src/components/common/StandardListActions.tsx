@@ -2,23 +2,52 @@ import React from "react";
 import {
   CreateButton,
   FilterButton,
+  FilterContext,
   TopToolbar,
+  useListContext,
+  useResourceContext,
   useResourceDefinition,
 } from "react-admin";
 import { AsyncCsvExportButton } from "./AsyncCsvExportButton";
 import { ListViewsControl } from "./ListViewsControl";
 
 interface StandardListActionsProps {
-  filters?: React.ReactNode[] | React.ReactNode;
+  filters?: React.ReactElement;
+  resource?: string;
 }
 
 export const StandardListActions: React.FC<StandardListActionsProps> = (
   props,
 ) => {
+  const { displayedFilters, filterValues, showFilter } = useListContext();
   const { hasCreate } = useResourceDefinition();
-  const hasFilters = Array.isArray(props.filters)
-    ? props.filters.length > 0
-    : Boolean(props.filters);
+  const resource = useResourceContext(props);
+  const filtersFromContext = React.useContext(FilterContext);
+
+  const renderedFilterControl = React.useMemo(() => {
+    if (props.filters && React.isValidElement(props.filters)) {
+      return React.cloneElement(props.filters, {
+        resource,
+        showFilter,
+        displayedFilters,
+        filterValues,
+        context: "button",
+      });
+    }
+
+    if (filtersFromContext) {
+      return <FilterButton label="Filtros avancados" />;
+    }
+
+    return null;
+  }, [
+    props.filters,
+    resource,
+    showFilter,
+    displayedFilters,
+    filterValues,
+    filtersFromContext,
+  ]);
 
   return (
     <TopToolbar
@@ -33,9 +62,7 @@ export const StandardListActions: React.FC<StandardListActionsProps> = (
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        {hasFilters ? (
-          <FilterButton label="Filtros avançados" filters={props.filters} />
-        ) : null}
+        {renderedFilterControl}
         <ListViewsControl />
       </div>
 
