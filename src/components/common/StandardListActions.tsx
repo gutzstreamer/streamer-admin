@@ -1,6 +1,7 @@
 import React from "react";
 import {
   CreateButton,
+  FilterContext,
   FilterButton,
   TopToolbar,
   useResourceDefinition,
@@ -10,6 +11,7 @@ import { ListViewsControl } from "./ListViewsControl";
 
 export const StandardListActions: React.FC = () => {
   const { hasCreate } = useResourceDefinition();
+  const filters = React.useContext(FilterContext);
 
   return (
     <TopToolbar
@@ -24,7 +26,7 @@ export const StandardListActions: React.FC = () => {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <FilterButton label="Filtros avançados" />
+        {filters ? <FilterButton label="Filtros avançados" /> : null}
         <ListViewsControl />
       </div>
 
