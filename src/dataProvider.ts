@@ -262,6 +262,8 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
       pageSize: pagination?.perPage ?? 10,
       sortField: sort?.field,
       sortOrder: sort?.order,
+      sort: sort?.field,
+      order: sort?.order,
     };
 
     // ConversÃ£o de reais -> centavos para tier-config
@@ -272,13 +274,8 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
 
     const queryString = new URLSearchParams(query as any).toString();
 
-    const hasFilter = Object.keys(cleanFilter).length > 0;
-
-    // ðŸ¦ Alguns recursos nÃ£o tÃªm endpoint /all, sempre usam o endpoint raiz
-    const noAllEndpoint = ['refer', 'platform-benefits', 'chat-mentions'];
-    const useAllEndpoint = !noAllEndpoint.includes(resource) && !hasFilter;
-    
-    const url = `${apiUrl}/${resource}${useAllEndpoint ? "/all" : ""}?${queryString}`;
+    // Sempre usar endpoint paginado para garantir ordenação e paginação consistentes.
+    const url = `${apiUrl}/${resource}?${queryString}`;
 
     return httpClient(url).then(({ json }) => {
       const data = json.data ? json.data : json;

@@ -1,10 +1,14 @@
 import React from "react";
-import { TopToolbar, CreateButton, FilterButton, useListContext, useResourceDefinition } from "react-admin";
+import {
+  CreateButton,
+  FilterButton,
+  TopToolbar,
+  useResourceDefinition,
+} from "react-admin";
 import { AsyncCsvExportButton } from "./AsyncCsvExportButton";
 import { ListViewsControl } from "./ListViewsControl";
 
 export const StandardListActions: React.FC = () => {
-  const { filters } = useListContext();
   const { hasCreate } = useResourceDefinition();
 
   return (
@@ -20,7 +24,7 @@ export const StandardListActions: React.FC = () => {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        {filters ? <FilterButton label="Filtros avançados" /> : null}
+        <FilterButton label="Filtros avançados" />
         <ListViewsControl />
       </div>
 
