@@ -12,7 +12,7 @@ import { AsyncCsvExportButton } from "./AsyncCsvExportButton";
 import { ListViewsControl } from "./ListViewsControl";
 
 interface StandardListActionsProps {
-  filters?: React.ReactElement;
+  filters?: React.ReactNode;
   resource?: string;
 }
 
@@ -35,7 +35,21 @@ export const StandardListActions: React.FC<StandardListActionsProps> = (
       });
     }
 
-    if (filtersFromContext) {
+    if (Array.isArray(props.filters) && props.filters.length > 0) {
+      return <FilterButton label="Filtros avancados" />;
+    }
+
+    if (filtersFromContext && React.isValidElement(filtersFromContext)) {
+      return React.cloneElement(filtersFromContext, {
+        resource,
+        showFilter,
+        displayedFilters,
+        filterValues,
+        context: "button",
+      });
+    }
+
+    if (Array.isArray(filtersFromContext) && filtersFromContext.length > 0) {
       return <FilterButton label="Filtros avancados" />;
     }
 

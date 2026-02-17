@@ -192,10 +192,67 @@ const sanitizeQueryValues = (
     ),
   ) as Record<string, string | number | boolean>;
 
+const resourcesWithoutAllEndpoint = new Set([
+  "refer",
+  "platform-benefits",
+  "chat-mentions",
+]);
+
+const resourcesAlwaysUsingAllEndpoint = new Set(["users"]);
+
+type SortPayload = {
+  field?: string;
+  order?: string;
+};
+
+const getNestedValue = (record: any, fieldPath: string) =>
+  fieldPath.split(".").reduce((acc, key) => acc?.[key], record);
+
+const compareValues = (left: unknown, right: unknown): number => {
+  if (left === right) return 0;
+  if (left === undefined || left === null) return -1;
+  if (right === undefined || right === null) return 1;
+
+  if (typeof left === "boolean" && typeof right === "boolean") {
+    return Number(left) - Number(right);
+  }
+
+  if (typeof left === "number" && typeof right === "number") {
+    return left - right;
+  }
+
+  const leftDate = Date.parse(String(left));
+  const rightDate = Date.parse(String(right));
+  if (!Number.isNaN(leftDate) && !Number.isNaN(rightDate)) {
+    return leftDate - rightDate;
+  }
+
+  return String(left).localeCompare(String(right), undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+};
+
+const sortDataClientSide = (
+  data: any[],
+  sort?: SortPayload,
+): any[] => {
+  if (!Array.isArray(data) || !sort?.field || !sort?.order) return data;
+
+  const direction = sort.order === "DESC" ? -1 : 1;
+  const field = sort.field;
+
+  return [...data].sort((left, right) => {
+    const leftValue = getNestedValue(left, field);
+    const rightValue = getNestedValue(right, field);
+    return compareValues(leftValue, rightValue) * direction;
+  });
+};
+
 const streamerDataProvider: DataProviderWithCustomMethods = {
   ...dataProvider,
 
-  getList: (resource, params) => {
+  getList: async (resource, params) => {
     const { filter, pagination, sort } = params;
 
     if (resource === "widget-templates") {
@@ -264,7 +321,7 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
 
     const cleanFilter = normalizeFilterValues(rawFilter);
 
-    // LÃ³gica padrÃ£o para todos os resources
+    // Lógica padrão para todos os resources
     const rawQuery: Record<string, unknown> = {
       ...cleanFilter,
       page: pagination?.page ?? 1,
@@ -273,27 +330,75 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
       sortOrder: sort?.order,
     };
 
-    // ConversÃ£o de reais -> centavos para tier-config
+    // Conversão de reais -> centavos para tier-config
     if (resource === "tier-config" && rawQuery.minPriceReais) {
       rawQuery.minPriceCents = Math.round(Number(rawQuery.minPriceReais) * 100);
       delete rawQuery.minPriceReais;
     }
 
-    const query = sanitizeQueryValues(rawQuery);
-    const queryString = new URLSearchParams(query as any).toString();
+    const queryWithSort = sanitizeQueryValues(rawQuery);
+    const queryWithoutSort = sanitizeQueryValues({
+      ...rawQuery,
+      sortField: undefined,
+      sortOrder: undefined,
+    });
 
-    // Sempre usar endpoint paginado para garantir ordenação e paginação consistentes.
-    const url = `${apiUrl}/${resource}?${queryString}`;
+    const hasFilter = Object.keys(cleanFilter).length > 0;
+    const prefersAllEndpoint =
+      resourcesAlwaysUsingAllEndpoint.has(resource) ||
+      (!resourcesWithoutAllEndpoint.has(resource) && !hasFilter);
 
-    return httpClient(url).then(({ json }) => {
-      const data = json.data ? json.data : json;
-      const total = json.pagination?.total ?? json.total ?? (Array.isArray(data) ? data.length : 0);
-      
+    const endpointCandidates = Array.from(
+      new Set(
+        prefersAllEndpoint
+          ? [`${resource}/all`, resource]
+          : [resource, `${resource}/all`],
+      ),
+    );
+
+    const runListRequest = async (
+      endpoint: string,
+      query: Record<string, string | number | boolean>,
+    ) => {
+      const queryString = new URLSearchParams(query as any).toString();
+      const url = `${apiUrl}/${endpoint}?${queryString}`;
+      const { json } = await httpClient(url);
+      const responseData = json.data ? json.data : json;
+      const total =
+        json.pagination?.total ??
+        json.total ??
+        (Array.isArray(responseData) ? responseData.length : 0);
+
       return {
-        data,
+        data: Array.isArray(responseData)
+          ? sortDataClientSide(responseData, sort)
+          : responseData,
         total,
       };
-    });
+    };
+
+    const shouldRetryWithoutSort =
+      queryWithSort.sortField !== undefined || queryWithSort.sortOrder !== undefined;
+
+    let lastError: unknown;
+
+    for (const endpoint of endpointCandidates) {
+      try {
+        return await runListRequest(endpoint, queryWithSort);
+      } catch (error) {
+        lastError = error;
+      }
+
+      if (!shouldRetryWithoutSort) continue;
+
+      try {
+        return await runListRequest(endpoint, queryWithoutSort);
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    throw lastError;
   },
 
   update: (resource, params) => {
