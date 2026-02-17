@@ -1,3 +1,4 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   BooleanField,
@@ -6,10 +7,36 @@ import {
   NumberField,
   ReferenceField,
   TextField,
+  Filter,
+  TextInput,
+  SelectInput,
 } from "react-admin";
 
+const SubscriptionPlanTierCommissionFilter: React.FC = (props) => (
+  <Filter {...props}>
+    <TextInput label="ID" source="id" alwaysOn />
+    <TextInput label="Plano ID" source="subscriptionPlanId" />
+    <TextInput label="Tier" source="tier" />
+    <SelectInput
+      label="Ativo"
+      source="active"
+      choices={[
+        { id: true, name: "Yes" },
+        { id: false, name: "No" },
+      ]}
+      emptyText="All"
+    />
+  </Filter>
+);
+
 const SubscriptionPlanTierCommissionList: React.FC = (props) => (
-  <List {...props} perPage={10}>
+  <List
+    pagination={<DefaultPagination />}
+    {...props}
+    perPage={25}
+    filters={<SubscriptionPlanTierCommissionFilter />}
+    sort={{ field: "id", order: "DESC" }}
+  >
     <Datagrid rowClick="show">
       <TextField source="id" />
       <ReferenceField
@@ -20,10 +47,11 @@ const SubscriptionPlanTierCommissionList: React.FC = (props) => (
         <TextField source="name" />
       </ReferenceField>
       <TextField source="tier" />
-      <NumberField source="commissionPercent" label="Comissão (%)" />
+      <NumberField source="commissionPercent" label="ComissÃ£o (%)" />
       <BooleanField source="active" />
     </Datagrid>
   </List>
 );
 
 export default SubscriptionPlanTierCommissionList;
+

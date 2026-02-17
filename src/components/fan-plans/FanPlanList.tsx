@@ -1,13 +1,25 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
-import {
-  Datagrid,
-  List,
-  TextField,
-  FunctionField,
-} from "react-admin";
+import { Datagrid, List, TextField, FunctionField, Filter, TextInput } from "react-admin";
+
+const FanPlanFilter: React.FC = (props) => (
+  <Filter {...props}>
+    <TextInput label="Plan ID" source="id" alwaysOn />
+    <TextInput label="Streamer ID" source="streamerId" />
+    <TextInput label="Tier" source="tier" />
+    <TextInput label="Name" source="name" />
+    <TextInput label="Status" source="status" />
+  </Filter>
+);
 
 const FanPlanList: React.FC = (props) => (
-  <List {...props} perPage={25}>
+  <List
+    pagination={<DefaultPagination />}
+    {...props}
+    perPage={25}
+    filters={<FanPlanFilter />}
+    sort={{ field: "id", order: "DESC" }}
+  >
     <Datagrid rowClick="show">
       <TextField source="id" />
       <TextField source="streamerId" label="Streamer" />
@@ -24,7 +36,7 @@ const FanPlanList: React.FC = (props) => (
                 style: "currency",
                 currency: record.currency || "BRL",
               })
-            : "—"
+            : "â€”"
         }
       />
     </Datagrid>
@@ -32,3 +44,4 @@ const FanPlanList: React.FC = (props) => (
 );
 
 export default FanPlanList;
+

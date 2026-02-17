@@ -1,3 +1,4 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   List,
@@ -5,24 +6,36 @@ import {
   TextField,
   NumberField,
   DateField,
+  DateInput,
   ReferenceField,
   ShowButton,
   Filter,
   TextInput,
   NumberInput,
+  SelectInput,
 } from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const MonthlyServiceInvoiceFilter: React.FC = (props) => (
   <Filter {...props}>
     <NumberInput label="Ano" source="year" alwaysOn />
     <NumberInput label="Mês" source="month" alwaysOn />
     <TextInput label="Streamer ID" source="streamerId" />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Criado após" source="createdAt_gte" />
+    <DateInput label="Criado antes" source="createdAt_lte" />
   </Filter>
 );
 
 const MonthlyServiceInvoiceList: React.FC = (props) => {
   return (
-    <List {...props} filters={<MonthlyServiceInvoiceFilter />}>
+    <List
+      perPage={25}
+      pagination={<DefaultPagination />}
+      {...props}
+      filters={<MonthlyServiceInvoiceFilter />}
+      sort={{ field: "createdAt", order: "DESC" }}
+    >
       <Datagrid>
         <TextField source="id" />
         <TextField source="year" label="Ano" />
@@ -48,3 +61,7 @@ const MonthlyServiceInvoiceList: React.FC = (props) => {
 };
 
 export default MonthlyServiceInvoiceList;
+
+
+
+

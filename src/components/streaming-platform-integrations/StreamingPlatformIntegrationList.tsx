@@ -1,9 +1,11 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   Datagrid,
   List,
   TextField,
   DateField,
+  DateInput,
   ReferenceField,
   Filter,
   SelectInput,
@@ -14,6 +16,7 @@ import {
 } from "react-admin";
 
 import { platformTypeChoices, statusChoices } from "./index";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const StreamingPlatformIntegrationListFilter: React.FC = (props) => (
   <Filter {...props}>
@@ -28,14 +31,18 @@ const StreamingPlatformIntegrationListFilter: React.FC = (props) => (
       source="isActive"
       choices={statusChoices}
     />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Created After" source="createdAt_gte" />
+    <DateInput label="Created Before" source="createdAt_lte" />
   </Filter>
 );
 
 const StreamingPlatformIntegrationList: React.FC = (props) => {
   return (
-    <List 
+    <List perPage={25} pagination={<DefaultPagination />} 
       {...props} 
       filters={<StreamingPlatformIntegrationListFilter />}
+      sort={{ field: "createdAt", order: "DESC" }}
     >
       <Datagrid rowClick="show">
         <TextField source="id" label="Integration ID" />
@@ -83,3 +90,7 @@ const StreamingPlatformIntegrationList: React.FC = (props) => {
 };
 
 export default StreamingPlatformIntegrationList;
+
+
+
+

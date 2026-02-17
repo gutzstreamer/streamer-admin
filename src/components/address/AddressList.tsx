@@ -1,10 +1,34 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
-import { List, Datagrid, TextField, ReferenceField } from "react-admin";
+import {
+  List,
+  Datagrid,
+  TextField,
+  ReferenceField,
+  Filter,
+  TextInput,
+} from "react-admin";
+
+const AddressFilter: React.FC = (props) => (
+  <Filter {...props}>
+    <TextInput label="ID do EndereÃ§o" source="id" alwaysOn />
+    <TextInput label="Profile ID" source="profileId" />
+    <TextInput label="Apelido" source="nickname" />
+    <TextInput label="Cidade" source="city" />
+    <TextInput label="CEP" source="zipcode" />
+  </Filter>
+);
 
 export const AddressList: React.FC = (props) => (
-  <List {...props}>
+  <List
+    perPage={25}
+    pagination={<DefaultPagination />}
+    {...props}
+    filters={<AddressFilter />}
+    sort={{ field: "id", order: "DESC" }}
+  >
     <Datagrid rowClick="show">
-      <TextField source="id" label="ID do Endereço" />
+      <TextField source="id" label="ID do EndereÃ§o" />
       <ReferenceField
         source="profileId"
         reference="profiles"
@@ -21,3 +45,4 @@ export const AddressList: React.FC = (props) => (
     </Datagrid>
   </List>
 );
+

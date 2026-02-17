@@ -1,6 +1,8 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
+  DateInput,
   DateField,
   ReferenceField,
   FunctionField,
@@ -9,11 +11,13 @@ import {
   ExportButton,
   CreateButton,
   BooleanInput,
+  SelectInput,
   ReferenceInput,
   AutocompleteInput,
 } from 'react-admin';
 import { Chip, Box } from '@mui/material';
 import { CheckCircle, Cancel, Timer } from '@mui/icons-material';
+import { DatePresetInput } from "../common/DatePresetInput";
 
 // Função para calcular dias restantes
 const calculateRemainingDays = (expiresAt: string, isActive: boolean) => {
@@ -114,11 +118,14 @@ const referFilters = [
     />
   </ReferenceInput>,
   <BooleanInput key="isActive" source="isActive" label="Apenas Ativos" />,
+  <DatePresetInput key="datePreset" source="datePreset" label="Período" />, 
+  <DateInput key="createdAt_gte" source="createdAt_gte" label="Criado após" />,
+  <DateInput key="createdAt_lte" source="createdAt_lte" label="Criado antes" />,
 ];
 
 export const ReferList = () => {
   return (
-    <List
+    <List pagination={<DefaultPagination />}
       actions={<ListActions />}
       filters={referFilters}
       perPage={25}
@@ -210,3 +217,6 @@ export const ReferList = () => {
     </List>
   );
 };
+
+
+

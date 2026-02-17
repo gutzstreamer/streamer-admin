@@ -1,4 +1,4 @@
-import { fetchUtils, DataProvider } from "react-admin";
+﻿import { fetchUtils, DataProvider } from "react-admin";
 import simpleRestProvider from "ra-data-simple-rest";
 
 const apiUrl = import.meta.env.VITE_SIMPLE_REST_URL;
@@ -83,6 +83,41 @@ const normalizeBooleanFilter = (value: unknown): boolean | undefined => {
   return undefined;
 };
 
+type DatePresetValue = "today" | "7d" | "30d";
+
+const datePresetFieldByResource: Record<string, string> = {
+  "chat-mentions": "capturedAt",
+  "feature-toggles": "updatedAt",
+  invoices: "issuedOn",
+  sessions: "lastActivity",
+  wallets: "updatedAt",
+};
+
+const formatDateInputValue = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const buildDatePresetRange = (
+  preset: DatePresetValue,
+): { gte: string; lte: string } => {
+  const end = new Date();
+  const start = new Date(end);
+
+  if (preset === "7d") {
+    start.setDate(end.getDate() - 6);
+  } else if (preset === "30d") {
+    start.setDate(end.getDate() - 29);
+  }
+
+  return {
+    gte: formatDateInputValue(start),
+    lte: formatDateInputValue(end),
+  };
+};
+
 const streamerDataProvider: DataProviderWithCustomMethods = {
   ...dataProvider,
 
@@ -142,12 +177,22 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
       });
     }
 
-    // 🔥 Limpa filtros vazios ou nulos
+    // ðŸ”¥ Limpa filtros vazios ou nulos
+    const rawFilter = { ...(filter ?? {}) } as Record<string, any>;
+    const datePreset = rawFilter.datePreset as DatePresetValue | undefined;
+    if (datePreset) {
+      const fieldBase = datePresetFieldByResource[resource] || "createdAt";
+      const { gte, lte } = buildDatePresetRange(datePreset);
+      rawFilter[`${fieldBase}_gte`] = gte;
+      rawFilter[`${fieldBase}_lte`] = lte;
+    }
+    delete rawFilter.datePreset;
+
     const cleanFilter = Object.fromEntries(
-      Object.entries(filter).filter(([_, v]) => v !== undefined && v !== ""),
+      Object.entries(rawFilter).filter(([_, v]) => v !== undefined && v !== ""),
     );
 
-    // Lógica padrão para todos os resources
+    // LÃ³gica padrÃ£o para todos os resources
     const query: Record<string, any> = {
       ...cleanFilter,
       page: pagination?.page ?? 1,
@@ -156,7 +201,7 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
       sortOrder: sort?.order,
     };
 
-    // Conversão de reais -> centavos para tier-config
+    // ConversÃ£o de reais -> centavos para tier-config
     if (resource === "tier-config" && query.minPriceReais) {
       query.minPriceCents = Math.round(Number(query.minPriceReais) * 100);
       delete query.minPriceReais;
@@ -166,7 +211,7 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
 
     const hasFilter = Object.keys(cleanFilter).length > 0;
 
-    // 🦏 Alguns recursos não têm endpoint /all, sempre usam o endpoint raiz
+    // ðŸ¦ Alguns recursos nÃ£o tÃªm endpoint /all, sempre usam o endpoint raiz
     const noAllEndpoint = ['refer', 'platform-benefits', 'chat-mentions'];
     const useAllEndpoint = !noAllEndpoint.includes(resource) && !hasFilter;
     
@@ -354,3 +399,4 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
 };
 
 export default streamerDataProvider;
+

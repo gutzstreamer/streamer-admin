@@ -1,9 +1,11 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   Datagrid,
   List,
   TextField,
   DateField,
+  DateInput,
   ReferenceField,
   Filter,
   SelectInput,
@@ -16,6 +18,7 @@ import {
   useDataProvider,
 } from "react-admin";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 import { webhookStatusChoices, eventTypeChoices } from "./index";
 import { DataProviderWithCustomMethods } from "../../dataProvider";
@@ -35,6 +38,9 @@ const PlatformWebhookListFilter: React.FC = (props) => (
       source="status"
       choices={webhookStatusChoices}
     />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Created After" source="createdAt_gte" />
+    <DateInput label="Created Before" source="createdAt_lte" />
   </Filter>
 );
 
@@ -76,10 +82,11 @@ const PlatformWebhookListActions: React.FC = () => {
 
 const PlatformWebhookList: React.FC = (props) => {
   return (
-    <List
+    <List perPage={25} pagination={<DefaultPagination />}
       {...props}
       filters={<PlatformWebhookListFilter />}
       actions={<PlatformWebhookListActions />}
+      sort={{ field: "createdAt", order: "DESC" }}
     >
       <Datagrid rowClick="show">
         <TextField source="id" label="Webhook ID" />
@@ -133,3 +140,8 @@ const PlatformWebhookList: React.FC = (props) => {
 };
 
 export default PlatformWebhookList;
+
+
+
+
+

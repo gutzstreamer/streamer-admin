@@ -1,3 +1,4 @@
+﻿import { DefaultPagination } from "../../common/DefaultPagination";
 import React, { useEffect } from "react";
 import {
 	BooleanField,
@@ -41,9 +42,10 @@ const TemplateListLogger: React.FC = () => {
 };
 
 const TemplateList: React.FC = (props) => (
-	<List
+	<List pagination={<DefaultPagination />}
 		{...props}
-		perPage={10}
+		perPage={25}
+		sort={{ field: "createdAt", order: "DESC" }}
 		filters={[
 			<SelectInput
 				key="type"
@@ -97,3 +99,4 @@ const TemplateList: React.FC = (props) => (
 );
 
 export default TemplateList;
+

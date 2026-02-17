@@ -1,11 +1,40 @@
-import { List, Datagrid, TextField, ReferenceField, DateField } from "react-admin";
-import React from "react";
+﻿import React from "react";
+import { DefaultPagination } from "../common/DefaultPagination";
+import {
+  List,
+  Datagrid,
+  TextField,
+  ReferenceField,
+  DateField,
+  DateInput,
+  Filter,
+  TextInput,
+  SelectInput,
+} from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
+
+const FactoryFilter: React.FC = (props) => (
+  <Filter {...props}>
+    <TextInput label="Dimona Order ID" source="dimonaOrderId" alwaysOn />
+    <TextInput label="Order ID" source="orderId" />
+    <TextInput label="Customer Name" source="customerName" />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Created After" source="createdAt_gte" />
+    <DateInput label="Created Before" source="createdAt_lte" />
+  </Filter>
+);
 
 export const FactoryList: React.FC = (props) => (
-  <List {...props}>
+  <List
+    perPage={25}
+    pagination={<DefaultPagination />}
+    {...props}
+    filters={<FactoryFilter />}
+    sort={{ field: "createdAt", order: "DESC" }}
+  >
     <Datagrid rowClick="show">
       <TextField source="dimonaOrderId" />
-      <DateField source="createdAt"  />
+      <DateField source="createdAt" />
       <ReferenceField source="orderId" reference="orders">
         <TextField source="id" />
       </ReferenceField>
@@ -15,3 +44,7 @@ export const FactoryList: React.FC = (props) => (
     </Datagrid>
   </List>
 );
+
+
+
+

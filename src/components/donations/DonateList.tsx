@@ -1,3 +1,4 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   List,
@@ -6,17 +7,44 @@ import {
   NumberField,
   ReferenceField,
   DateField,
+  DateInput,
   Filter,
   TextInput,
   useDataProvider,
   useNotify,
   BooleanField,
+  SelectInput,
 } from "react-admin";
 import { ListProps } from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const DonateFilter: React.FC = (props) => (
   <Filter {...props}>
+    <TextInput label="Donation ID" source="id" alwaysOn />
     <TextInput label="Streamer ID" source="streamerId" alwaysOn />
+    <TextInput label="Username" source="username" />
+    <TextInput label="Transaction ID" source="transactionId" />
+    <SelectInput
+      label="Paid"
+      source="paid"
+      choices={[
+        { id: true, name: "Yes" },
+        { id: false, name: "No" },
+      ]}
+      emptyText="All"
+    />
+    <SelectInput
+      label="Skip Alert"
+      source="skipAlert"
+      choices={[
+        { id: true, name: "Yes" },
+        { id: false, name: "No" },
+      ]}
+      emptyText="All"
+    />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Created After" source="createdAt_gte" />
+    <DateInput label="Created Before" source="createdAt_lte" />
   </Filter>
 );
 
@@ -115,8 +143,15 @@ const DonateList = (props: ListProps) => {
     donationsExporter(donations, fetchRelatedRecords, dataProvider, notify);
 
   return (
-    <List {...props} filters={<DonateFilter />} exporter={exporter}>
-      <Datagrid>
+    <List
+      perPage={25}
+      pagination={<DefaultPagination />}
+      {...props}
+      filters={<DonateFilter />}
+      exporter={exporter}
+      sort={{ field: "createdAt", order: "DESC" }}
+    >
+      <Datagrid rowClick="show">
         <TextField source="id" />
         <ReferenceField source="streamerId" reference="streamers">
           <TextField source="name" />
@@ -146,3 +181,8 @@ const DonateList = (props: ListProps) => {
 };
 
 export default DonateList;
+
+
+
+
+

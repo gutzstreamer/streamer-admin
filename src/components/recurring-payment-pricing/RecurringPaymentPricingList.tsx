@@ -1,3 +1,4 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
@@ -5,11 +6,13 @@ import {
   NumberField,
   BooleanField,
   DateField,
+  DateInput,
   SelectField,
   SelectInput,
   BooleanInput,
 } from "react-admin";
 import { ListProps } from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const intervalChoices = [
   { id: "MONTHLY", name: "Mensal" },
@@ -38,10 +41,19 @@ const pricingFilters = [
     alwaysOn
   />,
   <BooleanInput key="isActive" source="isActive" alwaysOn />,
+  <DatePresetInput key="datePreset" source="datePreset" label="Período" />, 
+  <DateInput key="createdAt_gte" label="Created After" source="createdAt_gte" />,
+  <DateInput key="createdAt_lte" label="Created Before" source="createdAt_lte" />,
 ];
 
 export const RecurringPaymentPricingList = (props: ListProps) => (
-  <List {...props} filters={pricingFilters}>
+  <List
+    perPage={25}
+    pagination={<DefaultPagination />}
+    {...props}
+    filters={pricingFilters}
+    sort={{ field: "createdAt", order: "DESC" }}
+  >
     <Datagrid rowClick="show">
       <TextField source="id" />
       <TextField source="name" />
@@ -59,3 +71,6 @@ export const RecurringPaymentPricingList = (props: ListProps) => (
 );
 
 export default RecurringPaymentPricingList;
+
+
+

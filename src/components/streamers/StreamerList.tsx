@@ -1,3 +1,4 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
@@ -12,6 +13,7 @@ import {
 
 const StreamerFilter: React.FC = (props) => (
   <Filter {...props}>
+    <TextInput label="Streamer ID" source="id" alwaysOn />
     <TextInput label="User ID" source="userId" alwaysOn />
     <TextInput label="Name" source="name" alwaysOn />
     <TextInput label="Atname" source="atname" alwaysOn />
@@ -20,8 +22,14 @@ const StreamerFilter: React.FC = (props) => (
 
 const StreamerList: React.FC = (props) => {
   return (
-    <List {...props} filters={<StreamerFilter />}> 
-      <Datagrid>
+    <List
+      perPage={25}
+      pagination={<DefaultPagination />}
+      {...props}
+      filters={<StreamerFilter />}
+      sort={{ field: "id", order: "DESC" }}
+    >
+      <Datagrid rowClick="show">
         <TextField source="id" />
         <TextField source="name" />
         <TextField source="atname" />
@@ -37,3 +45,5 @@ const StreamerList: React.FC = (props) => {
 };
 
 export default StreamerList;
+
+
