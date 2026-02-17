@@ -183,6 +183,15 @@ const normalizeFilterValues = (
       .filter(([_, value]) => value !== undefined),
   );
 
+const sanitizeQueryValues = (
+  query: Record<string, unknown>,
+): Record<string, string | number | boolean> =>
+  Object.fromEntries(
+    Object.entries(query).filter(
+      ([_, value]) => value !== undefined && value !== null && value !== "",
+    ),
+  ) as Record<string, string | number | boolean>;
+
 const streamerDataProvider: DataProviderWithCustomMethods = {
   ...dataProvider,
 
@@ -256,22 +265,21 @@ const streamerDataProvider: DataProviderWithCustomMethods = {
     const cleanFilter = normalizeFilterValues(rawFilter);
 
     // LÃ³gica padrÃ£o para todos os resources
-    const query: Record<string, any> = {
+    const rawQuery: Record<string, unknown> = {
       ...cleanFilter,
       page: pagination?.page ?? 1,
       pageSize: pagination?.perPage ?? 10,
       sortField: sort?.field,
       sortOrder: sort?.order,
-      sort: sort?.field,
-      order: sort?.order,
     };
 
     // ConversÃ£o de reais -> centavos para tier-config
-    if (resource === "tier-config" && query.minPriceReais) {
-      query.minPriceCents = Math.round(Number(query.minPriceReais) * 100);
-      delete query.minPriceReais;
+    if (resource === "tier-config" && rawQuery.minPriceReais) {
+      rawQuery.minPriceCents = Math.round(Number(rawQuery.minPriceReais) * 100);
+      delete rawQuery.minPriceReais;
     }
 
+    const query = sanitizeQueryValues(rawQuery);
     const queryString = new URLSearchParams(query as any).toString();
 
     // Sempre usar endpoint paginado para garantir ordenação e paginação consistentes.

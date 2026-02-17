@@ -1,7 +1,6 @@
 import React from "react";
 import {
   CreateButton,
-  FilterContext,
   FilterButton,
   TopToolbar,
   useResourceDefinition,
@@ -9,9 +8,17 @@ import {
 import { AsyncCsvExportButton } from "./AsyncCsvExportButton";
 import { ListViewsControl } from "./ListViewsControl";
 
-export const StandardListActions: React.FC = () => {
+interface StandardListActionsProps {
+  filters?: React.ReactNode[] | React.ReactNode;
+}
+
+export const StandardListActions: React.FC<StandardListActionsProps> = (
+  props,
+) => {
   const { hasCreate } = useResourceDefinition();
-  const filters = React.useContext(FilterContext);
+  const hasFilters = Array.isArray(props.filters)
+    ? props.filters.length > 0
+    : Boolean(props.filters);
 
   return (
     <TopToolbar
@@ -26,7 +33,9 @@ export const StandardListActions: React.FC = () => {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        {filters ? <FilterButton label="Filtros avançados" /> : null}
+        {hasFilters ? (
+          <FilterButton label="Filtros avançados" filters={props.filters} />
+        ) : null}
         <ListViewsControl />
       </div>
 
