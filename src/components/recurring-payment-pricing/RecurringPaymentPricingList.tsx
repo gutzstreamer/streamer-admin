@@ -10,6 +10,8 @@ import {
   SelectField,
   SelectInput,
   BooleanInput,
+  TextInput,
+  NumberInput,
 } from "react-admin";
 import { ListProps } from "react-admin";
 import { DatePresetInput } from "../common/DatePresetInput";
@@ -41,7 +43,7 @@ const pricingFilters = [
     alwaysOn
   />,
   <BooleanInput key="isActive" source="isActive" alwaysOn />,
-  <DatePresetInput key="datePreset" source="datePreset" label="Período" />, 
+  <DatePresetInput key="datePreset" source="datePreset" label="PerÃ­odo" />,
   <DateInput key="createdAt_gte" label="Created After" source="createdAt_gte" />,
   <DateInput key="createdAt_lte" label="Created Before" source="createdAt_lte" />,
   <NumberInput key="amount" label="amount" source="amount" />,
@@ -74,8 +76,3 @@ export const RecurringPaymentPricingList = (props: ListProps) => (
 );
 
 export default RecurringPaymentPricingList;
-
-
-
-
-
