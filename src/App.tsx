@@ -191,15 +191,15 @@ export const App = () => (
       create={MonthlyServiceInvoiceCreate}
       options={{ label: "Service Invoices Monthly" }}
     />
-      <Resource
-        options={{ label: "Templates de Widgets" }}
-        name="widget-templates"
-        icon={Tv}
-        list={withStandardList(TemplateList)}
-        create={CreateTemplate}
-        edit={EditTemplate}
-        show={ShowTemplate}
-      />
+    <Resource
+      options={{ label: "Templates de Widgets" }}
+      name="widget-templates"
+      icon={Tv}
+      list={withStandardList(TemplateList)}
+      create={CreateTemplate}
+      edit={EditTemplate}
+      show={ShowTemplate}
+    />
     <CustomRoutes>
       <Route path="/alert-queues" element={<AlertQueuesPage />} />
       <Route path="/alert-queues/:id" element={<AlertQueueDetailPage />} />
@@ -500,4 +500,3 @@ export const App = () => (
     />
   </Admin>
 );
-

@@ -224,6 +224,11 @@ export const CustomMenu = () => {
         leftIcon={<SettingsIcon />}
       />
       <MenuItemLink
+        to="/recurring-payment-pricing"
+        primaryText="Preços de Assinatura"
+        leftIcon={<SettingsIcon />}
+      />
+      <MenuItemLink
         to="/subscription-plan-tier-commission"
         primaryText="Comissão por Tier (Plano)"
         leftIcon={<LocalAtmIcon />}
