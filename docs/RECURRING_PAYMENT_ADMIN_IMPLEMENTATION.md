@@ -65,7 +65,8 @@ src/
   resourceId: string | null;  // ID do SubscriptionPlan (quando resourceType = 'SUBSCRIPTION_PLAN')
   name: string;               // Ex: "Plano Premium - Mensal"
   description: string | null; // Ex: "Cobrança mensal do plano premium"
-  amount: number;             // Valor em centavos (ex: 4990 = R$ 49,90)
+  price: number;              // Valor decimal em reais (ex: 49.90)
+  durationDays: number;       // Duração da vigência em dias (ex: 30)
   interval: 'MONTHLY' | 'QUARTERLY' | 'YEARLY';
   metadata: object | null;    // Dados adicionais em JSON
   isActive: boolean;
@@ -173,10 +174,10 @@ export const RecurringPaymentPricingList = (props) => (
       <SelectField source="resourceType" choices={resourceTypeChoices} />
       <SelectField source="interval" choices={intervalChoices} />
       <NumberField 
-        source="amount" 
+        source="price" 
         options={{ style: 'currency', currency: 'BRL' }}
-        transform={(value) => value / 100}  // Converte centavos para reais
       />
+      <NumberField source="durationDays" label="Duração (dias)" />
       <BooleanField source="isActive" />
       <DateField source="createdAt" showTime />
     </Datagrid>
@@ -186,7 +187,7 @@ export const RecurringPaymentPricingList = (props) => (
 
 **Características:**
 - Filtros por `resourceType`, `interval` e `isActive`
-- Formata o valor em BRL (divide por 100 para converter centavos)
+- Formata o valor em BRL usando o campo `price`
 - SelectField para enums traduzidos em PT-BR
 
 ---
@@ -217,8 +218,17 @@ const resourceTypeChoices = [
   { id: 'CUSTOM', name: 'Personalizado' },
 ];
 
+const transform = (data) => ({
+  ...data,
+  price: Number(data.price),
+  planId:
+    data.resourceType === 'SUBSCRIPTION_PLAN' && data.resourceId
+      ? data.resourceId
+      : undefined,
+});
+
 export const RecurringPaymentPricingCreate = (props) => (
-  <Create {...props}>
+  <Create {...props} transform={transform}>
     <SimpleForm>
       {/* Tipo de Recurso */}
       <SelectInput 
@@ -241,13 +251,17 @@ export const RecurringPaymentPricingCreate = (props) => (
       <TextInput source="name" validate={required()} />
       <TextInput source="description" multiline rows={3} />
       
-      {/* Valor em REAIS (converter para centavos no transform) */}
+      {/* Valor em reais */}
       <NumberInput 
-        source="amount" 
+        source="price" 
         label="Valor (R$)" 
         validate={required()}
-        format={(v) => v / 100}       // Backend -> Frontend (centavos -> reais)
-        parse={(v) => Math.round(v * 100)} // Frontend -> Backend (reais -> centavos)
+      />
+
+      <NumberInput 
+        source="durationDays" 
+        label="Duração (dias)" 
+        validate={required()}
       />
       
       {/* Intervalo de Cobrança */}
@@ -266,7 +280,7 @@ export const RecurringPaymentPricingCreate = (props) => (
 ```
 
 **Características:**
-- **Conversão automática** de centavos ↔ reais via `format`/`parse`
+- **Transform** para alinhar payload com backend (incluindo `planId` derivado de `resourceId`)
 - **ReferenceInput** para vincular ao `subscription-plan` (quando `resourceType = 'SUBSCRIPTION_PLAN'`)
 - Validação com `required()` nos campos obrigatórios
 - Valores default para campos comuns
@@ -306,11 +320,15 @@ export const RecurringPaymentPricingEdit = (props) => (
       <TextInput source="description" multiline rows={3} />
       
       <NumberInput 
-        source="amount" 
+        source="price" 
         label="Valor (R$)" 
         validate={required()}
-        format={(v) => v / 100}
-        parse={(v) => Math.round(v * 100)}
+      />
+
+      <NumberInput 
+        source="durationDays" 
+        label="Duração (dias)" 
+        validate={required()}
       />
       
       <SelectInput 
@@ -361,10 +379,10 @@ export const RecurringPaymentPricingShow = (props) => (
       <TextField source="name" />
       <TextField source="description" />
       <NumberField 
-        source="amount"
+        source="price"
         options={{ style: 'currency', currency: 'BRL' }}
-        transform={(value) => value / 100}
       />
+      <NumberField source="durationDays" label="Duração (dias)" />
       <SelectField source="interval" choices={intervalChoices} />
       
       {/* Status */}
@@ -429,10 +447,9 @@ export const RecurringPaymentSubscriptionList = (props) => (
         label="Valor" 
         render={(record) => (
           <NumberField 
-            record={{ amount: record.pricing?.amount || 0 }}
-            source="amount"
+            record={{ price: record.pricing?.price || 0 }}
+            source="price"
             options={{ style: 'currency', currency: 'BRL' }}
-            transform={(v) => v / 100}
           />
         )}
       />
@@ -498,7 +515,6 @@ export const RecurringPaymentSubscriptionShow = (props) => (
           <NumberField 
             source="amount"
             options={{ style: 'currency', currency: 'BRL' }}
-            transform={(v) => v / 100}
           />
           <SelectField 
             source="status" 
@@ -558,7 +574,6 @@ export const RecurringPaymentTransactionList = (props) => (
       <NumberField 
         source="amount"
         options={{ style: 'currency', currency: 'BRL' }}
-        transform={(v) => v / 100}
       />
       
       {/* Status */}
@@ -607,7 +622,6 @@ export const RecurringPaymentTransactionShow = (props) => (
       <NumberField 
         source="amount"
         options={{ style: 'currency', currency: 'BRL' }}
-        transform={(v) => v / 100}
       />
       <SelectField source="status" choices={statusChoices} />
       <TextField source="paymentMethod" />
@@ -674,10 +688,10 @@ const SubscriptionPlanShow: React.FC = (props) => (
           <TextField source="name" />
           <SelectField source="interval" choices={intervalChoices} />
           <NumberField 
-            source="amount"
+            source="price"
             options={{ style: 'currency', currency: 'BRL' }}
-            transform={(v) => v / 100}
           />
+          <NumberField source="durationDays" label="Duração (dias)" />
           <BooleanField source="isActive" />
         </Datagrid>
       </ReferenceManyField>
@@ -735,11 +749,10 @@ const SubscriptionPlanEdit: React.FC = (props) => (
         <SimpleFormIterator>
           <TextInput source="name" label="Nome do Preço" />
           <NumberInput 
-            source="amount" 
+            source="price" 
             label="Valor (R$)"
-            format={(v) => v / 100}
-            parse={(v) => Math.round(v * 100)}
           />
+          <NumberInput source="durationDays" label="Duração (dias)" />
           <SelectInput source="interval" choices={intervalChoices} />
           <BooleanInput source="isActive" defaultValue={true} />
         </SimpleFormIterator>
@@ -847,7 +860,7 @@ Verificar se os seguintes endpoints existem e retornam dados no formato esperado
 - [ ] Modificar SubScriptionPlanShow.tsx para exibir preços vinculados
 - [ ] Testar criação de pricing via admin
 - [ ] Testar vinculação de pricing com subscription plan
-- [ ] Verificar formatação de valores (centavos ↔ reais)
+- [ ] Verificar formatação de valores em reais (`price`)
 - [ ] Testar filtros e ordenação nas listas
 - [ ] Verificar navegação entre resources (links de referência)
 
@@ -855,21 +868,18 @@ Verificar se os seguintes endpoints existem e retornam dados no formato esperado
 
 ## 🎨 Padrões de Código React Admin
 
-### Conversão de Valores (Centavos ↔ Reais)
+### Campos monetários (`price`)
 ```tsx
 // No formulário (Create/Edit):
 <NumberInput 
-  source="amount" 
+  source="price" 
   label="Valor (R$)"
-  format={(v) => v / 100}       // Backend → Frontend
-  parse={(v) => Math.round(v * 100)} // Frontend → Backend
 />
 
 // Na listagem/show:
 <NumberField 
-  source="amount"
+  source="price"
   options={{ style: 'currency', currency: 'BRL' }}
-  transform={(value) => value / 100}
 />
 ```
 
