@@ -38,6 +38,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchUtils, useNotify } from "react-admin";
 import { buildHeaders } from "./utils";
+import OverlayDisplaysCard, {
+  type OverlayDisplayInfo,
+} from "./OverlayDisplaysCard";
 
 type AlertState = {
   streamerId: string;
@@ -83,8 +86,42 @@ type DetailResponse = {
   recent: AlertRecord[];
 };
 
+type OverlayDisplaysResponse = {
+  primaryDisplayId: string | null;
+  data: OverlayDisplayInfo[];
+};
+
 const apiUrl = import.meta.env.VITE_SIMPLE_REST_URL;
 const adminApi = `${apiUrl}/admin/alerts`;
+const FONT_FAMILY =
+  '"Space Grotesk", "Manrope", "Avenir Next", "Segoe UI", sans-serif';
+const PAGE_SX = {
+  minHeight: "100vh",
+  p: { xs: 1.5, sm: 2 },
+  fontFamily: FONT_FAMILY,
+  background:
+    "radial-gradient(1100px circle at 0% 0%, rgba(51,137,255,0.22), transparent 38%), radial-gradient(900px circle at 100% 0%, rgba(16,185,129,0.14), transparent 34%), linear-gradient(180deg, #05070d 0%, #070b13 100%)",
+};
+const PANEL_SX = {
+  bgcolor: "rgba(11, 16, 28, 0.78)",
+  border: "1px solid rgba(118, 153, 220, 0.28)",
+  borderRadius: 2.5,
+  boxShadow:
+    "0 18px 40px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.05)",
+  backdropFilter: "blur(10px)",
+};
+const SURFACE_SX = {
+  bgcolor: "rgba(8, 13, 24, 0.82)",
+  border: "1px solid rgba(128, 159, 221, 0.24)",
+  borderRadius: 1.5,
+  boxShadow:
+    "0 10px 24px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,255,255,0.03)",
+};
+const ICON_BUTTON_SX = {
+  bgcolor: "rgba(13, 20, 34, 0.92)",
+  border: "1px solid rgba(96, 165, 250, 0.3)",
+  "&:hover": { bgcolor: "rgba(22, 34, 58, 0.95)" },
+};
 
 const formatDateTime = (value?: string | null) => {
   if (!value) return "-";
@@ -151,12 +188,11 @@ const AlertCard = ({
       elevation={1}
       sx={{
         p: { xs: 0.75, sm: 1 },
-        bgcolor: "#0d0d0d",
-        border: "1px solid rgba(255,255,255,0.08)",
+        ...SURFACE_SX,
         transition: "all 0.2s",
         "&:hover": {
-          bgcolor: "#1a1a1a",
-          borderColor: "rgba(255,255,255,0.15)",
+          bgcolor: "rgba(13, 19, 34, 0.92)",
+          borderColor: "rgba(159, 187, 245, 0.42)",
         },
       }}
     >
@@ -223,7 +259,7 @@ const AlertCard = ({
           <Box
             sx={{
               p: 0.5,
-              bgcolor: "#000",
+              bgcolor: "rgba(3, 6, 11, 0.9)",
               borderRadius: 0.5,
               fontSize: "0.65rem",
             }}
@@ -272,6 +308,9 @@ const AlertQueueDetailPage = () => {
   const notify = useNotify();
   const [detail, setDetail] = useState<DetailResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [displaysLoading, setDisplaysLoading] = useState(false);
+  const [overlayDisplays, setOverlayDisplays] = useState<OverlayDisplaysResponse | null>(null);
+  const [selectingPrimaryDisplayId, setSelectingPrimaryDisplayId] = useState<string | null>(null);
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [refreshInterval] = useState(30000); // 30 segundos
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
@@ -290,11 +329,6 @@ const AlertQueueDetailPage = () => {
       const { json } = await fetchUtils.fetchJson(url, {
         headers: buildHeaders(),
       });
-      console.log('🔍 Dados carregados da API:', json);
-      console.log('📊 Estatísticas:', json.stats);
-      console.log('🎯 Alerta atual:', json.current);
-      console.log('⏳ Fila de alertas:', json.queued);
-      console.log('✅ Alertas recentes:', json.recent);
       const normalized: DetailResponse = {
         ...(json as DetailResponse),
         current: json.current ? normalizeAlert(json.current) : null,
@@ -314,8 +348,59 @@ const AlertQueueDetailPage = () => {
     }
   };
 
+  const loadDisplays = async () => {
+    if (!id) return;
+
+    try {
+      setDisplaysLoading(true);
+      const url = `${apiUrl}/overlay/v1/streamers/${id}/displays`;
+      const { json } = await fetchUtils.fetchJson(url, {
+        headers: buildHeaders(),
+      });
+
+      const parsed = json as OverlayDisplaysResponse;
+      setOverlayDisplays({
+        primaryDisplayId: parsed.primaryDisplayId ?? null,
+        data: parsed.data ?? [],
+      });
+    } catch {
+      setOverlayDisplays((current) => current ?? { primaryDisplayId: null, data: [] });
+    } finally {
+      setDisplaysLoading(false);
+    }
+  };
+
+  const setPrimaryDisplay = async (display: OverlayDisplayInfo) => {
+    if (!display.widgetInstanceId) {
+      notify("Display sem widgetInstanceId válido", { type: "warning" });
+      return;
+    }
+
+    try {
+      setSelectingPrimaryDisplayId(display.displayId);
+
+      const url = `${apiUrl}/overlay/v1/widgets/${display.widgetInstanceId}/primary-display`;
+      await fetchUtils.fetchJson(url, {
+        method: "POST",
+        headers: buildHeaders(),
+        body: JSON.stringify({ displayId: display.displayId }),
+      });
+
+      notify("Display principal atualizado com sucesso", { type: "success" });
+      await Promise.all([loadDetail(), loadDisplays()]);
+    } catch (error: any) {
+      notify(
+        `Falha ao definir display principal: ${error?.message || "erro desconhecido"}`,
+        { type: "error" },
+      );
+    } finally {
+      setSelectingPrimaryDisplayId(null);
+    }
+  };
+
   useEffect(() => {
     loadDetail();
+    loadDisplays();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -325,6 +410,7 @@ const AlertQueueDetailPage = () => {
 
     const interval = setInterval(() => {
       loadDetail();
+      loadDisplays();
     }, refreshInterval);
 
     return () => clearInterval(interval);
@@ -386,7 +472,7 @@ const AlertQueueDetailPage = () => {
         headers: buildHeaders(),
       });
       notify("Alertas travados reprocessados", { type: "info" });
-      loadDetail();
+      await Promise.all([loadDetail(), loadDisplays()]);
     } catch (error: any) {
       notify(
         `Falha ao reprocessar travados: ${error?.message || "erro desconhecido"}`,
@@ -404,7 +490,7 @@ const AlertQueueDetailPage = () => {
         body: JSON.stringify({ alertId }),
       });
       notify("Alerta reprocessado com sucesso", { type: "success" });
-      loadDetail();
+      await Promise.all([loadDetail(), loadDisplays()]);
     } catch (error: any) {
       notify(
         `Falha ao reprocessar alerta: ${error?.message || "erro desconhecido"}`,
@@ -414,16 +500,13 @@ const AlertQueueDetailPage = () => {
   };
 
   return (
-    <Box sx={{ bgcolor: "#0a0a0a", minHeight: "100vh", p: { xs: 1.5, sm: 2 } }}>
+    <Box sx={PAGE_SX}>
       {/* Header */}
       <Stack direction="row" alignItems="center" spacing={{ xs: 0.75, sm: 1 }} mb={2}>
         <IconButton
           onClick={() => navigate("/alert-queues")}
           size="small"
-          sx={{
-            bgcolor: "#1e1e1e",
-            "&:hover": { bgcolor: "#2a2a2a" },
-          }}
+          sx={ICON_BUTTON_SX}
         >
           <ArrowBackIcon fontSize="small" />
         </IconButton>
@@ -442,7 +525,7 @@ const AlertQueueDetailPage = () => {
               display: { xs: "none", md: "block" },
               px: 1.5,
               py: 0.5,
-              bgcolor: "#1a1a1a",
+              ...SURFACE_SX,
             }}
           >
             <Typography variant="caption" color="text.secondary" fontSize="0.7rem">
@@ -471,13 +554,13 @@ const AlertQueueDetailPage = () => {
 
         <Tooltip title="Recarregar">
           <IconButton
-            onClick={loadDetail}
+            onClick={() => {
+              void loadDetail();
+              void loadDisplays();
+            }}
             color="primary"
             size="small"
-            sx={{
-              bgcolor: "#1e1e1e",
-              "&:hover": { bgcolor: "#2a2a2a" },
-            }}
+            sx={ICON_BUTTON_SX}
           >
             <RefreshIcon />
           </IconButton>
@@ -500,7 +583,7 @@ const AlertQueueDetailPage = () => {
       {detail?.success && detail.streamer && (
         <>
           {/* Card do Streamer */}
-          <Card elevation={1} sx={{ mb: 1.5, bgcolor: "#1a1a1a" }}>
+          <Card elevation={1} sx={{ ...PANEL_SX, mb: 1.5 }}>
             <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
               <Stack direction="row" spacing={{ xs: 1.5, sm: 2 }} alignItems="center" mb={1.5}>
                 <Avatar
@@ -566,7 +649,7 @@ const AlertQueueDetailPage = () => {
                     sx={{
                       height: 6,
                       borderRadius: 3,
-                      bgcolor: "#0d0d0d",
+                      bgcolor: "rgba(8, 13, 24, 0.82)",
                     }}
                   />
                 </Box>
@@ -579,8 +662,7 @@ const AlertQueueDetailPage = () => {
                     elevation={1}
                     sx={{
                       p: 1,
-                      bgcolor: "#0d0d0d",
-                      borderRadius: 1,
+                      ...SURFACE_SX,
                     }}
                   >
                     <Stack direction="row" spacing={0.75} alignItems="center">
@@ -601,8 +683,7 @@ const AlertQueueDetailPage = () => {
                     elevation={1}
                     sx={{
                       p: 1,
-                      bgcolor: "#0d0d0d",
-                      borderRadius: 1,
+                      ...SURFACE_SX,
                     }}
                   >
                     <Stack direction="row" spacing={0.75} alignItems="center">
@@ -623,8 +704,7 @@ const AlertQueueDetailPage = () => {
                     elevation={1}
                     sx={{
                       p: 1,
-                      bgcolor: "#0d0d0d",
-                      borderRadius: 1,
+                      ...SURFACE_SX,
                     }}
                   >
                     <Stack direction="row" spacing={0.75} alignItems="center">
@@ -645,6 +725,14 @@ const AlertQueueDetailPage = () => {
               </Grid>
             </CardContent>
           </Card>
+
+          <OverlayDisplaysCard
+            displays={overlayDisplays?.data ?? []}
+            primaryDisplayId={overlayDisplays?.primaryDisplayId ?? null}
+            loading={displaysLoading}
+            selectingDisplayId={selectingPrimaryDisplayId}
+            onSelectPrimary={setPrimaryDisplay}
+          />
 
           {/* Estatísticas */}
           <Grid container spacing={1} mb={1.5}>
@@ -756,7 +844,7 @@ const AlertQueueDetailPage = () => {
               <Card
                 elevation={1}
                 sx={{
-                  bgcolor: "#1a1a1a",
+                  ...PANEL_SX,
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
@@ -826,10 +914,9 @@ const AlertQueueDetailPage = () => {
                       <Paper
                         elevation={0}
                         sx={{
+                          ...SURFACE_SX,
                           p: 2,
                           textAlign: "center",
-                          bgcolor: "#0d0d0d",
-                          borderRadius: 1,
                         }}
                       >
                         <QueueIcon sx={{ fontSize: 32, color: "grey.700", mb: 0.5 }} />
@@ -848,7 +935,7 @@ const AlertQueueDetailPage = () => {
               <Card
                 elevation={1}
                 sx={{
-                  bgcolor: "#1a1a1a",
+                  ...PANEL_SX,
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
@@ -974,10 +1061,9 @@ const AlertQueueDetailPage = () => {
                     <Paper
                       elevation={0}
                       sx={{
+                        ...SURFACE_SX,
                         p: 2,
                         textAlign: "center",
-                        bgcolor: "#0d0d0d",
-                        borderRadius: 1,
                       }}
                     >
                       <PlayArrowIcon sx={{ fontSize: 32, color: "grey.700", mb: 0.5 }} />
@@ -995,7 +1081,7 @@ const AlertQueueDetailPage = () => {
               <Card
                 elevation={1}
                 sx={{
-                  bgcolor: "#1a1a1a",
+                  ...PANEL_SX,
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
@@ -1047,10 +1133,9 @@ const AlertQueueDetailPage = () => {
                       <Paper
                         elevation={0}
                         sx={{
+                          ...SURFACE_SX,
                           p: 2,
                           textAlign: "center",
-                          bgcolor: "#0d0d0d",
-                          borderRadius: 1,
                         }}
                       >
                         <CheckCircleOutlineIcon sx={{ fontSize: 32, color: "grey.700", mb: 0.5 }} />

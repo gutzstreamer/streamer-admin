@@ -1,14 +1,40 @@
+import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
   TextField,
   NumberField,
   DateField,
+  DateInput,
   ReferenceField,
+  TextInput,
+  NumberInput,
+  ListProps,
 } from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
 
-export const SubscriptionUsageList = () => (
-  <List>
+const subscriptionUsageFilters = [
+  <TextInput key="id" label="Usage ID" source="id" alwaysOn />,
+  <TextInput key="subscriptionId" label="Subscription ID" source="subscriptionId" />,
+  <DatePresetInput key="datePreset" source="datePreset" label="Período" />, 
+  <DateInput key="createdAt_gte" label="Created After" source="createdAt_gte" />,
+  <DateInput key="createdAt_lte" label="Created Before" source="createdAt_lte" />,
+  <NumberInput key="currentDonationWithdrawalUsed" label="currentDonationWithdrawalUsed" source="currentDonationWithdrawalUsed" />,
+  <NumberInput key="currentMarketWithdrawalUsed" label="currentMarketWithdrawalUsed" source="currentMarketWithdrawalUsed" />,
+  <TextInput key="name" label="name" source="name" />,
+  <TextInput key="subscription.planId" label="subscription.planId" source="subscription.planId" />,
+  <TextInput key="subscription.userId" label="subscription.userId" source="subscription.userId" />,
+  <DateInput key="updatedAt" label="updatedAt" source="updatedAt" />,
+];
+
+export const SubscriptionUsageList = (props: ListProps) => (
+  <List
+    perPage={25}
+    pagination={<DefaultPagination />}
+    {...props}
+    filters={subscriptionUsageFilters}
+    sort={{ field: "createdAt", order: "DESC" }}
+  >
     <Datagrid rowClick="show">
       <TextField source="id" />
       <ReferenceField source="subscriptionId" reference="subscription">
@@ -27,3 +53,8 @@ export const SubscriptionUsageList = () => (
     </Datagrid>
   </List>
 );
+
+
+
+
+

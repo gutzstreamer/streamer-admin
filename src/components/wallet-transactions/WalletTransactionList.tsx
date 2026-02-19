@@ -1,3 +1,4 @@
+import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   List,
@@ -5,13 +6,16 @@ import {
   TextField,
   NumberField,
   DateField,
+  DateInput,
   Filter,
   TextInput,
+  NumberInput,
   SelectInput,
   FunctionField,
   ChipField,
 } from "react-admin";
 import { ListProps } from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const originTypeChoices = [
   { id: 'WITHDRAWAL_REQUEST', name: 'Withdrawal Request' },
@@ -44,11 +48,24 @@ const WalletTransactionFilter: React.FC = (props) => (
     <TextInput label="EFI Transaction ID" source="txId" />
     <SelectInput label="Status" source="status" choices={statusChoices} />
     <SelectInput label="Type" source="type" choices={typeChoices} />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Created After" source="createdAt_gte" />
+    <DateInput label="Created Before" source="createdAt_lte" />
+    <NumberInput label="amount" source="amount" />
+    <TextInput label="description" source="description" />
+    <TextInput label="id" source="id" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
 const WalletTransactionList = (props: ListProps) => (
-  <List {...props} filters={<WalletTransactionFilter />}>
+  <List
+    perPage={25}
+    pagination={<DefaultPagination />}
+    {...props}
+    filters={<WalletTransactionFilter />}
+    sort={{ field: "createdAt", order: "DESC" }}
+  >
     <Datagrid>
       <TextField source="id" />
       <NumberField
@@ -87,3 +104,10 @@ const WalletTransactionList = (props: ListProps) => (
 );
 
 export default WalletTransactionList;
+
+
+
+
+
+
+

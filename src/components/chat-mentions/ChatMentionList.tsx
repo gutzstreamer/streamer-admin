@@ -1,5 +1,7 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import {
   Datagrid,
+  DateInput,
   DateField,
   FunctionField,
   List,
@@ -10,6 +12,7 @@ import {
   TopToolbar,
   useListContext,
 } from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const filters = [
   <TextInput
@@ -37,6 +40,13 @@ const filters = [
       { id: "none", name: "Nenhum" },
     ]}
   />,
+  <DatePresetInput key="datePreset" source="datePreset" label="Período" />, 
+  <DateInput key="capturedAt_gte" source="capturedAt_gte" label="Capturado após" />,
+  <DateInput key="capturedAt_lte" source="capturedAt_lte" label="Capturado antes" />,
+  <TextInput key="broadcasterName" label="broadcasterName" source="broadcasterName" />,
+  <TextInput key="displayName" label="displayName" source="displayName" />,
+  <TextInput key="matchedKeyword" label="matchedKeyword" source="matchedKeyword" />,
+  <DateInput key="sentAt" label="sentAt" source="sentAt" />,
 ];
 
 const ListActions = () => {
@@ -45,7 +55,7 @@ const ListActions = () => {
 };
 
 const ChatMentionList = (props: ListProps) => (
-  <List
+  <List pagination={<DefaultPagination />}
     {...props}
     filters={filters}
     sort={{ field: "capturedAt", order: "DESC" }}
@@ -77,3 +87,7 @@ const ChatMentionList = (props: ListProps) => (
 );
 
 export default ChatMentionList;
+
+
+
+

@@ -1,17 +1,27 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   Datagrid,
   List,
   TextField,
   DateField,
+  DateInput,
   ReferenceField,
   Filter,
   SelectInput,
   TextInput,
   ChipField,
+  TopToolbar,
+  Button,
+  useNotify,
+  useRefresh,
+  useDataProvider,
 } from "react-admin";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 import { webhookStatusChoices, eventTypeChoices } from "./index";
+import { DataProviderWithCustomMethods } from "../../dataProvider";
 
 const PlatformWebhookListFilter: React.FC = (props) => (
   <Filter {...props}>
@@ -28,14 +38,60 @@ const PlatformWebhookListFilter: React.FC = (props) => (
       source="status"
       choices={webhookStatusChoices}
     />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Created After" source="createdAt_gte" />
+    <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="callbackUrl" source="callbackUrl" />
+    <TextInput label="id" source="id" />
+    <DateInput label="lastTriggeredAt" source="lastTriggeredAt" />
+    <TextInput label="platformUsername" source="platformUsername" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
+const PlatformWebhookListActions: React.FC = () => {
+  const notify = useNotify();
+  const refresh = useRefresh();
+  const dataProvider = useDataProvider<DataProviderWithCustomMethods>();
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleRenew = async () => {
+    setIsLoading(true);
+    try {
+      await dataProvider.renewYouTubeWebhooks();
+      notify("YouTube webhook renewal triggered", { type: "info" });
+      refresh();
+    } catch (error: any) {
+      const message =
+        error?.body?.message ||
+        error?.message ||
+        "Failed to trigger YouTube webhook renewal";
+      notify(message, { type: "warning" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <TopToolbar>
+      <Button
+        label="Renovar webhooks YouTube"
+        onClick={handleRenew}
+        disabled={isLoading}
+      >
+        <RefreshIcon />
+      </Button>
+    </TopToolbar>
+  );
+};
+
 const PlatformWebhookList: React.FC = (props) => {
   return (
-    <List 
-      {...props} 
+    <List perPage={25} pagination={<DefaultPagination />}
+      {...props}
       filters={<PlatformWebhookListFilter />}
+      actions={<PlatformWebhookListActions />}
+      sort={{ field: "createdAt", order: "DESC" }}
     >
       <Datagrid rowClick="show">
         <TextField source="id" label="Webhook ID" />
@@ -89,3 +145,9 @@ const PlatformWebhookList: React.FC = (props) => {
 };
 
 export default PlatformWebhookList;
+
+
+
+
+
+

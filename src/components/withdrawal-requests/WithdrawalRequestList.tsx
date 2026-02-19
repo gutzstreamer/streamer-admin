@@ -1,3 +1,4 @@
+import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
@@ -5,6 +6,7 @@ import {
   DateField,
   NumberField,
   TextInput,
+  NumberInput,
   DateInput,
   SelectInput,
   ShowButton,
@@ -13,6 +15,7 @@ import {
   ReferenceField,
 } from "react-admin";
 import { statusChoices } from ".";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const WithdrawalFilter = (props: any) => (
   <Filter {...props}>
@@ -22,15 +25,24 @@ const WithdrawalFilter = (props: any) => (
       choices={statusChoices}
       alwaysOn
     />
+    <DatePresetInput source="datePreset" label="Período" />
     <TextInput label="Pix Key" source="pixKey" />
     <TextInput label="Wallet ID" source="walletId" />
-    <DateInput label="Criado apÃ³s" source="createdAt_gte" />
+    <DateInput label="Criado após" source="createdAt_gte" />
     <DateInput label="Criado antes" source="createdAt_lte" />
+    <NumberInput label="amount" source="amount" />
+    <NumberInput label="fee" source="fee" />
+    <TextInput label="finalAmount" source="finalAmount" />
+    <TextInput label="id" source="id" />
+    <TextInput label="name" source="name" />
+    <TextInput label="pixKeyType" source="pixKeyType" />
+    <TextInput label="streamerId" source="streamerId" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
 export const WithdrawalList = () => (
-  <List
+  <List perPage={25} pagination={<DefaultPagination />}
     filters={<WithdrawalFilter />}
     sort={{ field: "createdAt", order: "DESC" }}
   >
@@ -66,3 +78,8 @@ export const WithdrawalList = () => (
     </Datagrid>
   </List>
 );
+
+
+
+
+

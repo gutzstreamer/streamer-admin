@@ -3,6 +3,7 @@ import {
   Create,
   SimpleForm,
   ReferenceInput,
+  AutocompleteInput,
   SelectInput,
   useNotify,
   useRedirect,
@@ -18,13 +19,42 @@ import {
   Typography,
   CircularProgress,
   Box,
+  Card,
+  CardContent,
+  Divider,
+  Alert,
+  Chip,
 } from "@mui/material";
-import { Receipt as ReceiptIcon, Warning as WarningIcon } from "@mui/icons-material";
+import {
+  Receipt as ReceiptIcon,
+  Warning as WarningIcon,
+  Preview as PreviewIcon,
+  CheckCircle as CheckCircleIcon,
+} from "@mui/icons-material";
+
+interface SimulationData {
+  type: 'PF' | 'PJ';
+  streamerId: string;
+  streamerName: string;
+  year: number;
+  month: number;
+  monthName: string;
+  totalAmount: number;
+  totalFee: number;
+  netAmount: number;
+  withdrawalCount: number;
+  invoiceDescription: string;
+  streamerEmail: string;
+  streamerIdentityNumber: string;
+  alreadyExists: boolean;
+}
 
 const MonthlyServiceInvoiceCreate: React.FC = (props) => {
   const [loading, setLoading] = useState(false);
+  const [simulating, setSimulating] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [formData, setFormData] = useState<any>(null);
+  const [simulationData, setSimulationData] = useState<SimulationData[] | null>(null);
   const notify = useNotify();
   const redirect = useRedirect();
   const dataProvider = useDataProvider();
@@ -50,9 +80,28 @@ const MonthlyServiceInvoiceCreate: React.FC = (props) => {
     name: (currentYear - i).toString(),
   }));
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = async (data: any) => {
     setFormData(data);
-    setConfirmOpen(true);
+    
+    // Primeiro simular
+    setSimulating(true);
+    try {
+      const result = await (dataProvider as any).simulateMonthlyInvoice(
+        data.year,
+        data.month,
+        data.streamerId,
+      );
+
+      setSimulationData(result.data);
+      setConfirmOpen(true);
+    } catch (error: any) {
+      notify(
+        `Erro ao simular nota fiscal: ${error.message || "Erro desconhecido"}`,
+        { type: "error" }
+      );
+    } finally {
+      setSimulating(false);
+    }
   };
 
   const handleConfirm = async () => {
@@ -60,9 +109,11 @@ const MonthlyServiceInvoiceCreate: React.FC = (props) => {
 
     setLoading(true);
     try {
-      await dataProvider.create("monthly-service-invoices", {
-        data: formData,
-      });
+      await (dataProvider as any).createMonthlyInvoice(
+        formData.year,
+        formData.month,
+        formData.streamerId,
+      );
 
       notify(
         `Nota fiscal mensal gerada com sucesso para o mês ${formData.month}/${formData.year}`,
@@ -103,7 +154,12 @@ const MonthlyServiceInvoiceCreate: React.FC = (props) => {
             reference="streamers"
             label="Streamer"
           >
-            <SelectInput optionText="name" optionValue="id" validate={required()} />
+            <AutocompleteInput 
+              optionText="name" 
+              optionValue="id" 
+              validate={required()}
+              filterToQuery={searchText => ({ name: searchText })}
+            />
           </ReferenceInput>
 
           <SelectInput
@@ -125,35 +181,89 @@ const MonthlyServiceInvoiceCreate: React.FC = (props) => {
       </Create>
 
       {/* Modal de Confirmação */}
-      <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog open={confirmOpen} onClose={() => !loading && setConfirmOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           <Box display="flex" alignItems="center" gap={1}>
-            <WarningIcon color="warning" />
-            Confirmar Geração de Nota Fiscal
+            <PreviewIcon color="primary" />
+            Simulação da Nota Fiscal Mensal
           </Box>
         </DialogTitle>
         <DialogContent>
-          {formData && (
+          {formData && simulationData && (
             <Box>
-              <Typography variant="body1" gutterBottom>
-                Você está prestes a gerar uma nota fiscal mensal com os seguintes dados:
-              </Typography>
-              
-              <Box sx={{ mt: 2, p: 2, bgcolor: "action.hover", borderRadius: 1, border: 1, borderColor: "divider" }}>
-                <Typography><strong>Período:</strong> {getMonthName(formData.month)}/{formData.year}</Typography>
-                <Typography><strong>Streamer ID:</strong> {formData.streamerId}</Typography>
-              </Box>
+              {simulationData.some(s => s.alreadyExists) && (
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                  ⚠️ Já existe uma nota fiscal gerada para este streamer no período selecionado!
+                </Alert>
+              )}
 
-              <Typography variant="body2" color="warning.main" sx={{ mt: 2 }}>
-                ⚠️ Esta ação irá:
+              <Typography variant="body1" gutterBottom fontWeight="bold">
+                Resumo do Período: {simulationData[0]?.monthName}/{simulationData[0]?.year}
               </Typography>
-              <ul style={{ margin: "8px 0", paddingLeft: "20px" }}>
-                <li>Buscar todos os saques aprovados do período</li>
-                <li>Calcular os totais e taxas</li>
-                <li>Gerar a nota fiscal de serviço</li>
-                <li>Enviar para a API externa</li>
-                <li>Notificar o streamer por e-mail</li>
-              </ul>
+
+              {simulationData.map((simulation, index) => (
+                <Card key={index} sx={{ mt: 2, border: 2, borderColor: simulation.type === 'PF' ? 'primary.main' : 'secondary.main' }}>
+                  <CardContent>
+                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                      <Typography variant="h6">
+                        {simulation.streamerName}
+                      </Typography>
+                      <Chip 
+                        label={simulation.type === 'PF' ? 'Pessoa Física' : 'Pessoa Jurídica'}
+                        color={simulation.type === 'PF' ? 'primary' : 'secondary'}
+                      />
+                    </Box>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+                      📄 Valor da Nota Fiscal (Taxas de Serviço)
+                    </Typography>
+                    <Typography variant="h5" color="primary" gutterBottom fontWeight="bold">
+                      R$ {simulation.totalFee.toFixed(2).replace('.', ',')}
+                    </Typography>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    <Box sx={{ bgcolor: 'action.hover', p: 2, borderRadius: 1 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        <strong>🔢 Quantidade de saques:</strong> {simulation.withdrawalCount}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        <strong>💵 Total dos saques processados:</strong> R$ {simulation.totalAmount.toFixed(2).replace('.', ',')}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        <strong>✅ Valor líquido recebido:</strong> R$ {simulation.netAmount.toFixed(2).replace('.', ',')}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ mt: 2, p: 1.5, bgcolor: 'info.lighter', borderRadius: 1, border: 1, borderColor: 'info.main' }}>
+                      <Typography variant="caption" display="block">
+                        <strong>📧 E-mail:</strong> {simulation.streamerEmail}
+                      </Typography>
+                      <Typography variant="caption" display="block">
+                        <strong>🆔 {simulation.type === 'PF' ? 'CPF' : 'CNPJ'}:</strong> {simulation.streamerIdentityNumber}
+                      </Typography>
+                    </Box>
+
+                    <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 2, fontStyle: 'italic' }}>
+                      {simulation.invoiceDescription}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
+
+              <Alert severity="info" sx={{ mt: 3 }}>
+                <Typography variant="body2">
+                  <strong>ℹ️ Esta ação irá:</strong>
+                </Typography>
+                <ul style={{ margin: "8px 0", paddingLeft: "20px" }}>
+                  <li>Gerar {simulationData.length} nota(s) fiscal(is) de serviço</li>
+                  <li>Enviar para a API externa (Spedy)</li>
+                  <li>Notificar o streamer por e-mail</li>
+                  <li>Vincular os saques à nota fiscal</li>
+                </ul>
+              </Alert>
             </Box>
           )}
         </DialogContent>
@@ -164,10 +274,10 @@ const MonthlyServiceInvoiceCreate: React.FC = (props) => {
           <Button
             onClick={handleConfirm}
             variant="contained"
-            disabled={loading}
-            startIcon={loading ? <CircularProgress size={20} /> : <ReceiptIcon />}
+            disabled={loading || simulationData?.some(s => s.alreadyExists)}
+            startIcon={loading ? <CircularProgress size={20} /> : <CheckCircleIcon />}
           >
-            {loading ? "Gerando..." : "Confirmar Geração"}
+            {loading ? "Gerando..." : "Confirmar e Gerar"}
           </Button>
         </DialogActions>
       </Dialog>

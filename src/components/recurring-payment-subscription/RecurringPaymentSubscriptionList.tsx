@@ -1,14 +1,21 @@
+import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
   TextField,
   ReferenceField,
   DateField,
+  DateInput,
   SelectField,
   NumberField,
   FunctionField,
+  Filter,
+  TextInput,
+  NumberInput,
+  SelectInput,
 } from "react-admin";
 import { ListProps } from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const statusChoices = [
   { id: "ACTIVE", name: "Ativa" },
@@ -17,17 +24,39 @@ const statusChoices = [
   { id: "SUSPENDED", name: "Suspensa" },
 ];
 
+const RecurringPaymentSubscriptionFilter: React.FC = (props) => (
+  <Filter {...props}>
+    <TextInput label="Subscription ID" source="id" alwaysOn />
+    <TextInput label="User ID" source="userId" />
+    <TextInput label="Pricing ID" source="pricingId" />
+    <SelectInput
+      label="Status"
+      source="status"
+      choices={statusChoices}
+      emptyText="Todos"
+    />
+    <DatePresetInput source="datePreset" label="PerÌodo" />
+    <DateInput label="Created After" source="createdAt_gte" />
+    <DateInput label="Created Before" source="createdAt_lte" />
+    <NumberInput label="amount" source="amount" />
+    <TextInput label="name" source="name" />
+    <DateInput label="nextPaymentDate" source="nextPaymentDate" />
+  </Filter>
+);
+
 export const RecurringPaymentSubscriptionList = (props: ListProps) => (
-  <List {...props}>
+  <List
+    perPage={25}
+    pagination={<DefaultPagination />}
+    {...props}
+    filters={<RecurringPaymentSubscriptionFilter />}
+    sort={{ field: "createdAt", order: "DESC" }}
+  >
     <Datagrid rowClick="show">
       <TextField source="id" />
-
-      {/* Usu√°rio */}
       <ReferenceField source="userId" reference="users" link="show">
         <TextField source="name" />
       </ReferenceField>
-
-      {/* Pricing */}
       <ReferenceField
         source="pricingId"
         reference="recurring-payment-pricing"
@@ -35,15 +64,9 @@ export const RecurringPaymentSubscriptionList = (props: ListProps) => (
       >
         <TextField source="name" />
       </ReferenceField>
-
-      {/* Status */}
       <SelectField source="status" choices={statusChoices} />
-
-      {/* Datas */}
       <DateField source="nextPaymentDate" />
       <DateField source="createdAt" />
-
-      {/* Valor */}
       <FunctionField
         label="Valor"
         render={(record: any) => (
@@ -60,3 +83,9 @@ export const RecurringPaymentSubscriptionList = (props: ListProps) => (
 );
 
 export default RecurringPaymentSubscriptionList;
+
+
+
+
+
+

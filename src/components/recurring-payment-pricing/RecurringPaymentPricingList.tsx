@@ -1,3 +1,4 @@
+import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
@@ -5,11 +6,15 @@ import {
   NumberField,
   BooleanField,
   DateField,
+  DateInput,
   SelectField,
   SelectInput,
   BooleanInput,
+  TextInput,
+  NumberInput,
 } from "react-admin";
 import { ListProps } from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const intervalChoices = [
   { id: "MONTHLY", name: "Mensal" },
@@ -38,20 +43,29 @@ const pricingFilters = [
     alwaysOn
   />,
   <BooleanInput key="isActive" source="isActive" alwaysOn />,
+  <DatePresetInput key="datePreset" source="datePreset" label="Período" />,
+  <DateInput key="createdAt_gte" label="Created After" source="createdAt_gte" />,
+  <DateInput key="createdAt_lte" label="Created Before" source="createdAt_lte" />,
+  <NumberInput key="price" label="price" source="price" />,
+  <TextInput key="id" label="id" source="id" />,
+  <TextInput key="name" label="name" source="name" />,
 ];
 
 export const RecurringPaymentPricingList = (props: ListProps) => (
-  <List {...props} filters={pricingFilters}>
+  <List
+    perPage={25}
+    pagination={<DefaultPagination />}
+    {...props}
+    filters={pricingFilters}
+    sort={{ field: "createdAt", order: "DESC" }}
+  >
     <Datagrid rowClick="show">
       <TextField source="id" />
       <TextField source="name" />
       <SelectField source="resourceType" choices={resourceTypeChoices} />
       <SelectField source="interval" choices={intervalChoices} />
-      <NumberField
-        source="amount"
-        options={{ style: "currency", currency: "BRL" }}
-        transform={(value: number) => value / 100}
-      />
+      <NumberField source="price" options={{ style: "currency", currency: "BRL" }} />
+      <NumberField source="durationDays" label="Duração (dias)" />
       <BooleanField source="isActive" />
       <DateField source="createdAt" showTime />
     </Datagrid>

@@ -1,18 +1,24 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
   TextField,
   BooleanField,
   DateField,
+  DateInput,
   TopToolbar,
   useNotify,
   useRefresh,
   Button,
   Loading,
+  Filter,
+  TextInput,
+  SelectInput,
 } from "react-admin";
 import React from "react";
 import { Sync as SyncIcon } from "@mui/icons-material";
 import { Card, CardContent, Typography, Box, Chip } from "@mui/material";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const ElevenLabsStatusWithSync: React.FC = () => {
   const [status, setStatus] = React.useState<any>(null);
@@ -153,10 +159,48 @@ const ElevenLabsStatusWithSync: React.FC = () => {
   );
 };
 
+const AIVoiceFilter: React.FC = (props) => (
+  <Filter {...props}>
+    <TextInput label="Nome" source="name" alwaysOn />
+    <TextInput label="Categoria" source="category" />
+    <TextInput label="Idioma" source="language" />
+    <SelectInput
+      label="Ativa"
+      source="isActive"
+      choices={[
+        { id: true, name: "Yes" },
+        { id: false, name: "No" },
+      ]}
+      emptyText="All"
+    />
+    <SelectInput
+      label="Premium"
+      source="isPremium"
+      choices={[
+        { id: true, name: "Yes" },
+        { id: false, name: "No" },
+      ]}
+      emptyText="All"
+    />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Created After" source="createdAt_gte" />
+    <DateInput label="Created Before" source="createdAt_lte" />
+    <TextInput label="donationPreviewUrl" source="donationPreviewUrl" />
+    <TextInput label="salesPreviewUrl" source="salesPreviewUrl" />
+    <TextInput label="thumbnailUrl" source="thumbnailUrl" />
+  </Filter>
+);
+
 const AIVoiceList: React.FC = (props) => (
   <>
     <ElevenLabsStatusWithSync />
-    <List {...props}>
+    <List
+      perPage={25}
+      pagination={<DefaultPagination />}
+      {...props}
+      filters={<AIVoiceFilter />}
+      sort={{ field: "createdAt", order: "DESC" }}
+    >
       <Datagrid rowClick="edit">
         <TextField source="name" label="Nome" />
         <TextField source="category" label="Categoria" />
@@ -173,3 +217,9 @@ const AIVoiceList: React.FC = (props) => (
 );
 
 export default AIVoiceList;
+
+
+
+
+
+

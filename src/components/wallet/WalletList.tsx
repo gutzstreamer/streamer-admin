@@ -1,3 +1,4 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import React from "react";
 import {
   List,
@@ -6,11 +7,13 @@ import {
   NumberField,
   ReferenceField,
   DateField,
+  DateInput,
   Filter,
   TextInput,
   SelectInput,
 } from "react-admin";
 import { ListProps } from "react-admin";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const WalletFilter: React.FC = (props) => (
   <Filter {...props}>
@@ -23,11 +26,28 @@ const WalletFilter: React.FC = (props) => (
         { id: 'donate', name: 'Donate' },
       ]} 
     />
+    <DatePresetInput source="datePreset" label="Período" />
+    <DateInput label="Updated After" source="updatedAt_gte" />
+    <DateInput label="Updated Before" source="updatedAt_lte" />
+    <TextInput label="balance" source="balance" />
+    <DateInput label="createdAt" source="createdAt" />
+    <TextInput label="currency" source="currency" />
+    <TextInput label="id" source="id" />
+    <TextInput label="name" source="name" />
+    <TextInput label="pendingBalance" source="pendingBalance" />
+    <TextInput label="pixKey" source="pixKey" />
+    <TextInput label="status" source="status" />
   </Filter>
 );
 
 const WalletList = (props: ListProps) => (
-  <List {...props} filters={<WalletFilter />}>
+  <List
+    perPage={25}
+    pagination={<DefaultPagination />}
+    {...props}
+    filters={<WalletFilter />}
+    sort={{ field: "updatedAt", order: "DESC" }}
+  >
     <Datagrid>
       <TextField source="id" />
       <TextField source="pixKey" />
@@ -54,3 +74,9 @@ const WalletList = (props: ListProps) => (
 );
 
 export default WalletList;
+
+
+
+
+
+

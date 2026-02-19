@@ -22,8 +22,21 @@ const resourceTypeChoices = [
   { id: "CUSTOM", name: "Personalizado" },
 ];
 
+const transform = (data: any) => {
+  const payload = {
+    ...data,
+    price: Number(data.price),
+  };
+
+  if (payload.resourceType === "SUBSCRIPTION_PLAN" && payload.resourceId) {
+    payload.planId = payload.resourceId;
+  }
+
+  return payload;
+};
+
 export const RecurringPaymentPricingCreate = (props: any) => (
-  <Create {...props}>
+  <Create {...props} transform={transform}>
     <SimpleForm>
       {/* Tipo de Recurso */}
       <SelectInput
@@ -46,13 +59,17 @@ export const RecurringPaymentPricingCreate = (props: any) => (
       <TextInput source="name" validate={required()} />
       <TextInput source="description" multiline rows={3} />
 
-      {/* Valor em REAIS (converter para centavos no transform) */}
+      {/* Valor em reais */}
       <NumberInput
-        source="amount"
+        source="price"
         label="Valor (R$)"
         validate={required()}
-        format={(v: number) => v / 100}
-        parse={(v: number) => Math.round(v * 100)}
+      />
+
+      <NumberInput
+        source="durationDays"
+        label="Duração (dias)"
+        validate={required()}
       />
 
       {/* Intervalo de Cobrança */}

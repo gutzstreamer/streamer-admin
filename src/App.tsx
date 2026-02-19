@@ -29,6 +29,10 @@ import SubscriptionPlanCreate from "./components/subscription-plan/SubScriptionP
 import SubscriptionPlanEdit from "./components/subscription-plan/SubScriptionPlanEdit";
 import SubscriptionPlanShow from "./components/subscription-plan/SubScriptionPlanShow";
 import SubscriptionPlanListCopy from "./components/subscription-plan/SubscriptionPlanListCopy";
+import SubscriptionPlanTierCommissionList from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionList";
+import SubscriptionPlanTierCommissionCreate from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionCreate";
+import SubscriptionPlanTierCommissionEdit from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionEdit";
+import SubscriptionPlanTierCommissionShow from "./components/subscription-plan-tier-commission/SubscriptionPlanTierCommissionShow";
 import FeatureToggleList from "./components/feature-toggles/FeatureToggleList";
 import FeatureToggleCreate from "./components/feature-toggles/FeatureToggleCreate";
 import FeatureToggleShow from "./components/feature-toggles/FeatureToggleShow";
@@ -94,6 +98,8 @@ import {
   Mic,
   Repeat,
   Payment,
+  EmojiEvents,
+  ViewList,
 } from "@mui/icons-material";
 import { SubscriptionUsageList } from "./components/subscription-usages/SubscriptionUsageList";
 import { SubscriptionUsageCreate } from "./components/subscription-usages/SubscriptionUsageCreate";
@@ -133,6 +139,16 @@ import {
   RecurringPaymentTransactionList,
   RecurringPaymentTransactionShow,
 } from "./components/recurring-payment-transaction";
+import PlatformBenefitList from "./components/platform-benefits/PlatformBenefitList";
+import PlatformBenefitCreate from "./components/platform-benefits/PlatformBenefitCreate";
+import PlatformBenefitEdit from "./components/platform-benefits/PlatformBenefitEdit";
+import PlatformBenefitShow from "./components/platform-benefits/PlatformBenefitShow";
+import TierConfigList from "./components/tier-config/TierConfigList";
+import TierConfigCreate from "./components/tier-config/TierConfigCreate";
+import TierConfigEdit from "./components/tier-config/TierConfigEdit";
+import TierConfigShow from "./components/tier-config/TierConfigShow";
+import FanPlanList from "./components/fan-plans/FanPlanList";
+import FanPlanShow from "./components/fan-plans/FanPlanShow";
 import Chat from "@mui/icons-material/Chat";
 import ChatMentionList from "./components/chat-mentions/ChatMentionList";
 import { CustomRoutes } from "react-admin";
@@ -141,6 +157,12 @@ import AlertQueuesPage from "./components/alert-queues/AlertQueuesPage";
 import AlertQueueDetailPage from "./components/alert-queues/AlertQueueDetailPage";
 import MusicthonQueuesPage from "./components/musicthon-queues/MusicthonQueuesPage";
 import MusicthonQueueDetailPage from "./components/musicthon-queues/MusicthonQueueDetailPage";
+import QueueControlCenterPage from "./components/queue-control/QueueControlCenterPage";
+import TemplateList from "./components/widgets/templates/ListTemplate";
+import CreateTemplate from "./components/widgets/templates/CreateTemplate";
+import EditTemplate from "./components/widgets/templates/EditTemplate";
+import ShowTemplate from "./components/widgets/templates/ShowTemplate";
+import { withStandardList } from "./components/common/withStandardList";
 
 export const App = () => (
   <Admin
@@ -157,11 +179,26 @@ export const App = () => (
       options={{ label: "Dashboard" }}
     />
     <Resource
+      name="queue-control-center"
+      list={QueueControlCenterPage}
+      icon={ViewList}
+      options={{ label: "Queue Control Center" }}
+    />
+    <Resource
       name="monthly-service-invoices"
-      list={MonthlyServiceInvoiceList}
+      list={withStandardList(MonthlyServiceInvoiceList)}
       show={MonthlyServiceInvoiceShow}
       create={MonthlyServiceInvoiceCreate}
       options={{ label: "Service Invoices Monthly" }}
+    />
+    <Resource
+      options={{ label: "Templates de Widgets" }}
+      name="widget-templates"
+      icon={Tv}
+      list={withStandardList(TemplateList)}
+      create={CreateTemplate}
+      edit={EditTemplate}
+      show={ShowTemplate}
     />
     <CustomRoutes>
       <Route path="/alert-queues" element={<AlertQueuesPage />} />
@@ -177,7 +214,7 @@ export const App = () => (
       name="users"
       icon={People}
       create={UserCreate}
-      list={UserList}
+      list={withStandardList(UserList)}
       edit={UserEdit}
       show={UserShow}
     />
@@ -185,7 +222,7 @@ export const App = () => (
       options={{ label: "Subscription Plans" }}
       name="subscription-plan"
       icon={Subscriptions}
-      list={SubscriptionPlanListCopy}
+      list={withStandardList(SubscriptionPlanListCopy)}
       create={SubscriptionPlanCreate}
       edit={SubscriptionPlanEdit}
       show={SubscriptionPlanShow}
@@ -194,7 +231,7 @@ export const App = () => (
       options={{ label: "Preços Recorrentes" }}
       name="recurring-payment-pricing"
       icon={Repeat}
-      list={RecurringPaymentPricingList}
+      list={withStandardList(RecurringPaymentPricingList)}
       create={RecurringPaymentPricingCreate}
       edit={RecurringPaymentPricingEdit}
       show={RecurringPaymentPricingShow}
@@ -203,21 +240,21 @@ export const App = () => (
       options={{ label: "Assinaturas Recorrentes" }}
       name="recurring-payment-subscription"
       icon={Payment}
-      list={RecurringPaymentSubscriptionList}
+      list={withStandardList(RecurringPaymentSubscriptionList)}
       show={RecurringPaymentSubscriptionShow}
     />
     <Resource
       options={{ label: "Transações Recorrentes" }}
       name="recurring-payment-transaction"
       icon={Receipt}
-      list={RecurringPaymentTransactionList}
+      list={withStandardList(RecurringPaymentTransactionList)}
       show={RecurringPaymentTransactionShow}
     />
     <Resource
       options={{ label: "User Subscriptions" }}
       name="subscription"
       icon={Subscriptions}
-      list={UserSubscriptionList}
+      list={withStandardList(UserSubscriptionList)}
       edit={UserSubscriptionEdit}
       show={UserSubscriptionShow}
     />
@@ -225,7 +262,7 @@ export const App = () => (
       options={{ label: "User Subscription Usage" }}
       name="subscription-usages"
       icon={Subscriptions}
-      list={SubscriptionUsageList}
+      list={withStandardList(SubscriptionUsageList)}
       show={SubscriptionUsageShow}
       edit={SubscriptionUsageEdit}
       create={SubscriptionUsageCreate}
@@ -234,28 +271,28 @@ export const App = () => (
       options={{ label: "User Sessions" }}
       name="sessions"
       icon={Visibility}
-      list={SessionList}
+      list={withStandardList(SessionList)}
       show={SessionShow}
     />
     <Resource
       options={{ label: "Profiles" }}
       name="profiles"
       icon={AccountCircle}
-      list={ProfileList}
+      list={withStandardList(ProfileList)}
       edit={ProfileEdit}
       show={ProfileShow}
     />
     <Resource
       name="address"
       icon={LocationOn}
-      list={AddressList}
+      list={withStandardList(AddressList)}
       show={AddressShow}
       options={{ label: "Addresses" }}
     />
     <Resource
       name="wallets"
       icon={AccountBalanceWallet}
-      list={WalletList}
+      list={withStandardList(WalletList)}
       show={WalletShow}
       options={{ label: "Wallets" }}
     />
@@ -263,14 +300,14 @@ export const App = () => (
       options={{ label: "Wallet Transactions" }}
       name="wallet-transactions"
       icon={SwapHoriz}
-      list={WalletTransactionList}
+      list={withStandardList(WalletTransactionList)}
       show={WalletTransactionShow}
     />
     <Resource
       options={{ label: "Streamer Requests" }}
       name="streamer-requests"
       icon={SupportAgent}
-      list={StreamerRequestList}
+      list={withStandardList(StreamerRequestList)}
       show={StreamerRequestShow}
       edit={StreamerRequestEdit}
     />
@@ -278,7 +315,7 @@ export const App = () => (
       options={{ label: "Streamer Profile" }}
       name="streamers"
       icon={Storefront}
-      list={StreamerList}
+      list={withStandardList(StreamerList)}
       edit={StreamerEdit}
       show={StreamerShow}
     />
@@ -286,14 +323,14 @@ export const App = () => (
       options={{ label: "Streamer Commissions" }}
       name="commission-streamer"
       icon={MonetizationOn}
-      list={CommissionStreamerList}
+      list={withStandardList(CommissionStreamerList)}
       show={CommissionStreamerShow}
     />
     <Resource
       options={{ label: "Streamer Withdrawal" }}
       name="withdrawal-requests"
       icon={MonetizationOn}
-      list={WithdrawalList}
+      list={withStandardList(WithdrawalList)}
       edit={WithdrawalEdit}
       show={WithdrawalShow}
     />
@@ -301,14 +338,14 @@ export const App = () => (
       options={{ label: "Streamer Products" }}
       name="product-streamer"
       icon={LocalMall}
-      list={ProductStreamerList}
+      list={withStandardList(ProductStreamerList)}
       show={ProductStreamerShow}
       edit={ProductStreamerEdit}
     />
     <Resource
       name="donations"
       icon={Favorite}
-      list={DonateList}
+      list={withStandardList(DonateList)}
       show={DonateShow}
       options={{ label: "Streamer Donations" }}
     />
@@ -317,7 +354,7 @@ export const App = () => (
       options={{ label: "Product Categories" }}
       name="categories"
       icon={Category}
-      list={CategoryList}
+      list={withStandardList(CategoryList)}
       create={CategoryCreate}
       edit={CategoryEdit}
       show={CategoryShow}
@@ -326,7 +363,7 @@ export const App = () => (
       options={{ label: "Product Grid" }}
       name="product-grid"
       icon={PlaylistAddCheck}
-      list={ProductGridList}
+      list={withStandardList(ProductGridList)}
       create={ProductGridCreate}
       edit={ProductGridEdit}
       show={ProductGridShow}
@@ -335,7 +372,7 @@ export const App = () => (
       options={{ label: "Products" }}
       name="products"
       icon={LocalMall}
-      list={ProductList}
+      list={withStandardList(ProductList)}
       create={ProductCreate}
       edit={ProductEdit}
       show={ProductShow}
@@ -344,15 +381,49 @@ export const App = () => (
       options={{ label: "Feature Toggles" }}
       name="feature-toggles"
       icon={ToggleOn}
-      list={FeatureToggleList}
+      list={withStandardList(FeatureToggleList)}
       create={FeatureToggleCreate}
       edit={FeatureToggleEdit}
       show={FeatureToggleShow}
     />
     <Resource
+      options={{ label: "Platform Benefits" }}
+      name="platform-benefits"
+      icon={EmojiEvents}
+      list={withStandardList(PlatformBenefitList)}
+      create={PlatformBenefitCreate}
+      edit={PlatformBenefitEdit}
+      show={PlatformBenefitShow}
+    />
+    <Resource
+      options={{ label: "Tier Config" }}
+      name="tier-config"
+      icon={ToggleOn}
+      list={withStandardList(TierConfigList)}
+      create={TierConfigCreate}
+      edit={TierConfigEdit}
+      show={TierConfigShow}
+    />
+    <Resource
+      options={{ label: "Comissão por Tier (Plano)" }}
+      name="subscription-plan-tier-commission"
+      icon={ToggleOn}
+      list={withStandardList(SubscriptionPlanTierCommissionList)}
+      create={SubscriptionPlanTierCommissionCreate}
+      edit={SubscriptionPlanTierCommissionEdit}
+      show={SubscriptionPlanTierCommissionShow}
+    />
+    <Resource
+      options={{ label: "Fan Plans" }}
+      name="fan-plans"
+      icon={Subscriptions}
+      list={withStandardList(FanPlanList)}
+      show={FanPlanShow}
+    />
+    <Resource
       name="orders"
       icon={ShoppingCart}
-      list={OrderList}
+      list={withStandardList(OrderList)}
       show={OrderShow}
       options={{ label: "Orders" }}
     />
@@ -360,7 +431,7 @@ export const App = () => (
       options={{ label: "Order Cancel" }}
       name="order-cancel"
       icon={Cancel}
-      list={OrderCancelList}
+      list={withStandardList(OrderCancelList)}
       edit={OrderCancelEdit}
       show={OrderCancelShow}
       create={OrderCancelCreate}
@@ -368,7 +439,7 @@ export const App = () => (
     <Resource
       name="invoices"
       icon={Receipt}
-      list={InvoiceList}
+      list={withStandardList(InvoiceList)}
       show={InvoiceShow}
       options={{ label: "Invoices" }}
     />
@@ -376,40 +447,40 @@ export const App = () => (
       options={{ label: "Order Billings" }}
       name="order-billings"
       icon={Payments}
-      list={OrderBillingList}
+      list={withStandardList(OrderBillingList)}
       show={OrderBillingShow}
     />
     <Resource
       name="factory"
       icon={Factory}
-      list={FactoryList}
+      list={withStandardList(FactoryList)}
       show={FactoryShow}
     />
     <Resource
       options={{ label: "Streaming Platform Integrations" }}
       name="streaming-platform-integrations"
       icon={Tv}
-      list={StreamingPlatformIntegrationList}
+      list={withStandardList(StreamingPlatformIntegrationList)}
       show={StreamingPlatformIntegrationShow}
     />
     <Resource
       options={{ label: "Platform Webhooks" }}
       name="platform-webhooks"
       icon={Webhook}
-      list={PlatformWebhookList}
+      list={withStandardList(PlatformWebhookList)}
       show={PlatformWebhookShow}
     />
     <Resource
       options={{ label: "Chat Mentions" }}
       name="chat-mentions"
       icon={Chat}
-      list={ChatMentionList}
+      list={withStandardList(ChatMentionList)}
     />
     <Resource
       options={{ label: "Calculation Fees" }}
       name="calculation-fee"
       icon={Calculate}
-      list={CalculationFeeList}
+      list={withStandardList(CalculationFeeList)}
       show={CalculationFeeShow}
       edit={CalculationFeeEdit}
       create={CalculationFeeCreate}
@@ -418,7 +489,7 @@ export const App = () => (
       options={{ label: "AI Voices" }}
       name="ai-voice"
       icon={Mic}
-      list={AIVoiceList}
+      list={withStandardList(AIVoiceList)}
       edit={AIVoiceEdit}
     />
     <Resource

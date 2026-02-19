@@ -35,11 +35,15 @@ export const RecurringPaymentPricingEdit = (props: any) => (
       <TextInput source="description" multiline rows={3} />
 
       <NumberInput
-        source="amount"
+        source="price"
         label="Valor (R$)"
         validate={required()}
-        format={(v: number) => v / 100}
-        parse={(v: number) => Math.round(v * 100)}
+      />
+
+      <NumberInput
+        source="durationDays"
+        label="Duração (dias)"
+        validate={required()}
       />
 
       <SelectInput

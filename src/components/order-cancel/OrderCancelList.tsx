@@ -1,3 +1,4 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import {
   Filter,
   TextInput,
@@ -12,6 +13,7 @@ import {
   ReferenceField,
 } from "react-admin";
 import { orderCancelStatusChoices } from ".";
+import { DatePresetInput } from "../common/DatePresetInput";
 
 const OrderCancelFilter = (props: any) => (
   <Filter {...props}>
@@ -23,13 +25,16 @@ const OrderCancelFilter = (props: any) => (
       choices={orderCancelStatusChoices}
       alwaysOn
     />
+    <DatePresetInput source="datePreset" label="Período" />
     <DateInput label="Criado após" source="createdAt_gte" />
     <DateInput label="Criado antes" source="createdAt_lte" />
+    <TextInput label="reason" source="reason" />
+    <DateInput label="updatedAt" source="updatedAt" />
   </Filter>
 );
 
 export const OrderCancelList = () => (
-  <List
+  <List perPage={25} pagination={<DefaultPagination />}
     filters={<OrderCancelFilter />}
     sort={{ field: "createdAt", order: "DESC" }}
   >
@@ -59,3 +64,9 @@ export const OrderCancelList = () => (
 //     "createdAt": "2025-06-06T19:21:59.014Z",
 //     "updatedAt": "2025-06-06T19:21:59.014Z"
 // }
+
+
+
+
+
+

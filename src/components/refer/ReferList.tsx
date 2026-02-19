@@ -1,19 +1,20 @@
+﻿import { DefaultPagination } from "../common/DefaultPagination";
 import {
   List,
   Datagrid,
+  DateInput,
   DateField,
   ReferenceField,
   FunctionField,
   useRecordContext,
-  TopToolbar,
-  ExportButton,
-  CreateButton,
+  ListProps,
   BooleanInput,
   ReferenceInput,
   AutocompleteInput,
 } from 'react-admin';
 import { Chip, Box } from '@mui/material';
 import { CheckCircle, Cancel, Timer } from '@mui/icons-material';
+import { DatePresetInput } from "../common/DatePresetInput";
 
 // Função para calcular dias restantes
 const calculateRemainingDays = (expiresAt: string, isActive: boolean) => {
@@ -77,13 +78,6 @@ const RemainingDaysField = () => {
   );
 };
 
-const ListActions = () => (
-  <TopToolbar>
-    <CreateButton />
-    <ExportButton />
-  </TopToolbar>
-);
-
 const referFilters = [
   <ReferenceInput
     key="referrerStreamerId"
@@ -114,12 +108,17 @@ const referFilters = [
     />
   </ReferenceInput>,
   <BooleanInput key="isActive" source="isActive" label="Apenas Ativos" />,
+  <DatePresetInput key="datePreset" source="datePreset" label="Período" />, 
+  <DateInput key="createdAt_gte" source="createdAt_gte" label="Criado após" />,
+  <DateInput key="createdAt_lte" source="createdAt_lte" label="Criado antes" />,
+  <DateInput key="expiresAt" label="expiresAt" source="expiresAt" />,
+  <DateInput key="startDate" label="startDate" source="startDate" />,
 ];
 
-export const ReferList = () => {
+export const ReferList = (props: ListProps) => {
   return (
-    <List
-      actions={<ListActions />}
+    <List pagination={<DefaultPagination />}
+      {...props}
       filters={referFilters}
       perPage={25}
       sort={{ field: 'createdAt', order: 'DESC' }}
@@ -210,3 +209,7 @@ export const ReferList = () => {
     </List>
   );
 };
+
+
+
+
